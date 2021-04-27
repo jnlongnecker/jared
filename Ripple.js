@@ -56,8 +56,6 @@ class Ripple {
             vel.y -= this.canvasHeight;
         }
 
-        console.log(vel);
-
         this.rippleCircle.velocity = vel;
     }
 }

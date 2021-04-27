@@ -15,9 +15,20 @@ class Circle {
     }
 
     Bounce(collidingCircle) {
+        this.lerpAmount = 1.05;
+
+        //If the circle is hit from behind, average the current heading and heading of collision
+        if (this.HitFromBehind(collidingCircle)) {
+            let collisionVector = p5.Vector.sub(this.center, collidingCircle.center);
+            let collisionHeading = collisionVector.heading();
+            let newHeading = (this.velocity.heading() + collisionHeading) * 0.5;
+            this.velocity.setHeading(newHeading);
+            return;
+        }
+
+        //If not, reflect from the point of contact
         let normal = p5.Vector.sub(collidingCircle.center, this.center);
         this.velocity.reflect(normal);
-        this.lerpAmount = 1.05;
     }
 
     BounceHorizontal() {
@@ -30,6 +41,14 @@ class Circle {
         let normal = createVector(1, 0);
         this.velocity.reflect(normal);
         this.lerpAmount = 1.05;
+    }
+
+    HitFromBehind(collidingCircle) {
+        let collisionVector = p5.Vector.sub(this.center, collidingCircle.center);
+        let collisionHeading = collisionVector.heading();
+        let travelHeading = this.velocity.heading();
+
+        return abs(collisionHeading - travelHeading) < HALF_PI;
     }
 
     IsColliding(otherCircle) {

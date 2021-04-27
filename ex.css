@@ -8,6 +8,26 @@
 */
 
 html {
+    background: #f3f4ed;
+    color: #1f1f1f;
+    font-family: 'Noto Sans HK', sans-serif;
+}
+
+body {
+    text-align: center;
+    margin: 0;
+}
+
+.detail {
+    font-style: italic;
+}
+
+.red-section {
+    padding: 5%;
     background: #310b0b;
     color: #f3f4ed;
+}
+
+#sketch-holder {
+    margin: 0;
 }

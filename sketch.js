@@ -1,6 +1,13 @@
 var circles;
-var cWidth = 500;
-var cHeight = 400;
+var cWidth = document.documentElement.clientWidth * 0.5;
+var cHeight = document.documentElement.clientHeight * 0.5;
+var canvas;
+
+function windowResized() {
+  var cWidth = document.documentElement.clientWidth * 0.5;
+  var cHeight = document.documentElement.clientHeight * 0.5;
+  resizeCanvas(cWidth, cHeight);
+}
 
 function setup() {
   var canvas = createCanvas(cWidth, cHeight);

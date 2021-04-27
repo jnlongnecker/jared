@@ -4,8 +4,8 @@ var cHeight = document.documentElement.clientHeight * 0.5;
 var canvas;
 
 function windowResized() {
-  var cWidth = document.documentElement.clientWidth * 0.5;
-  var cHeight = document.documentElement.clientHeight * 0.5;
+  cWidth = document.documentElement.clientWidth * 0.5;
+  cHeight = document.documentElement.clientHeight * 0.5;
   resizeCanvas(cWidth, cHeight);
 }
 

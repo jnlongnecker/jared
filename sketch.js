@@ -102,6 +102,10 @@ function HandleEdges(currCircle) {
     currCircle.BounceVertical();
 }
 
-window.onmousedown = function() {
+window.onclick = function() {
+  ripple.Reset(mouseX, mouseY);
+}
+
+window.ontouchstart = function() {
   ripple.Reset(mouseX, mouseY);
 }

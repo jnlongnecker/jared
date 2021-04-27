@@ -2,11 +2,13 @@ var circles;
 var cWidth = document.documentElement.clientWidth * 0.5;
 var cHeight = document.documentElement.clientHeight * 0.5;
 var canvas;
+var ripple;
 
 function windowResized() {
   cWidth = document.documentElement.clientWidth * 0.5;
   cHeight = document.documentElement.clientHeight * 0.5;
   resizeCanvas(cWidth, cHeight);
+  ripple.CanvasResized(cWidth, cHeight);
 }
 
 function setup() {
@@ -16,14 +18,26 @@ function setup() {
   fill("#310b0b");
   noStroke();
   PopulateCircles(16);
+  ripple = new Ripple();
 }
 
 function draw() {
   background("#f3f4ed");
   HandleCircles();
+  noStroke();
   for (i = 0; i < circles.length; i++) {
     fill(circles[i].ColorActual());
     circle(circles[i].center.x, circles[i].center.y, 2 * circles[i].radius);
+  }
+
+  if(ripple.IsAlive()) {
+    noFill();
+    stroke("#310b0b");
+    strokeWeight(2.5);
+    let cRadius = ripple.GetRadius();
+    circle (ripple.x, ripple.y, 2 * cRadius);
+    strokeWeight(1);
+    circle(ripple.x, ripple.y, cRadius);
   }
 }
 
@@ -31,10 +45,12 @@ function HandleCircles() {
   for (i = 0; i < circles.length; i++) {
     for (j = i + 1; j < circles.length; j++) {
       if (circles[i].IsColliding(circles[j])) {
-        circles[i].Bounce();
-        circles[j].Bounce();
+        circles[i].Bounce(circles[j]);
+        circles[j].Bounce(circles[i]);
       }
     }
+    if (ripple.Born() && circles[i].IsColliding(ripple.rippleCircle))
+      circles[i].Bounce(ripple.rippleCircle);
     HandleEdges(circles[i]);
     circles[i].Move();
   }
@@ -78,8 +94,14 @@ function HandleEdges(currCircle) {
   botPoint = createVector(currCircle.center.x, 0);
   leftPoint = createVector(0, currCircle.center.y);
   rightPoint = createVector(cWidth, currCircle.center.y);
-  shouldBounce = currCircle.IsCollidingWithPoint(topPoint) || currCircle.IsCollidingWithPoint(botPoint) || 
-                  currCircle.IsCollidingWithPoint(leftPoint) || currCircle.IsCollidingWithPoint(rightPoint);
-  if (shouldBounce)
-    currCircle.Bounce();
+  shouldBounceHorizontal = currCircle.IsCollidingWithPoint(topPoint) || currCircle.IsCollidingWithPoint(botPoint); 
+  shouldBounceVertical = currCircle.IsCollidingWithPoint(leftPoint) || currCircle.IsCollidingWithPoint(rightPoint);
+  if (shouldBounceHorizontal)
+    currCircle.BounceHorizontal();
+  if (shouldBounceVertical)
+    currCircle.BounceVertical();
+}
+
+window.onmousedown = function() {
+  ripple.Reset(mouseX, mouseY);
 }

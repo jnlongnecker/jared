@@ -4,24 +4,30 @@ class Circle {
     velocity;
     maxVelocity;
     mass;
-    baseColor = color("#310b0b");
-    hitColor = color("#f3f4ed");
+    baseColor;
+    hitColor;
 
     lerpAmount = 0;
 
-    Circle() {
-        this.radius = 5;
-        this.center = createVector(0, 0);
-    }
-
-    Circle(r, c, v) {
-        this.radius = r;
-        this.center = c;
-        this.velocity = v;
+    constructor() {
+        this.baseColor = color("#310b0b");
+        this.hitColor = color("#f3f4ed");
     }
 
     Bounce(collidingCircle) {
-        let normal = p5.Vector.rotate(this.velocity, 90);
+        let normal = p5.Vector.sub(collidingCircle.center, this.center);
+        this.velocity.reflect(normal);
+        this.lerpAmount = 1.05;
+    }
+
+    BounceHorizontal() {
+        let normal = createVector(0, 1);
+        this.velocity.reflect(normal);
+        this.lerpAmount = 1.05;
+    }
+
+    BounceVertical() {
+        let normal = createVector(1, 0);
         this.velocity.reflect(normal);
         this.lerpAmount = 1.05;
     }

@@ -8,14 +8,14 @@ function windowResized() {
   cWidth = document.documentElement.clientWidth * 0.5;
   cHeight = document.documentElement.clientHeight * 0.5;
   if (cWidth < cHeight)
-    cHeight *= 2;
+    cWidth *= 1.5;
   resizeCanvas(cWidth, cHeight);
   ripple.CanvasResized(cWidth, cHeight);
 }
 
 function setup() {
   if (cWidth < cHeight)
-    cHeight *= 2;
+    cWidth *= 1.5;
   var canvas = createCanvas(cWidth, cHeight);
   canvas.parent("sketch-holder");
   background("#f3f4ed");

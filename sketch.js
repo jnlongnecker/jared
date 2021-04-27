@@ -110,6 +110,6 @@ window.onclick = function() {
   ripple.Reset(mouseX, mouseY);
 }
 
-window.ontouchstart = function() {
+window.ontouchend = function() {
   ripple.Reset(mouseX, mouseY);
 }

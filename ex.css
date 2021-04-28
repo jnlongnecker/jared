@@ -9,8 +9,30 @@
 
 html {
     background: #f3f4ed;
-    color: #1f1f1f;
+    color: #310b0b;
     font-family: 'Noto Sans HK', sans-serif;
+}
+
+footer {
+    background: #eeb76b;
+    color: #9c3d54;
+    text-align:center;
+    font-size: small;
+    padding: 1em;
+}
+
+a {
+    color: #e2703a;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+    color:#26abff;
+}
+
+hr {
+    height: 0;
 }
 
 body {
@@ -22,10 +44,45 @@ body {
     font-style: italic;
 }
 
+.footer-item {
+    margin: 0 6% 0 6%;
+}
+
+.footer-break {
+    margin: 3em;
+}
+
+.info {
+    text-align: left;
+    padding-left: 25%;
+    padding-right: 25%;
+}
+
+.main-hr {
+    width: 50%;
+    margin: 1.5em 0 1.5em 25%;
+    border: 0;
+    height: 2px;
+}
+
+.white-section .main-hr {
+    background-image: linear-gradient(to right, #310b0b, rgba(0,0,0,0))
+}
+
+.red-section .main-hr {
+    background-image: linear-gradient(to right, #f3f4ed, rgba(0,0,0,0))
+}
+
 .red-section {
     padding: 5%;
     background: #310b0b;
     color: #f3f4ed;
+}
+
+.white-section {
+    padding: 5%;
+    background: #f3f4ed;
+    color: #310b0b;
 }
 
 #sketch-holder {

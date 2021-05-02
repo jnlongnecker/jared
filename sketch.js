@@ -5,6 +5,9 @@ var canvas;
 var ripple;
 var bubbleSounds;
 var audioPlayer;
+var numPops;
+
+var confetti;
 
 function windowResized() {
   cWidth = document.documentElement.clientWidth * 0.5;
@@ -23,6 +26,7 @@ function SetupAudio() {
 }
 
 function setup() {
+  numPops = 0;
   if (cWidth < cHeight)
     cWidth *= 1.5;
   var canvas = createCanvas(cWidth, cHeight);
@@ -53,6 +57,28 @@ function draw() {
     strokeWeight(1);
     circle(ripple.x, ripple.y, cRadius);
   }
+
+  
+  if (numPops % 4 == 3) {
+    confetti = new Confetti(mouseX, mouseY);
+    numPops++;
+  }
+
+  console.log(confetti);
+
+  if (confetti != null) {
+    fill("#310b0b");
+    stroke("#310b0b");
+    strokeWeight(1);
+    confetti.MoveParticles();
+    for (let particle of confetti.confettiList) {
+      push();
+      translate(particle.x, particle.y);
+      rotate(particle.rotationSpeed * frameCount);
+      rect(0, 0, particle.width, particle.height);
+      pop();
+    }
+  }
 }
 
 function HandleCircles() {
@@ -64,6 +90,7 @@ function HandleCircles() {
       }
     }
     if (ripple.Born() && circles[i].IsColliding(ripple.rippleCircle)) {
+      numPops++;
       circles[i].RandomizeHitColor();
       circles[i].Bounce(ripple.rippleCircle);
       PlayRandomPop();

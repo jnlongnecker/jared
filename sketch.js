@@ -3,6 +3,7 @@ var cWidth = document.documentElement.clientWidth * 0.5;
 var cHeight = document.documentElement.clientHeight * 0.5;
 var canvas;
 var ripple;
+var bubbleSounds;
 
 function windowResized() {
   cWidth = document.documentElement.clientWidth * 0.5;
@@ -11,6 +12,12 @@ function windowResized() {
     cWidth *= 1.5;
   resizeCanvas(cWidth, cHeight);
   ripple.CanvasResized(cWidth, cHeight);
+}
+
+function SetupAudio() {
+  bubbleSounds = [];
+  for (i = 1; i < 7; i++)
+    bubbleSounds.push(new Audio("Audio/pop" + i + ".mp3"));
 }
 
 function setup() {
@@ -22,6 +29,7 @@ function setup() {
   fill("#310b0b");
   noStroke();
   PopulateCircles(16);
+  SetupAudio();
   ripple = new Ripple();
 }
 
@@ -53,8 +61,10 @@ function HandleCircles() {
         circles[j].Bounce(circles[i]);
       }
     }
-    if (ripple.Born() && circles[i].IsColliding(ripple.rippleCircle))
+    if (ripple.Born() && circles[i].IsColliding(ripple.rippleCircle)) {
       circles[i].Bounce(ripple.rippleCircle);
+      PlayRandomPop();
+    }
     HandleEdges(circles[i]);
     circles[i].Move();
   }
@@ -104,6 +114,11 @@ function HandleEdges(currCircle) {
     currCircle.BounceHorizontal();
   if (shouldBounceVertical)
     currCircle.BounceVertical();
+}
+
+function PlayRandomPop() {
+  randomChoice = Math.floor(random(0, bubbleSounds.length - 1));
+  bubbleSounds[randomChoice].play();
 }
 
 window.onclick = function() {

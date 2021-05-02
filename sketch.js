@@ -132,4 +132,6 @@ window.onclick = function() {
 
 window.ontouchend = function() {
   ripple.Reset(mouseX, mouseY);
+  if (audioPlayer.src == null)
+    audioPlayer.play();
 }

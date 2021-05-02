@@ -87,7 +87,18 @@ class Circle {
 
     ColorActual() {
         this.lerpAmount -= 0.01;
+        if (this.lerpAmount <= 0)
+            this.hitColor = color("#f3f4ed");
         return lerpColor(this.baseColor, this.hitColor, this.lerpAmount);
+    }
+
+    RandomizeHitColor() {
+        let colorVals = [];
+        colorVals.push(random(0, 255));
+        colorVals.push(random(0, 255));
+        colorVals.push(random(0, 255));
+        colorVals.push(255);
+        this.hitColor = color(colorVals);
     }
 
 }

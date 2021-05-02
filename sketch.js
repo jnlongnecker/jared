@@ -64,6 +64,7 @@ function HandleCircles() {
       }
     }
     if (ripple.Born() && circles[i].IsColliding(ripple.rippleCircle)) {
+      circles[i].RandomizeHitColor();
       circles[i].Bounce(ripple.rippleCircle);
       PlayRandomPop();
     }
@@ -129,7 +130,6 @@ window.onclick = function() {
   if (audioPlayer.src == "")
   {
     audioPlayer.play();
-    console.log("played");
   }
 }
 
@@ -138,6 +138,5 @@ window.ontouchend = function() {
   if (audioPlayer.src == "")
   {
     audioPlayer.play();
-    console.log("played");
   }
 }

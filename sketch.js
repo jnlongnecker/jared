@@ -17,7 +17,7 @@ function windowResized() {
 
 function SetupAudio() {
   bubbleSounds = [];
-  audioPlayer = new Audio(undefined);
+  audioPlayer = new Audio();
   for (i = 1; i < 7; i++)
     bubbleSounds.push(new Audio("Audio/pop" + i + ".mp3"));
 }
@@ -126,12 +126,18 @@ function PlayRandomPop() {
 
 window.onclick = function() {
   ripple.Reset(mouseX, mouseY);
-  if (audioPlayer.src == undefined)
+  if (audioPlayer.src == "")
+  {
     audioPlayer.play();
+    console.log("played");
+  }
 }
 
 window.ontouchend = function() {
   ripple.Reset(mouseX, mouseY);
-  if (audioPlayer.src == undefined)
+  if (audioPlayer.src == "")
+  {
     audioPlayer.play();
+    console.log("played");
+  }
 }

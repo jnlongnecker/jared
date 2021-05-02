@@ -4,6 +4,7 @@ var cHeight = document.documentElement.clientHeight * 0.5;
 var canvas;
 var ripple;
 var bubbleSounds;
+var audioPlayer;
 
 function windowResized() {
   cWidth = document.documentElement.clientWidth * 0.5;
@@ -16,6 +17,7 @@ function windowResized() {
 
 function SetupAudio() {
   bubbleSounds = [];
+  audioPlayer = new Audio();
   for (i = 1; i < 7; i++)
     bubbleSounds.push(new Audio("Audio/pop" + i + ".mp3"));
 }
@@ -118,11 +120,14 @@ function HandleEdges(currCircle) {
 
 function PlayRandomPop() {
   randomChoice = Math.floor(random(0, bubbleSounds.length - 1));
-  bubbleSounds[randomChoice].play();
+  audioPlayer.src = bubbleSounds[randomChoice].src;
+  audioPlayer.play();
 }
 
 window.onclick = function() {
   ripple.Reset(mouseX, mouseY);
+  if (audioPlayer.src == null)
+    audioPlayer.play();
 }
 
 window.ontouchend = function() {

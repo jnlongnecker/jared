@@ -22,7 +22,7 @@ function SetupAudio() {
   bubbleSounds = [];
   audioPlayer = new Audio();
   for (i = 1; i < 7; i++) {
-    let file = "Audio/pop" + i + ".mp3";
+    let file = "../Audio/pop" + i + ".mp3";
     bubbleSounds.push(new Audio(file));
   }
 }

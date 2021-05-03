@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circles</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../ex.css" />
+
+    <script src="../p5.js"></script>
+</head>
+
+<body>
+    <div class="header">
+        <div class="header-left">
+            <span class="header-logo header-item">Physics</span>
+            <hr class="vertical-rule" />
+            <a class="header-item" href="../index.html">Home</a>
+        </div>
+        <div class="header-right"></div>
+    </div>
+
+    <div class="white-section">
+        <h1>Circles</h1>
+        <p class="detail">A simulation of bouncing circles with no friction</p>
+    </div>
+
+    <div class="red-section">
+        <div id="sketch-holder"></div>
+        <h3>Interactivity</h3>
+        <p class="detail">
+            Click on the canvas to bounce the circles away from the mouse point. Bounced circles will 
+            make a "pop" sound and change to a randomized color. Every 3rd "pop" makes confetti appear.
+        </p>
+    </div>
+
+    <div class = "white-section">
+        <h1>About This Project</h1>
+        <p class = "info">
+            This was the very first of all my projects on this site, so a lot of the process was simply learning the new technology
+            of the p5.js library. First, let's discuss how it works: There are 16 circles that get created when the window is loaded.
+            Each circle has a randomized position and radius, and to ensure circles do not get created within each other, each circle
+            is repositioned if it is inside another circle. This process repeats until no circles intersect. Circles are assigned a
+            mass based on their radius and an initial, random force is applied to each circle. On a collision, circles will bounce
+            according to where they impacted the other surface.
+        </p>
+        <hr class = "main-hr" />
+        <p class = "info">
+            This project went through several iterations where it began with no forces, added forces and then removed them again. I
+            did end up keeping the initalizing force to create velocities that correspond as expected to the size of the circles, but
+            that's it. The primary issue this project went through was how to get a convincing reflection on a bounce. When I 
+            finally got a convincing equation, collisions on an object from behind ended up looking nonsensical, so there needed to 
+            be an additional check and handling of all collisions from behind.
+        </p>
+        <p class = "info">
+            The collision normal that velocity is reflected over is actually quite simple, it's the difference of the two circles'
+            centers. When colliding from behind, the velocity heading is averaged with the collision heading to get the new heading. 
+            In order to ensure that circles do not speed up to hilariously impossible speed, the magnitude of all velocities is
+            kept constant.
+        </p>
+    </div>
+</body>
+
+<footer>
+    <a class="footer-item" href="https://github.com/jnlongnecker">GitHub</a>
+    <a class="footer-item" href="https://github.com/jnlongnecker/jared">Site Repo</a>
+    <br />
+    <p class="footer-item footer-break">Created By Jared Longnecker</p>
+    <br />
+    <span class="footer-item">©2021</span>
+</footer>
+
+<script src="../Site.js"></script>
+<script src="../PhysicsScripts/sketch.js"></script>
+<script src="../PhysicsScripts/Circle.js"></script>
+<script src="../PhysicsScripts/Ripple.js"></script>
+<script src="../PhysicsScripts/Confetti.js"></script>
+
+</html>

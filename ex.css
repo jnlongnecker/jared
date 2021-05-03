@@ -27,6 +27,7 @@ a {
 }
 
 a:hover {
+    cursor: pointer;
     text-decoration: underline;
     color:#26abff;
 }
@@ -40,8 +41,40 @@ body {
     margin: 0;
 }
 
+.header {
+    position: fixed;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 1em 0 1em 0;
+    box-shadow: 0 5px 5px rgb(0, 0, 0, .5);
+    background: #9c3d54;
+}
+
+.header-right {
+    text-align: right;
+    padding: 0 1em 0 1em;
+}
+
+.header-left {
+    text-align: left;
+    padding: 0 1em 0 1em;
+}
+
+.header-item {
+    color: #f3f4ed;
+    padding: 1em;
+}
+
+.header-logo {
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
 .detail {
     font-style: italic;
+    padding-left: 25%;
+    padding-right: 25%;
 }
 
 .footer-item {
@@ -83,6 +116,11 @@ body {
     padding: 5%;
     background: #f3f4ed;
     color: #310b0b;
+}
+
+.vertical-rule {
+    display: inline;
+    border-left: 1px solid #f3f4ed;
 }
 
 #sketch-holder {

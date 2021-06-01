@@ -1,4 +1,5 @@
 class Circle {
+    
     radius;
     center;
     velocity;
@@ -6,12 +7,16 @@ class Circle {
     mass;
     baseColor;
     hitColor;
+    startColor;
+    startHitColor;
 
     lerpAmount = 0;
 
     constructor() {
-        this.baseColor = color("#310b0b");
-        this.hitColor = color("#f3f4ed");
+        this.startColor = color( getComputedStyle( document.body ).getPropertyValue( '--palette-darkest' ) );
+        this.startHitColor = color( getComputedStyle( document.body ).getPropertyValue( '--palette-lightest' ) );
+        this.baseColor = this.startColor;
+        this.hitColor = this.startHitColor;
     }
 
     Bounce(collidingCircle) {
@@ -88,7 +93,7 @@ class Circle {
     ColorActual() {
         this.lerpAmount -= 0.01;
         if (this.lerpAmount <= 0)
-            this.hitColor = color("#f3f4ed");
+            this.hitColor = this.startHitColor;
         return lerpColor(this.baseColor, this.hitColor, this.lerpAmount);
     }
 

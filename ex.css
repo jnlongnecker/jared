@@ -1,35 +1,41 @@
-/*
-    Color Palette:
-        #f3f4ed
-        #eeb76b
-        #e2703a
-        #9c3d54
-        #310b0b
-*/
+:root {
+    --background: hsl(240, 2%, 10%);
+    --color: hsl(306, 23%, 91%);
+    --palette-darkest: #046582;
+    --palette-dark: #6e7582;
+    --palette-light: #bb8082;
+    --palette-lightest: #f39189;
+    --anchor: #26abff;
+}
+
+::-webkit-scrollbar {
+    width: 0;
+}
 
 html {
-    background: #f3f4ed;
-    color: #310b0b;
+    background: var(--background);
+    color: var(--color);
     font-family: 'Noto Sans HK', sans-serif;
+    scrollbar-width: none;
 }
 
 footer {
-    background: #eeb76b;
-    color: #9c3d54;
+    background: var(--palette-lightest);
+    color: var(--palette-darkest);
     text-align:center;
     font-size: small;
     padding: 1em;
 }
 
 a {
-    color: #e2703a;
+    color: var(--palette-light);
     text-decoration: none;
 }
 
 a:hover {
     cursor: pointer;
     text-decoration: underline;
-    color:#26abff;
+    color:var(--anchor);
 }
 
 hr {
@@ -39,16 +45,19 @@ hr {
 body {
     text-align: center;
     margin: 0;
+    padding: 0;
 }
 
 .header {
-    position: fixed;
+    position: sticky;
+    top: 0;
     display: flex;
     justify-content: space-between;
-    width: 100%;
+    width: 100vw;
     padding: 1em 0 1em 0;
-    box-shadow: 0 5px 5px rgb(0, 0, 0, .5);
-    background: #9c3d54;
+    color: var(--palette-lightest);
+    border-bottom: 1px solid var(--palette-lightest);
+    background: var(--background);
 }
 
 .header-right {
@@ -62,7 +71,7 @@ body {
 }
 
 .header-item {
-    color: #f3f4ed;
+    color: var(--white);
     padding: 1em;
 }
 
@@ -73,8 +82,6 @@ body {
 
 .detail {
     font-style: italic;
-    padding-left: 25%;
-    padding-right: 25%;
 }
 
 .footer-item {
@@ -87,40 +94,32 @@ body {
 
 .info {
     text-align: left;
-    padding-left: 25%;
-    padding-right: 25%;
 }
 
 .main-hr {
     width: 50%;
-    margin: 1.5em 0 1.5em 25%;
+    margin: 1.5em 0 1.5em 0;
     border: 0;
     height: 2px;
+    background-image: linear-gradient(to right, var(--palette-darkest), rgba(0,0,0,0))
 }
 
-.white-section .main-hr {
-    background-image: linear-gradient(to right, #310b0b, rgba(0,0,0,0))
+.section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    min-height: 100vh;
 }
 
-.red-section .main-hr {
-    background-image: linear-gradient(to right, #f3f4ed, rgba(0,0,0,0))
+.section-content {
+    width: clamp(45ch, 50%, 75ch);
 }
 
-.red-section {
-    padding: 5%;
-    background: #310b0b;
-    color: #f3f4ed;
-}
-
-.white-section {
-    padding: 5%;
-    background: #f3f4ed;
-    color: #310b0b;
-}
 
 .vertical-rule {
     display: inline;
-    border-left: 1px solid #f3f4ed;
+    border-left: 1px solid var(--white);
 }
 
 #sketch-holder {

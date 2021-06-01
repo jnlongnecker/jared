@@ -9,6 +9,9 @@ var numPops;
 
 var confetti;
 
+var paletteFillColor = getComputedStyle( document.body ).getPropertyValue( '--palette-darkest' );
+var paletteBackgroundColor = getComputedStyle( document.body ).getPropertyValue( '--background' );
+
 function windowResized() {
   cWidth = document.documentElement.clientWidth * 0.5;
   cHeight = document.documentElement.clientHeight * 0.5;
@@ -33,8 +36,8 @@ function setup() {
     cWidth *= 1.5;
   var canvas = createCanvas(cWidth, cHeight);
   canvas.parent("sketch-holder");
-  background("#f3f4ed");
-  fill("#310b0b");
+  background( paletteBackgroundColor );
+  fill( paletteFillColor );
   noStroke();
   PopulateCircles(16);
   SetupAudio();
@@ -42,7 +45,7 @@ function setup() {
 }
 
 function draw() {
-  background("#f3f4ed");
+  background( paletteBackgroundColor );
   HandleCircles();
   noStroke();
   for (i = 0; i < circles.length; i++) {
@@ -52,7 +55,7 @@ function draw() {
 
   if(ripple.IsAlive()) {
     noFill();
-    stroke("#310b0b");
+    stroke( paletteFillColor );
     strokeWeight(2.5);
     let cRadius = ripple.GetRadius();
     circle (ripple.x, ripple.y, 2 * cRadius);
@@ -67,8 +70,8 @@ function draw() {
   }
 
   if (confetti != null) {
-    fill("#310b0b");
-    stroke("#310b0b");
+    fill( paletteFillColor );
+    stroke( paletteFillColor );
     strokeWeight(1);
     confetti.MoveParticles();
     for (let particle of confetti.confettiList) {

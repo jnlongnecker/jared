@@ -20,8 +20,7 @@ html {
 }
 
 footer {
-    background: var(--palette-lightest);
-    color: var(--palette-darkest);
+    color: var(--palette-light);
     text-align:center;
     font-size: small;
     padding: 1em;
@@ -34,7 +33,6 @@ a {
 
 a:hover {
     cursor: pointer;
-    text-decoration: underline;
     color:var(--anchor);
 }
 
@@ -104,12 +102,17 @@ body {
     background-image: linear-gradient(to right, var(--palette-darkest), rgba(0,0,0,0))
 }
 
+#site-content {
+    scroll-snap-type: y proximity;
+}
+
 .section {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100vw;
     min-height: 100vh;
+    scroll-snap-align: start;
 }
 
 .section-content {
@@ -119,9 +122,10 @@ body {
 
 .vertical-rule {
     display: inline;
-    border-left: 1px solid var(--white);
+    border-left: 1px solid var(--palette-lightest);
 }
 
 #sketch-holder {
     margin: 0;
+    border: 2px solid var(--palette-darkest);
 }

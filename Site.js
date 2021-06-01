@@ -1,6 +1,8 @@
 window.onload = function () {
     let headerFile = "Site Pages/header.html";
     loadHTMLAt(headerFile, ".header-right");
+    loadHTMLAt("Site Pages/home.html", "#site-content");
+    loadSketchScript("CircleSketch.js");
 }
 
 let getHTMLFile = function(path, callback) {
@@ -13,8 +15,18 @@ let getHTMLFile = function(path, callback) {
     xml.send();
 };
 
-let loadHTMLAt = function(filePath, selector) {
-    getHTMLFile(filePath, function(responseHTML) {
-        document.querySelector(selector).innerHTML = responseHTML;
+let loadHTMLAt = function( filePath, selector ) {
+    getHTMLFile( filePath, function( responseHTML ) {
+        document.querySelector( selector ).innerHTML = responseHTML;
     });
+};
+
+let loadSketchScript = function( scriptPath ) {
+    let newScript = document.createElement( "script" );
+    newScript.setAttribute( "id", "active-sketch" );
+    newScript.setAttribute( "src", scriptPath );
+    document.body.appendChild( newScript ); 
+    newScript.onload = function() {
+        customSetup();
+    }
 };

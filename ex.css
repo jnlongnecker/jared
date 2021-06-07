@@ -115,7 +115,7 @@ body {
 }
 
 .section-content {
-    width: clamp(45ch, 50%, 75ch);
+    width: clamp(45ch, 50vw, 75ch);
 }
 
 

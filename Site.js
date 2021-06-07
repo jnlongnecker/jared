@@ -1,24 +1,25 @@
 window.onload = function () {
     let headerFile = "Site Pages/header.html";
-    loadHTMLAt(headerFile, "#header-holder");
-    loadHeaderScript();
-    loadHTMLAt("Site Pages/home.html", "#site-content");
-    loadSketchScript("PhysicsScripts/CircleSketch.js");
+    loadHTMLAt(headerFile, "#header-holder", loadHeaderScript );
+    
+    loadHTMLAt("Site Pages/home.html", "#site-content", loadSketchScript, "PhysicsScripts/CircleSketch.js" );
+    
 }
 
 let getHTMLFile = function(path, callback) {
     let xml = new XMLHttpRequest();
-    xml.open('GET', path, true);
+    xml.open( 'GET', path, true );
     xml.onreadystatechange = function() {
-        if (this.status == 200)
-            callback(this.responseText);
+        if ( this.readyState == 4 && this.status == 200 )
+            callback( this.responseText );
     }
     xml.send();
 };
 
-let loadHTMLAt = function( filePath, selector ) {
+let loadHTMLAt = function( filePath, selector, callback, cbParam ) {
     getHTMLFile( filePath, function( responseHTML ) {
         document.querySelector( selector ).innerHTML = responseHTML;
+        callback( cbParam );
     });
 };
 

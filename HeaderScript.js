@@ -15,8 +15,7 @@ let ItemClick = function() {
     let filePath = RetrieveDesiredPath( window.event.target );
     let scriptPath = RetrieveDesiredScript( window.event.target );
     console.log( "looking for: " + scriptPath);
-    loadHTMLAt( filePath, "#site-content" );
-    loadSketchScript( scriptPath );
+    loadHTMLAt( filePath, "#site-content", loadSketchScript, scriptPath );
 }
 
 let RetrieveDesiredPath = function( target ) {

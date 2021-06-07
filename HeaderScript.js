@@ -21,7 +21,7 @@ let ItemClick = function() {
 
 let RetrieveDesiredPath = function( target ) {
     let folderAndFile = RetrieveFolderAndFile( target );
-    let filePath = `${ folderAndFile[0] }Pages/${ folderAndFile[1] }.html`;
+    let filePath = `${ folderAndFile[0] }Pages/${ folderAndFile[1].toLowerCase() }.html`;
 
     return filePath;
 }
@@ -35,7 +35,7 @@ let RetrieveDesiredScript = function( target ) {
 
 let RetrieveFolderAndFile = function( target ) {
     let folder = target.parentElement.previousSibling.previousSibling.innerText;
-    let file = target.innerText.toLowerCase();
+    let file = target.innerText;
 
     return [folder, file];
 }

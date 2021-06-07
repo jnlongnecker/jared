@@ -47,8 +47,6 @@ body {
 }
 
 .header {
-    position: sticky;
-    top: 0;
     display: flex;
     justify-content: space-between;
     width: 100vw;
@@ -126,14 +124,20 @@ body {
     border-left: 1px solid var(--palette-lightest);
 }
 
+#header-holder {
+    position: sticky;
+    top: 0;
+}
+
 #sketch-holder {
     margin: 0;
     border: 2px solid var(--palette-darkest);
 }
 
-#fade {
-    height: 100vh;
+#fade-to {
+    height: 15vh;
     width: 100vw;
-    background-image: linear-gradient(var(--background) 15%, rgb(0,0,0,0) 15% 85%, var(--background) 85%);
+    background: var( --background );
     position: fixed;
+    top: 0;
 }

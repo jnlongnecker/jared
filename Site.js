@@ -1,8 +1,9 @@
 window.onload = function () {
     let headerFile = "Site Pages/header.html";
-    loadHTMLAt(headerFile, ".header-right");
+    loadHTMLAt(headerFile, "#header-holder");
+    loadHeaderScript();
     loadHTMLAt("Site Pages/home.html", "#site-content");
-    loadSketchScript("CircleSketch.js");
+    loadSketchScript("PhysicsScripts/CircleSketch.js");
 }
 
 let getHTMLFile = function(path, callback) {
@@ -22,6 +23,9 @@ let loadHTMLAt = function( filePath, selector ) {
 };
 
 let loadSketchScript = function( scriptPath ) {
+    let oldScript = document.querySelector( "#active-sketch" );
+    if ( oldScript )  oldScript.remove();
+
     let newScript = document.createElement( "script" );
     newScript.setAttribute( "id", "active-sketch" );
     newScript.setAttribute( "src", scriptPath );
@@ -30,3 +34,12 @@ let loadSketchScript = function( scriptPath ) {
         customSetup();
     }
 };
+
+let loadHeaderScript = function() {
+    let headerScript = document.createElement( "script" );
+    headerScript.setAttribute( "src", "HeaderScript.js" );
+    document.body.appendChild( headerScript );
+    headerScript.onload = function() {
+        LoadListeners();
+    }
+}

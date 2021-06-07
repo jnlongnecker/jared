@@ -129,7 +129,7 @@ body {
     top: 0;
 }
 
-#sketch-holder {
+.p5Canvas {
     margin: 0;
     border: 2px solid var(--palette-darkest);
 }

@@ -6,20 +6,21 @@ let LoadListeners = function() {
 
 let MenuClick = function() {
     let header = document.querySelector( ".header" );
+    let menuContent = document.querySelector( "#menu-content" );
+
     if ( header.classList.contains( "expanded-menu" ) ) {
-        header.classList.remove( "expanded-menu" );
-        header.classList.add( "collapsed-menu" );
+        menuContent.classList.remove( "fly-in" );
+        menuContent.classList.add( "fly-out" );
+        setTimeout( function() {
+            header.classList.remove( "expanded-menu" );
+            header.classList.add( "collapsed-menu" );
+        }, 1000 );
+        return;
     }
 
-    let menuContent = document.querySelector( "#menu-content" );
-    console.log( menuContent.classList );
-
+    header.classList.remove( "collapsed-menu" );
+    header.classList.add( "expanded-menu" );
     setTimeout( function() {
-        if ( menuContent.classList.contains( "fly-in" ) ) {
-            menuContent.classList.remove( "fly-in" );
-            menuContent.classList.add( "fly-out" );
-            return;
-        }
         menuContent.classList.remove( "fly-out" );
         menuContent.classList.add( "fly-in" );
     }, 1000 );

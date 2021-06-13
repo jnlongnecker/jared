@@ -1,3 +1,39 @@
+@keyframes fly-in {
+    0% {
+        left: 100vw;
+    }
+    100% {
+        left: 0;
+    }
+}
+
+@keyframes fly-out {
+    0% {
+        left: 0;
+    }
+    100% {
+        left: 100vw;
+    }
+}
+
+@keyframes expand-menu {
+    0% {
+        height: var(--header-collapsed-height);
+    }
+    100% {
+        height: var(--header-expanded-height);
+    }
+}
+
+@keyframes collapse-menu {
+    0% {
+        height: var(--header-expanded-height);
+    }
+    100% {
+        height: var(--header-collapsed-height);
+    }
+}
+
 :root {
     --background: hsl(240, 2%, 10%);
     --color: hsl(306, 23%, 91%);
@@ -6,6 +42,8 @@
     --palette-light: #bb8082;
     --palette-lightest: #f39189;
     --anchor: #26abff;
+    --header-collapsed-height: 2rem;
+    --header-expanded-height: 10rem;
 }
 
 ::-webkit-scrollbar {
@@ -47,9 +85,11 @@ body {
 }
 
 .header {
+    align-items: center;
     display: flex;
     justify-content: space-between;
     width: 100vw;
+    height: var(--header-collapsed-height);
     padding: 1em 0 1em 0;
     color: var(--palette-lightest);
     border-bottom: 1px solid var(--palette-lightest);
@@ -80,6 +120,14 @@ body {
     font-style: italic;
 }
 
+.fly-in {
+    animation: fly-in 1s forwards;
+}
+
+.fly-out {
+    animation: fly-out 1s forwards;
+}
+
 .footer-item {
     margin: 0 6% 0 6%;
 }
@@ -100,6 +148,26 @@ body {
     background-image: linear-gradient(to right, var(--palette-darkest), rgba(0,0,0,0))
 }
 
+.expanded-menu {
+    animation: expand-menu 1s forwards;
+}
+
+.collapsed-menu {
+    animation: collapse-menu 1s forwards;
+}
+
+#menu-content {
+    position: relative;
+    text-align: left;
+    display: flex;
+    padding: 0 2rem;
+    left: 100vw;
+}
+
+.menu-column {
+
+}
+
 #site-content {
     scroll-snap-type: y mandatory;
     overflow-y: scroll;
@@ -107,6 +175,7 @@ body {
 
 .section {
     display: flex;
+    flex-flow: row wrap;
     align-items: center;
     justify-content: center;
     width: 100vw;
@@ -116,8 +185,12 @@ body {
 
 .section-content {
     width: clamp(45ch, 50vw, 75ch);
+    display: block;
 }
 
+.other-content {
+    width: 100%;
+}
 
 .vertical-rule {
     display: inline;

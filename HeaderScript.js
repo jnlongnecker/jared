@@ -1,6 +1,7 @@
 let LoadListeners = function() {
     document.querySelector( "#menu" ).addEventListener( "click", MenuClick );
     document.querySelector( "#header-holder li" ).addEventListener( "click", ItemClick );
+    console.log( "listeners Loaded" );
 }
 
 let MenuClick = function() {
@@ -9,6 +10,20 @@ let MenuClick = function() {
         menu.classList.remove( "expanded-menu" );
         menu.classList.add( "collapsed-menu" );
     }
+
+    let menuContent = document.querySelector( "#menu-content" );
+    console.log( menuContent.classList );
+
+    setTimeout( function() {
+        if ( menuContent.classList.contains( "fly-in" ) ) {
+            menuContent.classList.remove( "fly-in" );
+            menuContent.classList.add( "fly-out" );
+            return;
+        }
+        menuContent.classList.remove( "fly-out" );
+        menuContent.classList.add( "fly-in" );
+    }, 1000 );
+    
 }
 
 let ItemClick = function() {

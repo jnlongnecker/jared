@@ -1,3 +1,15 @@
+:root {
+    --background: hsl(240, 2%, 10%);
+    --color: hsl(306, 23%, 91%);
+    --palette-darkest: #046582;
+    --palette-dark: #6e7582;
+    --palette-light: #bb8082;
+    --palette-lightest: #f39189;
+    --anchor: #26abff;
+    --header-collapsed-height: 2rem;
+    --header-expanded-height: 10rem;
+}
+
 @keyframes fly-in {
     0% {
         left: 100vw;
@@ -34,17 +46,7 @@
     }
 }
 
-:root {
-    --background: hsl(240, 2%, 10%);
-    --color: hsl(306, 23%, 91%);
-    --palette-darkest: #046582;
-    --palette-dark: #6e7582;
-    --palette-light: #bb8082;
-    --palette-lightest: #f39189;
-    --anchor: #26abff;
-    --header-collapsed-height: 2rem;
-    --header-expanded-height: 10rem;
-}
+
 
 ::-webkit-scrollbar {
     width: 0;

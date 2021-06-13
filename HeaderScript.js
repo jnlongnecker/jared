@@ -5,10 +5,10 @@ let LoadListeners = function() {
 }
 
 let MenuClick = function() {
-    let menu = document.querySelector( "#menu" );
-    if ( menu.classList.contains( "expanded-menu" ) ) {
-        menu.classList.remove( "expanded-menu" );
-        menu.classList.add( "collapsed-menu" );
+    let header = document.querySelector( ".header" );
+    if ( header.classList.contains( "expanded-menu" ) ) {
+        header.classList.remove( "expanded-menu" );
+        header.classList.add( "collapsed-menu" );
     }
 
     let menuContent = document.querySelector( "#menu-content" );

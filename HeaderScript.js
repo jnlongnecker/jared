@@ -5,26 +5,16 @@ let LoadListeners = function() {
 }
 
 let MenuClick = function() {
-    let header = document.querySelector( ".header" );
     let menuContent = document.querySelector( "#menu-content" );
 
-    if ( header.classList.contains( "expanded-menu" ) ) {
-        menuContent.classList.remove( "fly-in" );
-        menuContent.classList.add( "fly-out" );
-        setTimeout( function() {
-            header.classList.remove( "expanded-menu" );
-            header.classList.add( "collapsed-menu" );
-        }, 1000 );
+    if ( menuContent.classList.contains( "expanded-menu" ) ) {
+        menuContent.classList.remove( "expanded-menu" );
+        menuContent.classList.add( "collapsed-menu" );
         return;
     }
 
-    header.classList.remove( "collapsed-menu" );
-    header.classList.add( "expanded-menu" );
-    setTimeout( function() {
-        menuContent.classList.remove( "fly-out" );
-        menuContent.classList.add( "fly-in" );
-    }, 1000 );
-    
+    menuContent.classList.remove( "collapsed-menu" );
+    menuContent.classList.add( "expanded-menu" );    
 }
 
 let ItemClick = function() {

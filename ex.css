@@ -85,8 +85,6 @@ body {
     justify-content: space-between;
     width: 100vw;
     padding: 1em 0 1em 0;
-    color: var(--palette-lightest);
-    background: var(--background);
 }
 
 .header-right {
@@ -195,6 +193,8 @@ body {
     position: sticky;
     top: 0;
     border-bottom: 1px solid var(--palette-lightest);
+    color: var(--palette-lightest);
+    background: var(--background);
 }
 
 .p5Canvas {

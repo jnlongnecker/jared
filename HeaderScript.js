@@ -1,7 +1,12 @@
 let LoadListeners = function() {
     document.querySelector( "#menu" ).addEventListener( "click", MenuClick );
     document.querySelector( "#header-holder li" ).addEventListener( "click", ItemClick );
+    document.querySelector( "#home" ).addEventListener( "click" , HomeClick );
     console.log( "listeners Loaded" );
+}
+
+let HomeClick = function() {
+    loadHTMLAt("Site Pages/home.html", "#site-content", loadSketchScript, "PhysicsScripts/CircleSketch.js" );
 }
 
 let MenuClick = function() {

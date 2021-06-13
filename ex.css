@@ -111,14 +111,6 @@ body {
     font-style: italic;
 }
 
-.fly-in {
-    animation: fly-in 1s forwards;
-}
-
-.fly-out {
-    animation: fly-out 1s forwards;
-}
-
 .footer-item {
     margin: 0 6% 0 6%;
 }
@@ -154,10 +146,6 @@ body {
     padding: 0 2rem;
     left: 100vw;
     height: 0;
-}
-
-.menu-column {
-
 }
 
 #site-content {

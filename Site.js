@@ -30,10 +30,11 @@ let loadSketchScript = function( scriptPath ) {
     let newScript = document.createElement( "script" );
     newScript.setAttribute( "id", "active-sketch" );
     newScript.setAttribute( "src", scriptPath );
-    document.body.appendChild( newScript ); 
     newScript.onload = function() {
         customSetup();
     }
+    document.body.appendChild( newScript ); 
+    
 };
 
 let loadHeaderScript = function() {

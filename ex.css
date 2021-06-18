@@ -107,6 +107,11 @@ body {
     font-size: 1.2em;
 }
 
+.header-logo:hover {
+    cursor: pointer;
+    color: var(--anchor);
+}
+
 .detail {
     font-style: italic;
 }
@@ -146,6 +151,11 @@ body {
     padding: 0 2rem;
     left: 100vw;
     height: 0;
+}
+
+#menu-content li:hover {
+    cursor: pointer;
+    color: var(--anchor);
 }
 
 #site-content {

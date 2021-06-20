@@ -1,8 +1,9 @@
 let LoadListeners = function() {
     document.querySelector( "#menu" ).addEventListener( "click", MenuClick );
-    document.querySelector( "#header-holder li" ).addEventListener( "click", ItemClick );
+    document.querySelectorAll( "#header-holder li" ).forEach( function( element ) {
+        element.addEventListener( "click", ItemClick );
+    } );
     document.querySelector( "#home" ).addEventListener( "click" , HomeClick );
-    console.log( "listeners Loaded" );
 }
 
 let HomeClick = function() {

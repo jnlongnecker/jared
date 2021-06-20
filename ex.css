@@ -258,6 +258,7 @@ input:checked ~ .flippable {
     color: var(--palette-lightest);
     background: var(--background);
     z-index: 1;
+    overflow: hidden;
 }
 
 .p5Canvas {

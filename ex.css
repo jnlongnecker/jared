@@ -173,6 +173,10 @@ input:checked ~ .flippable {
     color: var(--anchor);
 }
 
+.menu-column {
+    margin: 0 2rem 0 0;
+}
+
 #site-content {
     scroll-snap-type: y mandatory;
     overflow-y: scroll;

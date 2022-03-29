@@ -75,6 +75,10 @@ function buildJsParts(js) {
     return jsParts;
 }
 
+/*
+ *  Fetches all custom component references and adds an import statement for them, returning the string of all imports.
+ *  @returntype: string
+ */
 function getDependencyImports(html) {
     let jworkRegex = /<jwork-[a-zA-Z0-9_]*?>/g
     let dependentComponents = html.match(jworkRegex);

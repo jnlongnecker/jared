@@ -9,6 +9,8 @@ app.use(express.static("public"));
 jwork.rebuild();
 let routes = jwork.getRoutes();
 
+console.log("Starting server");
+
 for (let route of routes) {
     if (route === 'index') {
         app.get("/", (req, res) => {

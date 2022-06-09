@@ -1,5 +1,6 @@
 let template = document.createElement("template");
-template.innerHTML = `<style>footer {
+template.innerHTML = `<link rel="stylesheet" href="../styles/common.css" />
+<style>footer {
   text-align: center;
   display: flex;
   flex-wrap: nowrap;
@@ -66,7 +67,6 @@ template.innerHTML = `<style>footer {
   color: var(--background);
 }
 </style>
-<link rel="stylesheet" href="../styles/common.css" />
 <footer>
     <a class="item-holder" href="https://github.com/jnlongnecker">
         <p class="item">GitHub</p>

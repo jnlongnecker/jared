@@ -1,12 +1,12 @@
 const fs = require("fs");
-const archiveDir = __dirname + "\\module-tracking.json";
-const componentDir = __dirname + "\\public\\components";
+const archiveDir = __dirname + "/module-tracking.json";
+const componentDir = __dirname + "/public/components";
 let archive = JSON.parse(fs.readFileSync(archiveDir, "utf8"));
 
 exports.getRoutes = () => {
     let routeList = [];
 
-    let pages = fs.readdirSync(__dirname + "\\pages");
+    let pages = fs.readdirSync(__dirname + "/pages");
     pages.forEach((file) => {
         file = file.substring(0, file.indexOf(".html"));
         routeList.push(file);
@@ -45,12 +45,12 @@ function rebuildModules(moduleList) {
  *  @returntype: undefined
  */
 function transferModules(moduleName) {
-    const moduleDir = __dirname + "\\src\\" + moduleName;
+    const moduleDir = __dirname + "/src/" + moduleName;
     let filesInModule = fs.readdirSync(moduleDir, "utf8");
     for (let file of filesInModule) {
         if (file.indexOf(moduleName) != -1) continue;
-        let fileContent = fs.readFileSync(moduleDir + "\\" + file, "utf8");
-        fs.writeFileSync(componentDir + "\\" + file, fileContent);
+        let fileContent = fs.readFileSync(moduleDir + "/" + file, "utf8");
+        fs.writeFileSync(componentDir + "/" + file, fileContent);
     }
 }
 
@@ -59,7 +59,7 @@ function transferModules(moduleName) {
  *  @returntype: undefined
  */
 function buildModule(moduleName) {
-    const filePath = __dirname + "\\src" + "\\" + moduleName + "\\" + moduleName;
+    const filePath = __dirname + "/src" + "/" + moduleName + "/" + moduleName;
     let htmlContent = fs.readFileSync(filePath + ".html", "utf8");
     let jsContent = fs.readFileSync(filePath + ".js", "utf8");
     let cssContent = "";
@@ -68,7 +68,7 @@ function buildModule(moduleName) {
     }
     let newJsContent = combineContent(jsContent, htmlContent, cssContent, moduleName);
 
-    fs.writeFileSync(componentDir + `\\jwork-${toKebabCase(moduleName)}.js`, newJsContent);
+    fs.writeFileSync(componentDir + `/jwork-${toKebabCase(moduleName)}.js`, newJsContent);
 }
 
 /*

@@ -151,7 +151,7 @@ a:visited:hover {
             <h2>Algorithms</h2>
             <ul>
                 <li><a href="/quadTree">QuadTree</a></li>
-                <li>Wave Function Collapse</li>
+                <li><a href="/wfc">Wave Function Collapse</a></li>
             </ul>
         </div>
     </div>

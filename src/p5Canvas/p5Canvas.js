@@ -1,6 +1,7 @@
 /* jwork flag no-shadow */
 import { circle } from "./circleSketch.js";
 import { quadTree } from "./quadTreeSketch.js";
+import { wfc } from "./wfcSketch.js";
 import { test } from "./testSketch.js";
 
 export default class P5Canvas extends HTMLElement {
@@ -23,6 +24,9 @@ export default class P5Canvas extends HTMLElement {
                 break;
             case "quadtree":
                 this.p5instance = new p5(quadTree, "canvas-holder");
+                break;
+            case "wfc":
+                this.p5instance = new p5(wfc, "canvas-holder");
                 break;
         }
     }

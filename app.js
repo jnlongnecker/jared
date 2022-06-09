@@ -3,7 +3,10 @@
 const express = require("express");
 const jwork = require("./jwork.js");
 const app = express();
-const port = 3001;
+let port = process.env.PORT;
+if (port == null || port == "") {
+    port = 3001;
+}
 
 app.use(express.static("public"));
 jwork.rebuild();

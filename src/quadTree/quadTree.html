@@ -1,0 +1,51 @@
+<jwork-header></jwork-header>
+<jwork-demo-content>
+    <span slot="header">Quad Tree</span>
+    <span slot="subheader">More circles, faster</span>
+    <jwork-p5-canvas sketch="quadtree" slot="canvas"></jwork-p5-canvas>
+    <span slot="blurb">A visualization of the QuadTree optimization</span>
+    <div slot="interactivity">
+        <h3 class="centered">Interactivity</h3>
+        <p class="section-content">
+            Fiddle with the settings to the right of the canvas to control various features of the QuadTree and the
+            simulation.
+        <ul>
+            <li>Enable QuadTree Visualization: Toggle on or off the visualization features.</li>
+            <li>Number of Circles: Control the number of circles in the simulation, up to 500.</li>
+            <li>QuadTree Capacity: Control the number of circles a quad will store before subdividing, up to 20.</li>
+        </ul>
+        </p>
+    </div>
+
+    <div slot="content">
+        <section>
+            <div class="section-content">
+                <h1 class="main-header">About This Project</h1>
+                <p class="info">
+                    In creating the Circles project, it was immediately obvious that the way collision was being checked
+                    was inefficient. The original check needed to compare every circle against every other circle, with
+                    a slight optimization being that you only need to check against the circles that haven't already
+                    checked against every other circle. And yeah that's all great, but clearly this can be optimized.
+                    Enter: The QuadTree.
+                </p>
+                <hr class="main-hr" />
+                <p class="info">
+                    A QuadTree is a data structure that divides a rectangular space into 4 subspaces (hence "Quad") and
+                    each of these subspaces tracks the entities within it. Whenever one of these Quads becomes "full",
+                    which is some somewhat arbitrary capacity, the Quad will divide itself into 4 more Quads. This makes
+                    accessing entities within a desired space an easy task, and results in checking against
+                    significantly fewer entities.
+                </p>
+                <p class="info">
+                    Most of the work for this project was moreso in the detection of whether certain shapes intersected
+                    rather than the actual tree itself. The simplest implementation of the tree only detects individual
+                    points. As we can clearly see, most things in the real world occupies more space than a single
+                    point, so it's fairly important to be able to tell when an object is partially included in a space.
+                    While this has little to do with the QuadTree as a data structure, it is important for the practical
+                    application of it.
+                </p>
+            </div>
+        </section>
+    </div>
+</jwork-demo-content>
+<jwork-footer></jwork-footer>

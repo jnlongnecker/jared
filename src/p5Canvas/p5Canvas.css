@@ -1,0 +1,19 @@
+input[type=range] {
+    -webkit-appearance: slider-vertical;
+}
+
+.holder {
+    display: inline-block;
+    font-size: 0px;
+}
+
+.controls {
+    display: flex;
+    flex-flow: row nowrap;
+    gap: 10px;
+}
+
+.control-col {
+    display: flex;
+    flex-direction: column;
+}

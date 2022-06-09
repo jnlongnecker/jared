@@ -15,14 +15,14 @@ class Ripple {
         this.framesAlive = 91;
         this.maxRadius = 25;
         this.rippleCircle = new Circle();
-        this.rippleCircle.center = createVector(this.x, this.y);
+        this.rippleCircle.center = p5.createVector(this.x, this.y);
         this.rippleCircle.velocity = this.rippleCircle.center;
         this.rippleCircle.radius = 10;
     }
 
     Reset(x, y) {
         this.framesAlive = 0;
-        this.rippleCircle.center = createVector(x, y);
+        this.rippleCircle.center = p5.createVector(x, y);
         this.SetVelocity();
         this.x = x;
         this.y = y;
@@ -48,7 +48,7 @@ class Ripple {
     }
 
     SetVelocity() {
-        let vel = createVector(this.rippleCircle.center);
+        let vel = p5.createVector(this.rippleCircle.center);
         if (vel.x > this.canvasWidth * 0.5) {
             vel.x -= this.canvasWidth;
         }

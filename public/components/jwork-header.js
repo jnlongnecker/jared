@@ -1,5 +1,6 @@
 let template = document.createElement("template");
-template.innerHTML = `<style>@keyframes expand-menu {
+template.innerHTML = `<link rel="stylesheet" href="../styles/common.css" />
+<style>@keyframes expand-menu {
   0% {
     height: 0;
     left: 100vw;
@@ -27,6 +28,27 @@ template.innerHTML = `<style>@keyframes expand-menu {
     height: 0;
     left: 100vw;
   }
+}
+
+li {
+  list-style: none;
+}
+
+a {
+  color: var(--white);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--anchor);
+}
+
+a:visited {
+  color: var(--white);
+}
+
+a:visited:hover {
+  color: var(--anchor);
 }
 
 .header {
@@ -73,6 +95,18 @@ template.innerHTML = `<style>@keyframes expand-menu {
   animation: collapse-menu 1s forwards;
 }
 
+#menu {
+  background: rgba(0,0,0,0);
+  border: 0;
+  font-size: 1rem;
+  padding-top: 0;
+}
+
+#menu:hover {
+  cursor: pointer;
+  color: var(--palette-light);
+}
+
 #menu-content {
   position: relative;
   text-align: left;
@@ -88,7 +122,7 @@ template.innerHTML = `<style>@keyframes expand-menu {
 }
 
 #header-holder {
-  position: sticky;
+  position: fixed;
   top: 0;
   border-bottom: 1px solid var(--palette-lightest);
   color: var(--palette-lightest);
@@ -97,27 +131,26 @@ template.innerHTML = `<style>@keyframes expand-menu {
   overflow: hidden;
 }
 </style>
-<link rel="stylesheet" href="../styles/common.css" />
 <header id="header-holder">
     <div class="header">
         <div class="header-left">
-            <span id="home" class="header-logo header-item">Jared's PG</span>
+            <span id="home" class="header-logo header-item"><a href="/">Jared's PG</a></span>
         </div>
         <div class="header-right">
-            <a id="menu" class="header-item">Menu</a>
+            <button id="menu" class="header-item">Menu</button>
         </div>
     </div>
     <div id="menu-content">
         <div class="menu-column">
             <h2>Physics</h2>
             <ul>
-                <li>Circles</li>
-                <li>QuadTree</li>
+                <li><a href="/circles">Circles</a></li>
             </ul>
         </div>
         <div class="menu-column">
             <h2>Algorithms</h2>
             <ul>
+                <li><a href="/quadTree">QuadTree</a></li>
                 <li>Wave Function Collapse</li>
             </ul>
         </div>
@@ -126,35 +159,36 @@ template.innerHTML = `<style>@keyframes expand-menu {
 
 export default class JworkHeader extends HTMLElement {
 
-    constructor() {
-        super();
-        this.template = this.attachShadow({ mode: "open" });
-        this.template.appendChild(template.content.cloneNode(true));
-        }
+	constructor() {
+		super();
+		this.template = this.attachShadow({ mode: "open" });
+		this.template.appendChild(template.content.cloneNode(true));
+	}
 
-    connectedCallback() {
-        this.template.querySelector("#menu").addEventListener("click", this.menuClick);
-        this.template.querySelectorAll("#header-holder li").forEach((element) => {
-            element.addEventListener("click", this.itemClick);
-        });
-    }
+	connectedCallback() {
+		this.template.querySelector("#menu").addEventListener("click", this.menuClick);
+		this.template.querySelectorAll("#header-holder li").forEach((element) => {
+			element.addEventListener("click", this.itemClick);
+		});
+	}
 
-    menuClick(event) {
-        let menu = event.target;
+	menuClick = (event) => {
+		let menu = this.template.querySelector("#menu-content");
 
-        if (menu.classList.contains("expanded-menu")) {
-            menu.classList.remove("expanded-menu");
-            menu.classList.add("collapsed-menu");
-            return;
-        }
+		if (menu.classList.contains("expanded-menu")) {
+			menu.classList.remove("expanded-menu");
+			menu.classList.add("collapsed-menu");
+			return;
+		}
 
-        menu.classList.remove("collapsed-menu");
-        menu.classList.add("expanded-menu");
-    }
+		menu.classList.remove("collapsed-menu");
+		menu.classList.add("expanded-menu");
+	}
 
-    itemClick(event) {
-        console.log(`${event.target.textContent} clicked.`);
-    }
+	itemClick = (event) => {
+		console.log(`${event.target.textContent} clicked.`);
+	}
+
 }
 
 customElements.define('jwork-header', JworkHeader);

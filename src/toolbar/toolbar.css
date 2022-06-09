@@ -1,0 +1,42 @@
+.toolbar {
+    position: absolute;
+    display: flex;
+    justify-content:start;
+}
+
+.head {
+    background: rgba(40,40,40,0.4);
+    color: var(--color);
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    height: 100%;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.head:hover {
+    cursor: pointer;
+}
+
+.content-holder {
+    background: rgba(40,40,40,0.2);
+    color: var(--color);
+    height: 100%;
+    max-width: 0px;
+    transition: 0.5s;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.expanded {
+    max-width: 100%;
+    transition: 0.5s;
+}
+
+.formatting {
+    padding: 1rem;
+}
+
+.hide {
+    display: none;
+}

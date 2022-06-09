@@ -3,6 +3,18 @@ const archiveDir = __dirname + "\\module-tracking.json";
 const componentDir = __dirname + "\\public\\components";
 let archive = JSON.parse(fs.readFileSync(archiveDir, "utf8"));
 
+exports.getRoutes = () => {
+    let routeList = [];
+
+    let pages = fs.readdirSync(__dirname + "\\pages");
+    pages.forEach((file) => {
+        file = file.substring(0, file.indexOf(".html"));
+        routeList.push(file);
+    });
+
+    return routeList;
+}
+
 /*
  *  Entry point for Jwork framework.
  *  @returntype: string
@@ -21,8 +33,23 @@ function rebuildModules(moduleList) {
 
     for (let module of moduleList) {
         buildModule(module);
+        transferModules(module);
     }
     fs.writeFileSync(archiveDir, JSON.stringify(archive));
+}
+
+/*
+ *  Transfers non-component modules to the component directory.
+ *  @returntype: undefined
+ */
+function transferModules(moduleName) {
+    const moduleDir = __dirname + "\\src\\" + moduleName;
+    let filesInModule = fs.readdirSync(moduleDir, "utf8");
+    for (let file of filesInModule) {
+        if (file.indexOf(moduleName) != -1) continue;
+        let fileContent = fs.readFileSync(moduleDir + "\\" + file, "utf8");
+        fs.writeFileSync(componentDir + "\\" + file, fileContent);
+    }
 }
 
 /*
@@ -39,7 +66,7 @@ function buildModule(moduleName) {
     }
     let newJsContent = combineContent(jsContent, htmlContent, cssContent, moduleName);
 
-    fs.writeFileSync(componentDir + `\\jwork-${moduleName}.js`, newJsContent);
+    fs.writeFileSync(componentDir + `\\jwork-${toKebabCase(moduleName)}.js`, newJsContent);
 }
 
 /*
@@ -47,18 +74,20 @@ function buildModule(moduleName) {
  *  @returntype: string
  */
 function combineContent(js, html, css, moduleName) {
-    let styles = `<style>${css}</style>\n<link rel="stylesheet" href="../styles/common.css" />\n`;
+    js = js.replace(/ {4}/g, "\t");
+    let styles = `<link rel="stylesheet" href="../styles/common.css" />\n<style>${css}</style>\n`;
     let htmlContent = styles + html;
     let dependencyImports = getDependencyImports(html);
     let jsParts = buildJsParts(js);
+    let useShadow = js.indexOf("jwork flag no-shadow") == -1;
 
     let jsContent = dependencyImports + "\n";
     jsContent += jsParts.imports;
     jsContent += `\n\nlet template = document.createElement("template");\ntemplate.innerHTML = \`${htmlContent}\`;`
     jsContent += "\n\nexport default class Jwork" + capitalize(moduleName) + " extends HTMLElement {\n";
-    jsContent += writeConstructor(jsParts.constructorContent);
-    jsContent += jsParts.classContent.trimEnd();
-    jsContent += `\n}\n\ncustomElements.define('jwork-${moduleName.toLowerCase()}', Jwork${capitalize(moduleName)});`
+    jsContent += writeConstructor(jsParts.constructorContent, useShadow);
+    jsContent += writeBody(jsParts.classContent, useShadow);
+    jsContent += `\n}\n\ncustomElements.define('jwork-${toKebabCase(moduleName)}', Jwork${capitalize(moduleName)});`
     return jsContent.trim();
 }
 
@@ -80,8 +109,9 @@ function buildJsParts(js) {
  *  @returntype: string
  */
 function getDependencyImports(html) {
-    let jworkRegex = /<jwork-[a-zA-Z0-9_]*?>/g
+    let jworkRegex = /<jwork-[a-zA-Z0-9_-]*?(>| )/g
     let dependentComponents = html.match(jworkRegex);
+    if (!dependentComponents) return "";
 
     // Remove duplicates
     let dependencies = dependentComponents.filter((item, index, array) => array.indexOf(item) == index);
@@ -89,6 +119,7 @@ function getDependencyImports(html) {
     let importString = "";
     for (let component of dependencies) {
         let componentName = component.substring(1, component.length - 1);
+        console.log(componentName);
         importString += `import ${toPascalCase(componentName)} from "./${componentName}.js";\n`
     }
     return importString.substring(0, importString.length - 1);
@@ -119,7 +150,7 @@ function getImportsString(js) {
  *  @returntype: string
  */
 function getConstructorContent(js) {
-    if (js.indexOf("constructor(") == -1) return "}";
+    if (js.indexOf("constructor(") == -1) return "\t}";
 
     const constructorRegex = /constructor.*?\{.*?(\{.*?\}.*?)*\}/s;
     let fullConstructor = js.match(constructorRegex)[0];
@@ -135,29 +166,39 @@ function getConstructorContent(js) {
  *  @returntype: string
  */
 function getClassContent(js) {
-    const importRegex = /import.*;\s*\n/g;
-    const classRegex = /export default class.*{/g;
     const constructorRegex = /constructor.*?\{.*?(\{.*?\}.*?)*\}/s;
-    const endRegex = /}[^{}]*$/s;
-    js = js.replace(importRegex, "");
-    js = js.replace(classRegex, "");
-    js = js.replace(constructorRegex, "");
-    js = js.replace(endRegex, "");
+    let startIndex = js.indexOf("{", js.indexOf("export default class")) + 1;
+    let endIndex = js.lastIndexOf("}");
 
-    return js;
+    let classContent = js.substring(startIndex, endIndex);
+    return classContent.replace(constructorRegex, "");
 }
 
 /*
  *  Creates a string containing JS code for the constructor of a component
  *  @returntype: string
  */
-function writeConstructor(otherContent) {
+function writeConstructor(otherContent, useShadow) {
     return `
-    constructor() {
-        super();
-        this.template = this.attachShadow({ mode: "open" });
-        this.template.appendChild(template.content.cloneNode(true));
-        ${otherContent.trim()}\n`
+\tconstructor() {` + (useShadow ? `
+\t\tsuper();
+\t\tthis.template = this.attachShadow({ mode: "open" });
+\t\tthis.template.appendChild(template.content.cloneNode(true));
+${otherContent.trimEnd()}\n` : `
+\t\tsuper();
+${otherContent.trimEnd()}\n`);
+}
+
+function writeBody(bodyContent, useShadow) {
+    if (useShadow) return bodyContent;
+    let contentCreationString = "\n\t\tthis.appendChild(template.content.cloneNode(true));";
+
+    if (bodyContent.indexOf("connectedCallback()") == -1) {
+        return `\tconnectedCallback() {${contentCreationString}\n\t}\n` + bodyContent;
+    }
+
+    let startIndex = bodyContent.indexOf("{", bodyContent.indexOf("connectedCallback"));
+    return bodyContent.substring(0, startIndex + 1) + contentCreationString + bodyContent.substring(startIndex + 1);
 }
 
 /*
@@ -221,7 +262,17 @@ function getLastModifiedTimeOfModule(moduleName) {
 function toPascalCase(string) {
     let parts = string.split("-");
     if (!parts.length) return string;
-    return capitalize(parts[0]) + capitalize(parts[1]);
+    return parts.reduce((previous, current) => previous + capitalize(current));
+}
+
+/*
+ *  Returns the input string turned from PascalCase or camelCase to kebab-case.
+ *  @returntype: string
+ */
+function toKebabCase(string) {
+    string = string + " ";
+    let parts = string.match(/.*?[a-z0-9_](?=[A-Z ])/g);
+    return parts.reduce((previous, current) => previous.toLowerCase() + "-" + current.toLowerCase());
 }
 
 /*

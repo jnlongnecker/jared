@@ -1,0 +1,506 @@
+import { createElementWithText } from "../scripts/util.js";
+let p5;
+
+class Quad {
+    constructor(width, height, x, y) {
+        this.width = Math.floor(width);
+        this.height = Math.floor(height);
+        this.x = Math.floor(x);
+        this.y = Math.floor(y);
+    }
+
+    Contains(point) {
+        let withinX = point.x >= this.x - this.width && point.x < this.x + this.width;
+        let withinY = point.y >= this.y - this.height && point.y < this.y + this.height;
+
+        return withinX && withinY;
+    }
+
+    Intersects(object) {
+        let outsideX = object.x - object.width > this.x + this.width || object.x + object.width > this.x - this.width;
+        let outsideY = object.y - object.height > this.y + this.height || object.y + object.height > this.y - this.height;
+
+        return !(outsideX || outsideY);
+    }
+
+    IntersectsCircle(circle) {
+        let myCenter = p5.createVector(this.x, this.y);
+        let circleCenter = p5.createVector(circle.center.x, circle.center.y);
+
+        let distanceVector = myCenter.sub(circleCenter);
+        let distance = myCenter.dist(circleCenter);
+        distanceVector = distanceVector.normalize().mult(Math.min(distance, circle.radius));
+        let targetPoint = circleCenter.add(distanceVector);
+
+        return this.Contains(targetPoint);
+    }
+}
+
+class QuadTree {
+
+    constructor(quad, capacity) {
+        this.quad = quad;
+        this.capacity = capacity;
+        this.data = [];
+        this.topLeft = this.topRight = this.botLeft = this.botRight = null;
+    }
+
+    Build(dataList) {
+        for (let newData of dataList) {
+            this.Insert(newData);
+        }
+    }
+
+    Insert(newData) {
+        if (!this.quad.Contains(newData.center))
+            return;
+
+        if (this.data.length < this.capacity) {
+            this.data.push(newData);
+            return;
+        }
+
+        if (this.topLeft === null) {
+            this.Subdivide();
+        }
+
+        this.topLeft.Insert(newData);
+        this.topRight.Insert(newData);
+        this.botLeft.Insert(newData);
+        this.botRight.Insert(newData);
+    }
+
+    Subdivide() {
+        let subWidth = this.quad.width * 0.5;
+        let subHeight = this.quad.height * 0.5;
+
+        let tl = new Quad(subWidth, subHeight, this.quad.x - subWidth, this.quad.y - subHeight);
+        let tr = new Quad(subWidth + 1, subHeight, this.quad.x + subWidth, this.quad.y - subHeight);
+        let bl = new Quad(subWidth, subHeight + 1, this.quad.x - subWidth, this.quad.y + subHeight);
+        let br = new Quad(subWidth + 1, subHeight + 1, this.quad.x + subWidth, this.quad.y + subHeight);
+
+        this.topLeft = new QuadTree(tl, this.capacity);
+        this.topRight = new QuadTree(tr, this.capacity);
+        this.botLeft = new QuadTree(bl, this.capacity);
+        this.botRight = new QuadTree(br, this.capacity);
+
+        for (let someData of this.data) {
+            this.topLeft.Insert(someData);
+            this.topRight.Insert(someData);
+            this.botLeft.Insert(someData);
+            this.botRight.Insert(someData);
+        }
+        this.data = [];
+        this.capacity = 0;
+    }
+
+    Query(distance, center) {
+        let bounds = new Circle();
+        bounds.radius = distance;
+        bounds.center = center;
+
+        return this.RetrievePointsIn(bounds);
+    }
+
+    RetrievePointsIn(bounds, retData) {
+        if (!retData)
+            retData = [];
+
+        if (!this.quad.IntersectsCircle(bounds))
+            return retData;
+
+        if (this.topLeft === null) {
+            for (let someData of this.data) {
+                if (bounds.IsColliding(someData))
+                    retData.push(someData);
+            }
+            return retData;
+        }
+
+        this.topLeft.RetrievePointsIn(bounds, retData);
+        this.topRight.RetrievePointsIn(bounds, retData);
+        this.botLeft.RetrievePointsIn(bounds, retData);
+        this.botRight.RetrievePointsIn(bounds, retData);
+
+        return retData;
+    }
+
+    Display() {
+        p5.strokeWeight(1);
+        p5.noFill();
+        p5.rectMode(p5.CENTER);
+        p5.rect(this.quad.x, this.quad.y, this.quad.width * 2, this.quad.height * 2);
+
+        if (this.topLeft !== null) {
+            this.topLeft.Display();
+            this.topRight.Display();
+            this.botLeft.Display();
+            this.botRight.Display();
+        }
+    }
+}
+
+class TimerQueue {
+    constructor(size) {
+        this.maxSize = size;
+        this.elements = Array(size);
+        this.head = 0;
+        this.tail = 0;
+    }
+
+    Push(newElement) {
+        if (this.IncrementTail() == this.head) {
+            this.Pop();
+        }
+        this.elements[this.tail] = newElement;
+        this.tail = this.IncrementTail();
+    }
+
+    Pop() {
+        if (this.head == this.tail)
+            return null;
+
+        let retValue = this.elements[this.head];
+        this.head = this.IncrementHead();
+        return retValue;
+    }
+
+    IncrementTail() {
+        return (this.tail + 1) % this.maxSize;
+    }
+
+    IncrementHead() {
+        return (this.head + 1) % this.maxSize;
+    }
+
+    Average() {
+        let count = 0;
+        let sum = 0;
+        for (let value of this.elements) {
+            sum += value;
+            count++;
+        }
+        return sum / count;
+    }
+}
+
+class Circle {
+
+    radius;
+    center;
+    velocity;
+    maxVelocity;
+    mass;
+    baseColor;
+    hitColor;
+    startColor;
+    startHitColor;
+
+    lerpAmount = 0;
+
+    constructor() {
+        this.startColor = p5.color(getComputedStyle(document.body).getPropertyValue('--palette-darkest'));
+        this.startHitColor = p5.color(getComputedStyle(document.body).getPropertyValue('--palette-lightest'));
+        this.baseColor = this.startColor;
+        this.hitColor = this.startHitColor;
+    }
+
+    Bounce(collidingCircle) {
+        this.lerpAmount = 1.05;
+
+        //If the circle is hit from behind, average the current heading and heading of collision
+        if (this.HitFromBehind(collidingCircle)) {
+            let center = this.center.copy();
+            let collisionVector = center.sub(collidingCircle.center);
+            let collisionHeading = collisionVector.heading();
+            let newHeading = (this.velocity.heading() + collisionHeading) * 0.5;
+            this.velocity.setHeading(newHeading);
+            return;
+        }
+
+        let center = collidingCircle.center.copy();
+
+        //If not, reflect from the point of contact
+        let normal = center.sub(this.center);
+        this.velocity.reflect(normal);
+    }
+
+    BounceHorizontal() {
+        let normal = p5.createVector(0, 1);
+        this.velocity.reflect(normal);
+        this.lerpAmount = 1.05;
+    }
+
+    BounceVertical() {
+        let normal = p5.createVector(1, 0);
+        this.velocity.reflect(normal);
+        this.lerpAmount = 1.05;
+    }
+
+    HitFromBehind(collidingCircle) {
+        let center = this.center.copy();
+        let collisionVector = center.sub(collidingCircle.center);
+        let collisionHeading = collisionVector.heading();
+        let travelHeading = this.velocity.heading();
+
+        return p5.abs(collisionHeading - travelHeading) < p5.HALF_PI;
+    }
+
+    IsColliding(otherCircle) {
+        let distance = this.center.dist(otherCircle.center);
+        return distance <= this.radius + otherCircle.radius;
+    }
+
+    IsCollidingWithPoint(point) {
+        let distance = this.center.dist(point);
+        return distance <= this.radius;
+    }
+
+    IsInside(otherCircle) {
+        let distance = this.center.dist(otherCircle.center);
+        return distance + 2 <= this.radius + otherCircle.radius;
+    }
+
+    Move() {
+        this.center = this.center.add(this.velocity);
+    }
+
+    ApplyForce(force) {
+        force = force.div(this.mass);
+        this.velocity = this.velocity.add(force);
+        if (this.velocity.mag() > this.maxVelocity) {
+            this.velocity = this.velocity.normalize();
+            this.velocity = this.velocity.mult(this.maxVelocity);
+        }
+
+    }
+
+    Force() {
+        let acc = this.velocity;
+        return p5.Vector.mult(acc, this.mass);
+    }
+
+    ColorActual() {
+        this.lerpAmount -= 0.01;
+        if (this.lerpAmount <= 0)
+            this.hitColor = this.startHitColor;
+        return p5.lerpColor(this.baseColor, this.hitColor, this.lerpAmount);
+    }
+
+    RandomizeHitColor() {
+        let colorVals = [];
+        colorVals.push(p5.random(0, 255));
+        colorVals.push(p5.random(0, 255));
+        colorVals.push(p5.random(0, 255));
+        colorVals.push(255);
+        this.hitColor = p5.color(colorVals);
+    }
+
+}
+
+export const quadTree = sketch => {
+    p5 = sketch;
+    var circles;
+    var cWidth = document.documentElement.clientWidth * 0.5;
+    var cHeight = document.documentElement.clientHeight * 0.5;
+    var canvas;
+
+    let qTree;
+    let capacity;
+    let showVisualization = true;
+    let numCircles;
+    let timer;
+
+    var tQueue = new TimerQueue(40);
+
+    var paletteFillColor = getComputedStyle(document.body).getPropertyValue('--palette-darkest');
+    var paletteBackgroundColor = getComputedStyle(document.body).getPropertyValue('--background');
+
+    sketch.windowResized = () => {
+        cWidth = document.documentElement.clientWidth * 0.5;
+        cHeight = document.documentElement.clientHeight * 0.5;
+        if (cWidth < cHeight)
+            cWidth *= 1.5;
+        p5.resizeCanvas(cWidth, cHeight);
+    }
+
+    sketch.setup = () => {
+        PopulateTools();
+        PopulateCircles(numCircles.value);
+        cWidth = document.documentElement.clientWidth * 0.5;
+        cHeight = document.documentElement.clientHeight * 0.5;
+        if (cWidth < cHeight)
+            cWidth *= 1.5;
+        p5.createCanvas(cWidth, cHeight);
+    }
+
+    sketch.draw = () => {
+        p5.background(paletteBackgroundColor);
+        p5.noStroke();
+
+        // Begin tracking time performance
+        var start = window.performance.now();
+
+        // Build the QuadTree
+        qTree = new QuadTree(new Quad(cWidth * 0.5, cHeight * 0.5, cWidth * 0.5, cHeight * 0.5), capacity.value);
+        qTree.Build(circles);
+
+        // Handle circle collision and movement
+        HandleCircles();
+
+        // Render the circles
+        for (let i = 0; i < circles.length; i++) {
+            p5.fill(circles[i].ColorActual());
+            p5.circle(circles[i].center.x, circles[i].center.y, 2 * circles[i].radius);
+        }
+
+        // End time tracking
+        var end = window.performance.now();
+
+        // Display the QuadTree, if visualization is turned on
+        if (showVisualization.checked) {
+            p5.stroke(paletteFillColor);
+            qTree.Display();
+        }
+
+        tQueue.Push(end - start);
+        timer.innerHTML = `Avg Execution Time: ${tQueue.Average().toFixed(2)}ms`;
+    }
+
+    function HandleCircles() {
+        // Iterate through the list of circles
+        for (let i = 0; i < circles.length; i++) {
+            let currCircle = circles[i];
+
+            // Determine which circles to check and check collision
+            let distance = currCircle.radius + currCircle.velocity.mag();
+            let circlesToCheck = qTree.Query(distance, currCircle.center);
+            for (let j = 0; j < circlesToCheck.length; j++) {
+                if (currCircle === circlesToCheck[j])
+                    continue;
+                if (currCircle.IsColliding(circlesToCheck[j])) {
+                    currCircle.Bounce(circlesToCheck[j]);
+                    circlesToCheck[j].Bounce(currCircle);
+                }
+            }
+
+            // Handle collision on canvas edges
+            HandleEdges(circles[i]);
+
+            // Move the circle
+            currCircle.Move();
+        }
+    }
+
+    function PopulateCircles(numCircles) {
+        circles = [];
+
+        for (let i = 0; i < numCircles; i++) {
+            circles.push(CreateCircle());
+        }
+
+        let internalCircles = true;
+        while (internalCircles) {
+            internalCircles = false;
+            for (let i = 0; i < numCircles; i++) {
+                for (let j = i + 1; j < numCircles; j++) {
+                    if (circles[i].IsInside(circles[j])) {
+                        internalCircles = true;
+                        circles[i].center = p5.createVector(p5.random(31, cWidth - 31), p5.random(31, cHeight - 31));
+                    }
+                }
+            }
+        }
+    }
+
+    function CreateCircle() {
+        let newCircle = new Circle();
+
+        let minRadius = numCircles.value > 75 ? 3 : 6;
+        let maxRadius = numCircles.value > 75 ? 10 : 30;
+
+        newCircle.radius = p5.random(minRadius, maxRadius);
+        newCircle.center = p5.createVector(p5.random(31, cWidth - 31), p5.random(31, cHeight - 31));
+        newCircle.velocity = p5.createVector(0, 0);
+        newCircle.maxVelocity = p5.random(1, 6);
+        newCircle.mass = newCircle.radius;
+        newCircle.ApplyForce(p5.createVector(p5.random(-4, 4), p5.random(-4, 4)));
+
+        return newCircle;
+    }
+
+    function HandleEdges(currCircle) {
+        let topPoint = p5.createVector(currCircle.center.x, cHeight);
+        let botPoint = p5.createVector(currCircle.center.x, 0);
+        let leftPoint = p5.createVector(0, currCircle.center.y);
+        let rightPoint = p5.createVector(cWidth, currCircle.center.y);
+        let shouldBounceHorizontal = currCircle.IsCollidingWithPoint(topPoint) || currCircle.IsCollidingWithPoint(botPoint);
+        let shouldBounceVertical = currCircle.IsCollidingWithPoint(leftPoint) || currCircle.IsCollidingWithPoint(rightPoint);
+        if (shouldBounceHorizontal)
+            currCircle.BounceHorizontal();
+        if (shouldBounceVertical)
+            currCircle.BounceVertical();
+    }
+
+    function UpdateSettings() {
+        PopulateCircles(numCircles.value);
+    }
+
+    function PopulateTools() {
+        let toolbar = document.querySelector("jwork-toolbar");
+        let slotDiv = document.createElement("div");
+        slotDiv.setAttribute("slot", "content");
+
+        let containerDiv = document.createElement("div");
+        containerDiv.classList.add("controls");
+
+        let controlDiv1 = document.createElement("div");
+        controlDiv1.classList.add("control-col");
+
+        let cap = createElementWithText("span", "Capacity");
+        let slider1 = document.createElement("input");
+        slider1.setAttribute("orient", "vertical");
+        slider1.setAttribute("type", "range");
+        slider1.setAttribute("min", "2");
+        slider1.setAttribute("max", "10");
+
+        capacity = slider1;
+
+        controlDiv1.appendChild(cap);
+        controlDiv1.appendChild(slider1);
+
+        let controlDiv2 = document.createElement("div");
+        controlDiv2.classList.add("control-col");
+
+        let circles = createElementWithText("span", "Circles");
+        let slider2 = document.createElement("input");
+        slider2.setAttribute("orient", "vertical");
+        slider2.setAttribute("type", "range");
+        slider2.setAttribute("min", "5");
+        slider2.setAttribute("max", "200");
+        slider2.addEventListener("change", UpdateSettings);
+
+        numCircles = slider2;
+
+        controlDiv2.appendChild(circles);
+        controlDiv2.appendChild(slider2);
+
+        let vis = createElementWithText("span", "Show Visualization");
+        let br = document.createElement("br");
+        let chk = document.createElement("input");
+        chk.setAttribute("type", "checkbox");
+        showVisualization = chk;
+        let time = createElementWithText("p", "Time");
+        timer = time;
+
+        containerDiv.appendChild(controlDiv1);
+        containerDiv.appendChild(controlDiv2);
+        slotDiv.appendChild(containerDiv);
+        slotDiv.appendChild(vis);
+        slotDiv.appendChild(br);
+        slotDiv.appendChild(chk);
+        slotDiv.appendChild(time);
+
+        toolbar.appendChild(slotDiv);
+    }
+}

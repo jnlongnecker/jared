@@ -6,8 +6,8 @@ export default class Header extends HTMLElement {
         });
     }
 
-    menuClick(event) {
-        let menu = event.target;
+    menuClick = (event) => {
+        let menu = this.template.querySelector("#menu-content");
 
         if (menu.classList.contains("expanded-menu")) {
             menu.classList.remove("expanded-menu");
@@ -19,7 +19,7 @@ export default class Header extends HTMLElement {
         menu.classList.add("expanded-menu");
     }
 
-    itemClick(event) {
+    itemClick = (event) => {
         console.log(`${event.target.textContent} clicked.`);
     }
 }

@@ -28,6 +28,27 @@
   }
 }
 
+li {
+  list-style: none;
+}
+
+a {
+  color: var(--white);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--anchor);
+}
+
+a:visited {
+  color: var(--white);
+}
+
+a:visited:hover {
+  color: var(--anchor);
+}
+
 .header {
   display: flex;
   justify-content: space-between;
@@ -72,6 +93,18 @@
   animation: collapse-menu 1s forwards;
 }
 
+#menu {
+  background: rgba(0,0,0,0);
+  border: 0;
+  font-size: 1rem;
+  padding-top: 0;
+}
+
+#menu:hover {
+  cursor: pointer;
+  color: var(--palette-light);
+}
+
 #menu-content {
   position: relative;
   text-align: left;
@@ -87,7 +120,7 @@
 }
 
 #header-holder {
-  position: sticky;
+  position: fixed;
   top: 0;
   border-bottom: 1px solid var(--palette-lightest);
   color: var(--palette-lightest);

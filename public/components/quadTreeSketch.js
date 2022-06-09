@@ -1,6 +1,11 @@
 import { createElementWithText } from "../scripts/util.js";
 let p5;
 
+/*
+    Classes for the algorithm to work. Since I used a reference to P5 for this, I had to
+    contain them all in the same script file to access the reference that gets set by
+    the closure
+*/
 class Quad {
     constructor(width, height, x, y) {
         this.width = Math.floor(width);
@@ -300,35 +305,38 @@ class Circle {
 
 export const quadTree = sketch => {
     p5 = sketch;
-    var circles;
-    var cWidth = document.documentElement.clientWidth * 0.5;
-    var cHeight = document.documentElement.clientHeight * 0.5;
-    var canvas;
 
-    let qTree;
-    let capacity;
-    let showVisualization = true;
+    // User configurable options 
+    let qtCapacity;
+    let showVisualization;
     let numCircles;
     let timer;
 
-    var tQueue = new TimerQueue(40);
+    // Data structures for the Quad Tree and time reporting
+    let qTree;
+    let tQueue = new TimerQueue(40);
 
-    var paletteFillColor = getComputedStyle(document.body).getPropertyValue('--palette-darkest');
-    var paletteBackgroundColor = getComputedStyle(document.body).getPropertyValue('--background');
+    // Misc settings and tracking
+    let circleList;
+    let cWidth = document.documentElement.clientWidth * 0.5;
+    let cHeight = document.documentElement.clientHeight * 0.5;
+    let paletteFillColor = getComputedStyle(document.body).getPropertyValue('--palette-darkest');
+    let paletteBackgroundColor = getComputedStyle(document.body).getPropertyValue('--background');
 
+    // Resize the canvas when the window is resized
     sketch.windowResized = () => {
         cWidth = document.documentElement.clientWidth * 0.5;
         cHeight = document.documentElement.clientHeight * 0.5;
         if (cWidth < cHeight)
             cWidth *= 1.5;
         p5.resizeCanvas(cWidth, cHeight);
+        PopulateCircles(numCircles.value);
     }
 
+    // Setup the simulation
     sketch.setup = () => {
         PopulateTools();
         PopulateCircles(numCircles.value);
-        cWidth = document.documentElement.clientWidth * 0.5;
-        cHeight = document.documentElement.clientHeight * 0.5;
         if (cWidth < cHeight)
             cWidth *= 1.5;
         p5.createCanvas(cWidth, cHeight);
@@ -342,16 +350,16 @@ export const quadTree = sketch => {
         var start = window.performance.now();
 
         // Build the QuadTree
-        qTree = new QuadTree(new Quad(cWidth * 0.5, cHeight * 0.5, cWidth * 0.5, cHeight * 0.5), capacity.value);
-        qTree.Build(circles);
+        qTree = new QuadTree(new Quad(cWidth * 0.5, cHeight * 0.5, cWidth * 0.5, cHeight * 0.5), qtCapacity.value);
+        qTree.Build(circleList);
 
         // Handle circle collision and movement
         HandleCircles();
 
         // Render the circles
-        for (let i = 0; i < circles.length; i++) {
-            p5.fill(circles[i].ColorActual());
-            p5.circle(circles[i].center.x, circles[i].center.y, 2 * circles[i].radius);
+        for (let i = 0; i < circleList.length; i++) {
+            p5.fill(circleList[i].ColorActual());
+            p5.circle(circleList[i].center.x, circleList[i].center.y, 2 * circleList[i].radius);
         }
 
         // End time tracking
@@ -364,13 +372,13 @@ export const quadTree = sketch => {
         }
 
         tQueue.Push(end - start);
-        timer.innerHTML = `Avg Execution Time: ${tQueue.Average().toFixed(2)}ms`;
+        timer.innerHTML = `${tQueue.Average().toFixed(2)}ms`;
     }
 
     function HandleCircles() {
         // Iterate through the list of circles
-        for (let i = 0; i < circles.length; i++) {
-            let currCircle = circles[i];
+        for (let i = 0; i < circleList.length; i++) {
+            let currCircle = circleList[i];
 
             // Determine which circles to check and check collision
             let distance = currCircle.radius + currCircle.velocity.mag();
@@ -385,7 +393,7 @@ export const quadTree = sketch => {
             }
 
             // Handle collision on canvas edges
-            HandleEdges(circles[i]);
+            HandleEdges(circleList[i]);
 
             // Move the circle
             currCircle.Move();
@@ -393,10 +401,10 @@ export const quadTree = sketch => {
     }
 
     function PopulateCircles(numCircles) {
-        circles = [];
+        circleList = [];
 
         for (let i = 0; i < numCircles; i++) {
-            circles.push(CreateCircle());
+            circleList.push(CreateCircle());
         }
 
         let internalCircles = true;
@@ -404,9 +412,9 @@ export const quadTree = sketch => {
             internalCircles = false;
             for (let i = 0; i < numCircles; i++) {
                 for (let j = i + 1; j < numCircles; j++) {
-                    if (circles[i].IsInside(circles[j])) {
+                    if (circleList[i].IsInside(circleList[j])) {
                         internalCircles = true;
-                        circles[i].center = p5.createVector(p5.random(31, cWidth - 31), p5.random(31, cHeight - 31));
+                        circleList[i].center = p5.createVector(p5.random(31, cWidth - 31), p5.random(31, cHeight - 31));
                     }
                 }
             }
@@ -464,7 +472,7 @@ export const quadTree = sketch => {
         slider1.setAttribute("min", "2");
         slider1.setAttribute("max", "10");
 
-        capacity = slider1;
+        qtCapacity = slider1;
 
         controlDiv1.appendChild(cap);
         controlDiv1.appendChild(slider1);
@@ -490,6 +498,7 @@ export const quadTree = sketch => {
         let chk = document.createElement("input");
         chk.setAttribute("type", "checkbox");
         showVisualization = chk;
+        let timerText = createElementWithText("p", "Average Execution Time:");
         let time = createElementWithText("p", "Time");
         timer = time;
 
@@ -499,6 +508,7 @@ export const quadTree = sketch => {
         slotDiv.appendChild(vis);
         slotDiv.appendChild(br);
         slotDiv.appendChild(chk);
+        slotDiv.appendChild(timerText);
         slotDiv.appendChild(time);
 
         toolbar.appendChild(slotDiv);

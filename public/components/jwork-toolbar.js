@@ -66,6 +66,8 @@ export default class JworkToolbar extends HTMLElement {
 	connectedCallback() {
 		this.toolbar = this.template.querySelector(".toolbar");
 		this.parent = this.querySelector("*[slot=item]:first-child");
+
+		// Position the toolbar correctly on the parent
 		const cb = () => {
 			let newStyles = "";
 			let parent = this.parent;
@@ -78,14 +80,18 @@ export default class JworkToolbar extends HTMLElement {
 			this.toolbar.setAttribute("style", newStyles);
 			console.log("adjusting");
 		}
+
+		// Detect changes in the parent
 		let resizeObserver = new MutationObserver(cb);
 		resizeObserver.observe(this.parent, { childList: true, attributes: true });
 
+		// Hide the toolbar when nothing is slotted in for content
 		let contentSlot = this.template.querySelector("slot[name=content]");
 		contentSlot.onslotchange = () => {
 			this.template.querySelector(".toolbar").classList.remove("hide");
 		}
 
+		// Expand/reduce the toolbar on head click
 		this.template.querySelector(".head").addEventListener("click", () => {
 			this.template.querySelector(".content-holder").classList.toggle("expanded");
 		});

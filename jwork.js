@@ -31,6 +31,8 @@ exports.rebuild = () => {
 function rebuildModules(moduleList) {
     if (!moduleList.length) return;
 
+    console.log("Rebuilding modules");
+
     for (let module of moduleList) {
         buildModule(module);
         transferModules(module);

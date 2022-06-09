@@ -323,7 +323,10 @@ export const quadTree = sketch => {
     let paletteFillColor = getComputedStyle(document.body).getPropertyValue('--palette-darkest');
     let paletteBackgroundColor = getComputedStyle(document.body).getPropertyValue('--background');
 
-    // Resize the canvas when the window is resized
+    /*
+     *  Resize the canvas when the window is resized.
+     *  @returntype: undefined
+     */
     sketch.windowResized = () => {
         cWidth = document.documentElement.clientWidth * 0.5;
         cHeight = document.documentElement.clientHeight * 0.5;
@@ -333,7 +336,10 @@ export const quadTree = sketch => {
         PopulateCircles(numCircles.value);
     }
 
-    // Setup the simulation
+    /*
+     *  Setup the simulation.
+     *  @returntype: undefined
+     */
     sketch.setup = () => {
         PopulateTools();
         PopulateCircles(numCircles.value);
@@ -342,6 +348,10 @@ export const quadTree = sketch => {
         p5.createCanvas(cWidth, cHeight);
     }
 
+    /*
+     *  Redraw the canvas content frame.
+     *  @returntype: undefined
+     */
     sketch.draw = () => {
         p5.background(paletteBackgroundColor);
         p5.noStroke();
@@ -375,6 +385,10 @@ export const quadTree = sketch => {
         timer.innerHTML = `${tQueue.Average().toFixed(2)}ms`;
     }
 
+    /*
+     *  Handle circle collision and movement.
+     *  @returntype: undefined
+     */
     function HandleCircles() {
         // Iterate through the list of circles
         for (let i = 0; i < circleList.length; i++) {
@@ -400,6 +414,10 @@ export const quadTree = sketch => {
         }
     }
 
+    /*
+     *  Reset the circle list to a new list of the desired number of circles.
+     *  @returntype: undefined
+     */
     function PopulateCircles(numCircles) {
         circleList = [];
 
@@ -421,9 +439,14 @@ export const quadTree = sketch => {
         }
     }
 
+    /*
+     *  Builds an individual, randomized circle.
+     *  @returntype: Circle (object)
+     */
     function CreateCircle() {
         let newCircle = new Circle();
 
+        // Reduce the size of circles for large quantities of circles
         let minRadius = numCircles.value > 75 ? 3 : 6;
         let maxRadius = numCircles.value > 75 ? 10 : 30;
 
@@ -437,6 +460,10 @@ export const quadTree = sketch => {
         return newCircle;
     }
 
+    /*
+     *  Calculate collision along the edge of the canvas for the input circle.
+     *  @returntype: undefined
+     */
     function HandleEdges(currCircle) {
         let topPoint = p5.createVector(currCircle.center.x, cHeight);
         let botPoint = p5.createVector(currCircle.center.x, 0);
@@ -450,21 +477,36 @@ export const quadTree = sketch => {
             currCircle.BounceVertical();
     }
 
+    /*
+     *  Handler for the onchange event for the Circles slider to refresh the new number of desired circles.
+     *  @returntype: undefined
+     */
     function UpdateSettings() {
         PopulateCircles(numCircles.value);
     }
 
+    /*
+     *  Populate the toolbar with options and store those setting references.
+     *  @returntype: undefined
+     */
     function PopulateTools() {
+
+        // Retrieve a reference to the toolbar
         let toolbar = document.querySelector("jwork-toolbar");
+
+        // Create the div to hold the toolbar content to be slotted in
         let slotDiv = document.createElement("div");
         slotDiv.setAttribute("slot", "content");
 
+        // Create the div to hold the slider controls
         let containerDiv = document.createElement("div");
         containerDiv.classList.add("controls");
 
+        // Create the first slider control div
         let controlDiv1 = document.createElement("div");
         controlDiv1.classList.add("control-col");
 
+        // Create the slider control details
         let cap = createElementWithText("span", "Capacity");
         let slider1 = document.createElement("input");
         slider1.setAttribute("orient", "vertical");
@@ -472,14 +514,18 @@ export const quadTree = sketch => {
         slider1.setAttribute("min", "2");
         slider1.setAttribute("max", "10");
 
+        // Capacity of the quadtree retrieved from slider1
         qtCapacity = slider1;
 
+        // Add slider control details to the first slider control div
         controlDiv1.appendChild(cap);
         controlDiv1.appendChild(slider1);
 
+        // Create the second slider control div
         let controlDiv2 = document.createElement("div");
         controlDiv2.classList.add("control-col");
 
+        // Create the second slider control details
         let circles = createElementWithText("span", "Circles");
         let slider2 = document.createElement("input");
         slider2.setAttribute("orient", "vertical");
@@ -488,20 +534,26 @@ export const quadTree = sketch => {
         slider2.setAttribute("max", "200");
         slider2.addEventListener("change", UpdateSettings);
 
+        // Number of circles in the simulation retrieved from slider2
         numCircles = slider2;
 
+        // Add second slider control details to the second slider control div
         controlDiv2.appendChild(circles);
         controlDiv2.appendChild(slider2);
 
+        // Create the miscellaneous controls
         let vis = createElementWithText("span", "Show Visualization");
         let br = document.createElement("br");
         let chk = document.createElement("input");
         chk.setAttribute("type", "checkbox");
-        showVisualization = chk;
         let timerText = createElementWithText("p", "Average Execution Time:");
         let time = createElementWithText("p", "Time");
+
+        // Visualization display controlled by chk, execution time displayed by time
+        showVisualization = chk;
         timer = time;
 
+        // Add div details
         containerDiv.appendChild(controlDiv1);
         containerDiv.appendChild(controlDiv2);
         slotDiv.appendChild(containerDiv);
@@ -511,6 +563,7 @@ export const quadTree = sketch => {
         slotDiv.appendChild(timerText);
         slotDiv.appendChild(time);
 
+        // Slot in the toolbar controls
         toolbar.appendChild(slotDiv);
     }
-}
+};

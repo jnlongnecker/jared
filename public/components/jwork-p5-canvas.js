@@ -1,6 +1,7 @@
 import jworkToolbar from "./jwork-toolbar.js";
 import { circle } from "./circleSketch.js";
 import { quadTree } from "./quadTreeSketch.js";
+import { wfc } from "./wfcSketch.js";
 import { test } from "./testSketch.js";
 
 let template = document.createElement("template");
@@ -56,6 +57,9 @@ export default class JworkP5canvas extends HTMLElement {
 				break;
 			case "quadtree":
 				this.p5instance = new p5(quadTree, "canvas-holder");
+				break;
+			case "wfc":
+				this.p5instance = new p5(wfc, "canvas-holder");
 				break;
 		}
 	}

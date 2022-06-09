@@ -1,5 +1,10 @@
 let p5;
 
+/*
+    Classes for the algorithm to work. Since I used a reference to P5 for this, I had to
+    contain them all in the same script file to access the reference that gets set by
+    the closure
+*/
 class ConfettiParticle {
     velocity;
     x;
@@ -224,24 +229,28 @@ class Circle {
 }
 
 export const circle = sketch => {
-
-    console.log(sketch);
-
     p5 = sketch;
+
+    // Simulation variables
     var circles;
-    var cWidth = document.documentElement.clientWidth * 0.5;
-    var cHeight = document.documentElement.clientHeight * 0.5;
-    var canvas;
     var ripple;
-    var bubbleSounds;
-    var audioPlayer;
+    var confetti;
     var numPops;
 
-    var confetti;
+    // Audio controls
+    var bubbleSounds;
+    var audioPlayer;
 
+    // Canvas variables
+    var cWidth = document.documentElement.clientWidth * 0.5;
+    var cHeight = document.documentElement.clientHeight * 0.5;
     var paletteFillColor = getComputedStyle(document.body).getPropertyValue('--palette-darkest');
     var paletteBackgroundColor = getComputedStyle(document.body).getPropertyValue('--background');
 
+    /*
+     *  Resize the canvas when the window is resized.
+     *  @returntype: undefined
+     */
     sketch.windowResized = () => {
         cWidth = document.documentElement.clientWidth * 0.5;
         cHeight = document.documentElement.clientHeight * 0.5;
@@ -251,6 +260,10 @@ export const circle = sketch => {
         ripple.CanvasResized(cWidth, cHeight);
     }
 
+    /*
+     *  Gather audio information for interactivity.
+     *  @returntype: undefined
+     */
     function SetupAudio() {
         bubbleSounds = [];
         audioPlayer = new Audio();
@@ -260,6 +273,10 @@ export const circle = sketch => {
         }
     }
 
+    /*
+     *  Setup the simulation.
+     *  @returntype: undefined
+     */
     sketch.setup = () => {
         numPops = 0;
         PopulateCircles(16);
@@ -272,6 +289,10 @@ export const circle = sketch => {
         p5.createCanvas(cWidth, cHeight);
     }
 
+    /*
+     *  Redraw the canvas content frame.
+     *  @returntype: undefined
+     */
     sketch.draw = () => {
         p5.background(paletteBackgroundColor);
         HandleCircles();
@@ -312,6 +333,10 @@ export const circle = sketch => {
         }
     }
 
+    /*
+     *  Handle circle collision and movement.
+     *  @returntype: undefined
+     */
     function HandleCircles() {
         for (let i = 0; i < circles.length; i++) {
             for (let j = i + 1; j < circles.length; j++) {
@@ -331,6 +356,10 @@ export const circle = sketch => {
         }
     }
 
+    /*
+     *  Reset the circle list to a new list of the desired number of circles.
+     *  @returntype: undefined
+     */
     function PopulateCircles(numCircles) {
         circles = [];
 
@@ -352,6 +381,10 @@ export const circle = sketch => {
         }
     }
 
+    /*
+     *  Builds an individual, randomized circle.
+     *  @returntype: Circle (object)
+     */
     function CreateCircle() {
         let newCircle = new Circle();
         newCircle.radius = p5.random(6, 30);
@@ -364,6 +397,10 @@ export const circle = sketch => {
         return newCircle;
     }
 
+    /*
+     *  Calculate collision along the edge of the canvas for the input circle.
+     *  @returntype: undefined
+     */
     function HandleEdges(currCircle) {
         let topPoint = p5.createVector(currCircle.center.x, cHeight);
         let botPoint = p5.createVector(currCircle.center.x, 0);
@@ -377,12 +414,20 @@ export const circle = sketch => {
             currCircle.BounceVertical();
     }
 
+    /*
+     *  Selects a random loaded sound and plays it.
+     *  @returntype: undefined
+     */
     function PlayRandomPop() {
         let randomChoice = Math.floor(p5.random(0, bubbleSounds.length - 1));
         audioPlayer.src = bubbleSounds[randomChoice].src;
         audioPlayer.play();
     }
 
+    /*
+     *  Move the ripple to the cursor on click.
+     *  @returntype: undefined
+     */
     window.onclick = () => {
         ripple.Reset(p5.mouseX, p5.mouseY);
         if (audioPlayer.src == "") {
@@ -390,6 +435,10 @@ export const circle = sketch => {
         }
     }
 
+    /*
+     *  Move the ripple to the touch point.
+     *  @returntype: undefined
+     */
     window.ontouchend = () => {
         ripple.Reset(p5.mouseX, p5.mouseY);
         if (audioPlayer.src == "") {

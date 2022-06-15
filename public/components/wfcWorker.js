@@ -218,11 +218,12 @@ class OverlappingModel {
         this.remainingPatternsLastBuild = [];
         this.inProgress = [];
         this.done = false;
+        this.numPatterns = 0;
+
+        this.texture = texture;
         this.periodicOutput = periodicOutput;
         this.periodicInput = periodicInput;
-        this.texture = texture;
         this.samplePixels = samplePixels;
-        this.numPatterns = 0;
         this.width = outputWidth;
         this.height = outputHeight;
 
@@ -267,7 +268,6 @@ class OverlappingModel {
         }
 
         this.numPatterns = this.patterns.length;
-        console.log(this.numPatterns);
 
         // Now that we have our patterns, we need to find which patterns match on which side
         for (let currPattern of this.patterns) {
@@ -578,7 +578,15 @@ self.addEventListener("message", (event) => {
 
     let payload = event.data;
 
-    wfc = new OverlappingModel(payload.pixels);
+    wfc = new OverlappingModel(
+        payload.pixels,
+        payload.n,
+        payload.width,
+        payload.height,
+        payload.pInput,
+        payload.pOutput,
+        payload.sym
+    );
     output = null;
     runWfc();
 });

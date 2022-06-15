@@ -513,6 +513,7 @@ export const quadTree = sketch => {
         slider1.setAttribute("type", "range");
         slider1.setAttribute("min", "2");
         slider1.setAttribute("max", "10");
+        slider1.classList.add("slider-vert");
 
         // Capacity of the quadtree retrieved from slider1
         qtCapacity = slider1;
@@ -532,6 +533,7 @@ export const quadTree = sketch => {
         slider2.setAttribute("type", "range");
         slider2.setAttribute("min", "5");
         slider2.setAttribute("max", "200");
+        slider2.classList.add("slider-vert");
         slider2.addEventListener("change", UpdateSettings);
 
         // Number of circles in the simulation retrieved from slider2

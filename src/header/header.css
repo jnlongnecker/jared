@@ -93,6 +93,17 @@ a:visited:hover {
   animation: collapse-menu 1s forwards;
 }
 
+.hide-header {
+  max-height: 0px;
+  transition: .5s;
+  transition-delay: .3s;
+}
+
+.show-header {
+  max-height: 33vh;
+  transition: .8s;
+}
+
 #menu {
   background: rgba(0,0,0,0);
   border: 0;

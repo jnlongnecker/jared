@@ -1,6 +1,8 @@
 import { ColorToHex } from "../scripts/util.js"
+import { createElementWithText } from "../scripts/util.js";
 
 let p5;
+let sampleSize;
 
 class UserSketch {
     constructor(x, y, width, height, pixelsX, pixelsY, pixels) {
@@ -47,6 +49,12 @@ class UserSketch {
                 p5.rect(x, y, this.pixelSize, this.pixelSize);
             }
         }
+
+        p5.strokeWeight(3);
+        p5.stroke(p5.color("red"));
+        p5.noFill();
+        p5.rect(this.x, this.y, this.pixelSize * sampleSize.value, this.pixelSize * sampleSize.value);
+
         if (mousePos.x >= 0 && mousePos.y >= 0) {
             p5.strokeWeight(4);
             p5.stroke(p5.color("blue"));
@@ -158,11 +166,14 @@ export const wfc = (sketch) => {
     let userSketch;
     let colorPicker;
     let generateButton;
-    let message;
 
     // Wave Function Collapse variables
     let output;
     let wfc = new Worker('./components/wfcWorker.js');
+    let outputLength;
+    let periodicInput;
+    let periodicOutput;
+    let symmetry;
 
     // Canvas settings
     let cWidth = document.documentElement.clientWidth * 0.5;
@@ -186,6 +197,8 @@ export const wfc = (sketch) => {
         if (cWidth < cHeight)
             cWidth *= 1.5;
         canvas = p5.createCanvas(cWidth, cHeight);
+
+        PopulateTools();
 
         let sketchHolder = document.querySelector("#canvas-holder");
         sketchHolder.addEventListener("contextmenu", e => e.preventDefault());
@@ -215,29 +228,9 @@ export const wfc = (sketch) => {
             else if (p5.mouseButton == p5.RIGHT)
                 colorPicker.value(ColorToHex(userSketch.Select()));
 
-        /*
-        if (wfc && !wfc.done) {
-            let success = wfc.Run(10);
-            // message = "Algorithm running, please be patient!";
-            if (success) {
-                output = new OutputTexture(wfc.observedPatterns, wfc.height, wfc.width);
-                message = "";
-            }
-            else if (success != null) {
-                message = `Failure! The algorithm resulted in a contradiction. This probably wasn't your fault!`;
-                wfc = null;
-                output = null;
-            }
-            else if (p5.mouseIsPressed) {
-                wfc.buildInProgress();
-                //output = new OutputTexture(wfc.inProgress, wfc.height, wfc.width);
-            }
-        }
-        */
 
         p5.noStroke();
         p5.fill("white");
-        p5.text(message, 10, cHeight * 0.5, cWidth - userSketch.width - 10);
         userSketch.Render();
         if (output)
             output.Render(cWidth - userSketch.width, cHeight, 0, 0);
@@ -245,7 +238,88 @@ export const wfc = (sketch) => {
 
     function GenerateOutput() {
         output = null;
-        wfc.postMessage({ pixels: userSketch.pixels });
+        wfc.postMessage({
+            pixels: userSketch.pixels,
+            n: sampleSize.value,
+            width: outputLength.value * sampleSize.value,
+            height: outputLength.value * sampleSize.value,
+            pInput: periodicInput.checked,
+            pOutput: periodicOutput.checked,
+            sym: symmetry.value
+        });
+    }
+
+    function PopulateTools() {
+        // Retrieve a reference to the toolbar
+        let toolbar = document.querySelector("jwork-toolbar");
+
+        // Create the div to hold the toolbar content to be slotted in
+        let slotDiv = document.createElement("div");
+        slotDiv.setAttribute("slot", "content");
+
+        let wrapControls = document.createElement("div");
+        wrapControls.classList.add("controls");
+
+        let wrapCol1 = document.createElement("div");
+        wrapCol1.classList.add("control-col");
+
+        let inputLabel = createElementWithText("p", "Wrap Input");
+        periodicInput = document.createElement("input");
+        periodicInput.setAttribute("type", "checkbox");
+
+        wrapCol1.appendChild(inputLabel);
+        wrapCol1.appendChild(periodicInput);
+
+        let wrapCol2 = document.createElement("div");
+        wrapCol2.classList.add("control-col");
+
+        let outputLabel = createElementWithText("p", "Periodic Output");
+        periodicOutput = document.createElement("input");
+        periodicOutput.setAttribute("type", "checkbox");
+
+        wrapCol2.appendChild(outputLabel);
+        wrapCol2.appendChild(periodicOutput);
+
+        wrapControls.appendChild(wrapCol1);
+        wrapControls.appendChild(wrapCol2);
+
+        let numControls = document.createElement("div");
+        numControls.classList.add("controls");
+
+        let numCol = document.createElement("div");
+        numCol.classList.add("control-col");
+
+        let symmetryText = createElementWithText("p", "Degrees of Symmetry");
+        symmetry = document.createElement("input");
+        symmetry.setAttribute("type", "range");
+        symmetry.setAttribute("min", "1"); symmetry.setAttribute("max", "8");
+        let sampleText = createElementWithText("p", "Sampling Size");
+        sampleSize = document.createElement("input");
+        sampleSize.setAttribute("type", "range");
+        sampleSize.setAttribute("min", "2"); sampleSize.setAttribute("max", "5");
+        let outputText = createElementWithText("p", "Output Pixels");
+        outputLength = document.createElement("input");
+        outputLength.setAttribute("type", "range");
+        outputLength.setAttribute("min", "5"); outputLength.setAttribute("max", "16");
+
+        numCol.appendChild(symmetryText);
+        numCol.appendChild(symmetry);
+        numCol.appendChild(sampleText);
+        numCol.appendChild(sampleSize);
+        numCol.appendChild(outputText);
+        numCol.appendChild(outputLength);
+
+        numControls.appendChild(numCol);
+
+        slotDiv.appendChild(wrapControls);
+        slotDiv.appendChild(numControls);
+        toolbar.appendChild(slotDiv);
+
+        sampleSize.value = 3;
+        outputLength.value = 16;
+        periodicInput.checked = true;
+        periodicOutput.checked = false;
+        symmetry.value = 8;
     }
 
     wfc.addEventListener("message", (event) => {

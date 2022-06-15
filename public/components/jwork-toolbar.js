@@ -82,8 +82,8 @@ export default class JworkToolbar extends HTMLElement {
 		}
 
 		// Detect changes in the parent
-		let resizeObserver = new MutationObserver(cb);
-		resizeObserver.observe(this.parent, { childList: true, attributes: true });
+		let resizeObserver = new ResizeObserver(cb);
+		resizeObserver.observe(this.parent);
 
 		// Hide the toolbar when nothing is slotted in for content
 		let contentSlot = this.template.querySelector("slot[name=content]");

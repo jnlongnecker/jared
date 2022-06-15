@@ -1,9 +1,17 @@
 export default class Header extends HTMLElement {
+
+    constructor() {
+        this.lastScrollPos = window.scrollY;
+    }
+
     connectedCallback() {
         this.template.querySelector("#menu").addEventListener("click", this.menuClick);
         this.template.querySelectorAll("#header-holder li").forEach((element) => {
             element.addEventListener("click", this.itemClick);
         });
+        this.header = this.template.querySelector("#header-holder");
+
+        document.addEventListener("scroll", this.handleScroll);
     }
 
     menuClick = (event) => {
@@ -19,7 +27,16 @@ export default class Header extends HTMLElement {
         menu.classList.add("expanded-menu");
     }
 
-    itemClick = (event) => {
-        console.log(`${event.target.textContent} clicked.`);
+    handleScroll = (event) => {
+        if (this.lastScrollPos < window.scrollY) {
+            this.header.classList.remove("show-header");
+            this.header.classList.add("hide-header");
+        }
+        else {
+            this.header.classList.remove("hide-header");
+            this.header.classList.add("show-header");
+        }
+
+        this.lastScrollPos = window.scrollY;
     }
 }

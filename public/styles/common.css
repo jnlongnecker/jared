@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Merriweather&family=Open+Sans&family=Roboto+Mono&family=Space+Grotesk&display=swap');
+
 :root {
   --background: hsl(240, 2%, 10%);
   --color: hsl(306, 23%, 91%);
@@ -17,8 +19,14 @@
 html {
   color: var(--palette-lightest);
   background-color: var(--palette-dark);
-  font-family: 'Quicksand', sans-serif;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 300;
   font-size: 1.3rem;
+}
+
+code {
+  font-family: 'Roboto Mono', monospace;
+  color: var(--palette-light);
 }
 
 a {
@@ -26,7 +34,7 @@ a {
 }
 
 a:visited {
-  color: var(--palette-light);
+  color: var(--anchor);
 }
 
 body {
@@ -50,14 +58,17 @@ ul,li {
 
 .main-header {
   font-size: 3rem;
+  font-family: 'Space Grotesk', sans-serif;
 }
 
 .subheader {
   font-size: 2rem;
+  font-family: 'Merriweather', serif;
 }
 
 .topic-header {
   font-size: 1.5rem;
+  font-family: 'Space Grotesk', sans-serif;
 }
 
 .section-content {

@@ -6,7 +6,7 @@ import { test } from "./testSketch.js";
 
 let template = document.createElement("template");
 template.innerHTML = `<link rel="stylesheet" href="../styles/common.css" />
-<style>input[type=range] {
+<style>.slider-vert {
     -webkit-appearance: slider-vertical;
 }
 
@@ -18,12 +18,14 @@ template.innerHTML = `<link rel="stylesheet" href="../styles/common.css" />
 .controls {
     display: flex;
     flex-flow: row nowrap;
+    justify-content: center;
     gap: 10px;
 }
 
 .control-col {
     display: flex;
     flex-direction: column;
+    align-items: center;
 }</style>
 <jwork-toolbar>
     <div class="holder" slot="item" id="canvas-holder"></div>

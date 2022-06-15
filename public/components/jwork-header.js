@@ -95,6 +95,17 @@ a:visited:hover {
   animation: collapse-menu 1s forwards;
 }
 
+.hide-header {
+  max-height: 0px;
+  transition: .5s;
+  transition-delay: .3s;
+}
+
+.show-header {
+  max-height: 33vh;
+  transition: .8s;
+}
+
 #menu {
   background: rgba(0,0,0,0);
   border: 0;
@@ -131,7 +142,7 @@ a:visited:hover {
   overflow: hidden;
 }
 </style>
-<header id="header-holder">
+<header class="show-header" id="header-holder">
     <div class="header">
         <div class="header-left">
             <span id="home" class="header-logo header-item"><a href="/">Jared's PG</a></span>
@@ -163,13 +174,21 @@ export default class JworkHeader extends HTMLElement {
 		super();
 		this.template = this.attachShadow({ mode: "open" });
 		this.template.appendChild(template.content.cloneNode(true));
+
+		this.lastScrollPos = window.scrollY;
 	}
+
+
+	
 
 	connectedCallback() {
 		this.template.querySelector("#menu").addEventListener("click", this.menuClick);
 		this.template.querySelectorAll("#header-holder li").forEach((element) => {
 			element.addEventListener("click", this.itemClick);
 		});
+		this.header = this.template.querySelector("#header-holder");
+
+		document.addEventListener("scroll", this.handleScroll);
 	}
 
 	menuClick = (event) => {
@@ -185,8 +204,17 @@ export default class JworkHeader extends HTMLElement {
 		menu.classList.add("expanded-menu");
 	}
 
-	itemClick = (event) => {
-		console.log(`${event.target.textContent} clicked.`);
+	handleScroll = (event) => {
+		if (this.lastScrollPos < window.scrollY) {
+			this.header.classList.remove("show-header");
+			this.header.classList.add("hide-header");
+		}
+		else {
+			this.header.classList.remove("hide-header");
+			this.header.classList.add("show-header");
+		}
+
+		this.lastScrollPos = window.scrollY;
 	}
 
 }

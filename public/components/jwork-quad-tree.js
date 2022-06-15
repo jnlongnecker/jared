@@ -5,7 +5,7 @@ import jworkFooter from "./jwork-footer.js";
 
 
 let template = document.createElement("template");
-template.innerHTML = `<link rel="stylesheet" href="../styles/common.css" />
+template.innerHTML = `<link rel="stylesheet" media="screen and (max-width:900px)" href="../styles/common-phone.css" /><link rel="stylesheet" media="screen and (min-width:900px)" href="../styles/common.css" />
 <style></style>
 <jwork-header></jwork-header>
 <jwork-demo-content>

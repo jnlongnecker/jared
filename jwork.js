@@ -17,11 +17,19 @@ exports.getRoutes = () => {
 
 /*
  *  Entry point for Jwork framework.
- *  @returntype: string
+ *  @returntype: undefined
  */
 exports.rebuild = () => {
     let modulesToBuild = buildChanges();
     rebuildModules(modulesToBuild);
+}
+
+/*
+ *  Rebuilds all modules
+ *  @returntype: undefined
+ */
+exports.buildAll = () => {
+    rebuildModules(allSourceModules());
 }
 
 /*
@@ -77,7 +85,8 @@ function buildModule(moduleName) {
  */
 function combineContent(js, html, css, moduleName) {
     js = js.replace(/ {4}/g, "\t");
-    let styles = `<link rel="stylesheet" href="../styles/common.css" />\n<style>${css}</style>\n`;
+    let styles = `<link rel="stylesheet" media="screen and (max-width:900px)" href="../styles/common-phone.css" />`;
+    styles += `<link rel="stylesheet" media="screen and (min-width:900px)" href="../styles/common.css" />\n<style>${css}</style>\n`;
     let htmlContent = styles + html;
     let dependencyImports = getDependencyImports(html);
     let jsParts = buildJsParts(js);
@@ -218,6 +227,20 @@ function buildChanges() {
         }
     }
     return modulesToBuild;
+}
+
+/*
+ *  Retrieves all modules in SRC
+ *  @returntype: [string]
+ */
+function allSourceModules() {
+    let modules = [];
+
+    let srcModules = fs.readdirSync(__dirname + "/src", "utf8");
+    for (let module of srcModules) {
+        modules.push(module);
+    }
+    return modules;
 }
 
 /*

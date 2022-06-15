@@ -1,5 +1,5 @@
 let template = document.createElement("template");
-template.innerHTML = `<link rel="stylesheet" href="../styles/common.css" />
+template.innerHTML = `<link rel="stylesheet" media="screen and (max-width:900px)" href="../styles/common-phone.css" /><link rel="stylesheet" media="screen and (min-width:900px)" href="../styles/common.css" />
 <style>.intro {
     margin-top: 5rem;
     text-align: center;

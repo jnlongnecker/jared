@@ -242,8 +242,8 @@ export const circle = sketch => {
     var audioPlayer;
 
     // Canvas variables
-    var cWidth = document.documentElement.clientWidth * 0.5;
-    var cHeight = document.documentElement.clientHeight * 0.5;
+    var cWidth = document.documentElement.clientWidth * 0.45;
+    var cHeight = document.documentElement.clientHeight * 0.45;
     var paletteFillColor = getComputedStyle(document.body).getPropertyValue('--palette-darkest');
     var paletteBackgroundColor = getComputedStyle(document.body).getPropertyValue('--background');
 
@@ -252,10 +252,11 @@ export const circle = sketch => {
      *  @returntype: undefined
      */
     sketch.windowResized = () => {
-        cWidth = document.documentElement.clientWidth * 0.5;
-        cHeight = document.documentElement.clientHeight * 0.5;
-        if (cWidth < cHeight)
-            cWidth *= 1.5;
+        cWidth = document.documentElement.clientWidth * 0.45;
+        cHeight = document.documentElement.clientHeight * 0.45;
+        if (document.documentElement.clientWidth <= 900) {
+            cWidth = document.documentElement.clientWidth * 0.8;
+        }
         p5.resizeCanvas(cWidth, cHeight);
         ripple.CanvasResized(cWidth, cHeight);
     }
@@ -282,10 +283,9 @@ export const circle = sketch => {
         PopulateCircles(16);
         SetupAudio();
         ripple = new Ripple();
-        cWidth = document.documentElement.clientWidth * 0.5;
-        cHeight = document.documentElement.clientHeight * 0.5;
-        if (cWidth < cHeight)
-            cWidth *= 1.5;
+        if (document.documentElement.clientWidth <= 900) {
+            cWidth = document.documentElement.clientWidth * 0.8;
+        }
         p5.createCanvas(cWidth, cHeight);
     }
 

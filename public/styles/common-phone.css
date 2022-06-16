@@ -76,6 +76,10 @@ ul,li {
   display: block;
 }
 
+.interactivity {
+    max-width: 100%;
+  }
+
 .italics {
   font-style: italic;
 }

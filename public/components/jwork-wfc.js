@@ -16,7 +16,7 @@ template.innerHTML = `<link rel="stylesheet" media="screen and (max-width:900px)
     <span slot="blurb">A pattern recognition algorithm to learn rules and construct larger outputs</span>
     <div slot="interactivity">
         <h3 class="centered">Interactivity</h3>
-        <p class="section-content centered">
+        <p class="centered">
             Draw in the provided box to create a sample, then click on the <code>RUN</code> button to run the algorithm.
             Left click to draw in the chosen color, and right click on a pixel to change to that color. Select the color
             picker above the sample to select a brand-new color. The red box is a representation of the sampling size

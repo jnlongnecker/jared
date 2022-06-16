@@ -15,7 +15,7 @@ template.innerHTML = `<link rel="stylesheet" media="screen and (max-width:900px)
     <span slot="blurb">A simluation of circular bodies moving with no friction</span>
     <div slot="interactivity">
         <h3 class="centered">Interactivity</h3>
-        <p class="section-content">
+        <p class="centered">
             Click on the canvas to bounce the circles away from the mouse point. Bounced circles will
             make a "pop" sound and change to a randomized color. Every 3rd "pop" makes confetti appear.
         </p>

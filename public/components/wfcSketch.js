@@ -176,16 +176,17 @@ export const wfc = (sketch) => {
     let symmetry;
 
     // Canvas settings
-    let cWidth = document.documentElement.clientWidth * 0.5;
-    let cHeight = document.documentElement.clientHeight * 0.5;
+    let cWidth = document.documentElement.clientWidth * 0.45;
+    let cHeight = document.documentElement.clientHeight * 0.45;
     let paletteFillColor = getComputedStyle(document.body).getPropertyValue('--palette-darkest');
     let paletteBackgroundColor = getComputedStyle(document.body).getPropertyValue('--background');
 
     sketch.windowResized = () => {
-        cWidth = document.documentElement.clientWidth * 0.5;
-        cHeight = document.documentElement.clientHeight * 0.5;
-        if (cWidth < cHeight)
-            cWidth *= 1.5;
+        cWidth = document.documentElement.clientWidth * 0.45;
+        cHeight = document.documentElement.clientHeight * 0.45;
+        if (document.documentElement.clientWidth <= 900) {
+            cWidth = document.documentElement.clientWidth * 0.8;
+        }
         p5.resizeCanvas(cWidth, cHeight);
 
         let temp = userSketch;
@@ -194,8 +195,9 @@ export const wfc = (sketch) => {
     }
 
     sketch.setup = () => {
-        if (cWidth < cHeight)
-            cWidth *= 1.5;
+        if (document.documentElement.clientWidth <= 900) {
+            cWidth = document.documentElement.clientWidth * 0.8;
+        }
         canvas = p5.createCanvas(cWidth, cHeight);
 
         PopulateTools();

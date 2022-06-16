@@ -106,6 +106,10 @@ a:visited:hover {
   transition: .8s;
 }
 
+.overlay {
+  background: rgba(255,255,255, .16);
+}
+
 #menu {
   background: rgba(0,0,0,0);
   border: 0;
@@ -115,7 +119,7 @@ a:visited:hover {
 
 #menu:hover {
   cursor: pointer;
-  color: var(--palette-light);
+  color: var(--palette-primary);
 }
 
 #menu-content {
@@ -135,35 +139,37 @@ a:visited:hover {
 #header-holder {
   position: fixed;
   top: 0;
-  border-bottom: 1px solid var(--palette-lightest);
-  color: var(--palette-lightest);
+  border-bottom: 1px solid var(--palette-secondary);
+  color: var(--white);
   background: var(--background);
   z-index: 1;
   overflow: hidden;
 }
 </style>
 <header class="show-header" id="header-holder">
-    <div class="header">
-        <div class="header-left">
-            <span id="home" class="header-logo header-item"><a href="/">Jared's PG</a></span>
+    <div class="overlay">
+        <div class="header">
+            <div class="header-left">
+                <span id="home" class="header-logo header-item"><a href="/">Jared's PG</a></span>
+            </div>
+            <div class="header-right">
+                <button id="menu" class="header-item">Menu</button>
+            </div>
         </div>
-        <div class="header-right">
-            <button id="menu" class="header-item">Menu</button>
-        </div>
-    </div>
-    <div id="menu-content">
-        <div class="menu-column">
-            <h2>Physics</h2>
-            <ul>
-                <li><a href="/circles">Circles</a></li>
-            </ul>
-        </div>
-        <div class="menu-column">
-            <h2>Algorithms</h2>
-            <ul>
-                <li><a href="/quadTree">QuadTree</a></li>
-                <li><a href="/wfc">Wave Function Collapse</a></li>
-            </ul>
+        <div id="menu-content">
+            <div class="menu-column">
+                <h2>Physics</h2>
+                <ul>
+                    <li><a href="/circles">Circles</a></li>
+                </ul>
+            </div>
+            <div class="menu-column">
+                <h2>Algorithms</h2>
+                <ul>
+                    <li><a href="/quadTree">QuadTree</a></li>
+                    <li><a href="/wfc">Wave Function Collapse</a></li>
+                </ul>
+            </div>
         </div>
     </div>
 </header>`;

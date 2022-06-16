@@ -129,8 +129,8 @@ class Circle {
     lerpAmount = 0;
 
     constructor() {
-        this.startColor = p5.color(getComputedStyle(document.body).getPropertyValue('--palette-darkest'));
-        this.startHitColor = p5.color(getComputedStyle(document.body).getPropertyValue('--palette-lightest'));
+        this.startColor = p5.color(getComputedStyle(document.body).getPropertyValue('--palette-primary'));
+        this.startHitColor = p5.color(getComputedStyle(document.body).getPropertyValue('--palette-secondary'));
         this.baseColor = this.startColor;
         this.hitColor = this.startHitColor;
     }
@@ -244,8 +244,8 @@ export const circle = sketch => {
     // Canvas variables
     var cWidth = document.documentElement.clientWidth * 0.6;
     var cHeight = document.documentElement.clientHeight * 0.65;
-    var paletteFillColor = getComputedStyle(document.body).getPropertyValue('--palette-darkest');
-    var paletteBackgroundColor = getComputedStyle(document.body).getPropertyValue('--background');
+    let paletteFillColor = getComputedStyle(document.body).getPropertyValue('--palette-primary');
+    let paletteBackgroundColor = p5.color('hsl(0,0%,12%)');
 
     /*
      *  Resize the canvas when the window is resized.

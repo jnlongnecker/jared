@@ -68,6 +68,7 @@ template.innerHTML = `<link rel="stylesheet" media="screen and (max-width:900px)
 }
 </style>
 <footer>
+    <!--
     <a class="item-holder" href="https://github.com/jnlongnecker">
         <p class="item">GitHub</p>
     </a>
@@ -76,6 +77,7 @@ template.innerHTML = `<link rel="stylesheet" media="screen and (max-width:900px)
         <p class="item">Site Repo</p>
     </a>
     <div class="expanse">View the source code for this site</div>
+    -->
 </footer>`;
 
 export default class JworkFooter extends HTMLElement {

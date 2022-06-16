@@ -318,8 +318,8 @@ export const quadTree = sketch => {
 
     // Misc settings and tracking
     let circleList;
-    let cWidth = document.documentElement.clientWidth * 0.45;
-    let cHeight = document.documentElement.clientHeight * 0.45;
+    let cWidth = document.documentElement.clientWidth * 0.6;
+    let cHeight = document.documentElement.clientHeight * 0.65;
     let paletteFillColor = getComputedStyle(document.body).getPropertyValue('--palette-darkest');
     let paletteBackgroundColor = getComputedStyle(document.body).getPropertyValue('--background');
 
@@ -328,8 +328,8 @@ export const quadTree = sketch => {
      *  @returntype: undefined
      */
     sketch.windowResized = () => {
-        cWidth = document.documentElement.clientWidth * 0.45;
-        cHeight = document.documentElement.clientHeight * 0.45;
+        cWidth = document.documentElement.clientWidth * 0.6;
+        cHeight = document.documentElement.clientHeight * 0.65;
         if (document.documentElement.clientWidth <= 900) {
             cWidth = document.documentElement.clientWidth * 0.8;
         }

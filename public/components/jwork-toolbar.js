@@ -77,15 +77,20 @@ export default class JworkToolbar extends HTMLElement {
 			newStyles += `left:${coords.right}px;`;
 			newStyles += `height:${coords.height}px;`;
 
-			this.toolbar.setAttribute("style", newStyles);
-			console.log("adjusting");
+			// Hide the toolbar on small clients
+			if (document.documentElement.clientWidth < 900) {
+				this.toolbar.setAttribute("style", "max-height: 0; overflow: hidden");
+			}
+			else {
+				this.toolbar.setAttribute("style", newStyles);
+			}
 		}
 
 		// Detect changes in the parent
 		let resizeObserver = new ResizeObserver(cb);
 		resizeObserver.observe(this.parent);
 
-		// Hide the toolbar when nothing is slotted in for content
+		// Unhide the toolbar when content has been slotted in
 		let contentSlot = this.template.querySelector("slot[name=content]");
 		contentSlot.onslotchange = () => {
 			this.template.querySelector(".toolbar").classList.remove("hide");

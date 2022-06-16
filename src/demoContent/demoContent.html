@@ -1,5 +1,5 @@
 <section>
-    <div class="intro section-content">
+    <div class="intro">
         <h1 class="main-header">
             <slot name="header"></slot>
         </h1>
@@ -10,7 +10,11 @@
         <p class="italics">
             <slot name="blurb"></slot>
         </p>
-        <slot class="interactivity" name="interactivity"></slot>
+        <div class="interactivity">
+            <div class="section-content">
+                <slot name="interactivity"></slot>
+            </div>
+        </div>
     </div>
 </section>
 

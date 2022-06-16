@@ -5,7 +5,7 @@ template.innerHTML = `<link rel="stylesheet" media="screen and (max-width:900px)
     text-align: center;
 }</style>
 <section>
-    <div class="intro section-content">
+    <div class="intro">
         <h1 class="main-header">
             <slot name="header"></slot>
         </h1>
@@ -16,7 +16,11 @@ template.innerHTML = `<link rel="stylesheet" media="screen and (max-width:900px)
         <p class="italics">
             <slot name="blurb"></slot>
         </p>
-        <slot class="interactivity" name="interactivity"></slot>
+        <div class="interactivity">
+            <div class="section-content">
+                <slot name="interactivity"></slot>
+            </div>
+        </div>
     </div>
 </section>
 

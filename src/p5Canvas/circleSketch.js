@@ -242,8 +242,8 @@ export const circle = sketch => {
     var audioPlayer;
 
     // Canvas variables
-    var cWidth = document.documentElement.clientWidth * 0.45;
-    var cHeight = document.documentElement.clientHeight * 0.45;
+    var cWidth = document.documentElement.clientWidth * 0.6;
+    var cHeight = document.documentElement.clientHeight * 0.65;
     var paletteFillColor = getComputedStyle(document.body).getPropertyValue('--palette-darkest');
     var paletteBackgroundColor = getComputedStyle(document.body).getPropertyValue('--background');
 
@@ -252,8 +252,8 @@ export const circle = sketch => {
      *  @returntype: undefined
      */
     sketch.windowResized = () => {
-        cWidth = document.documentElement.clientWidth * 0.45;
-        cHeight = document.documentElement.clientHeight * 0.45;
+        cWidth = document.documentElement.clientWidth * 0.6;
+        cHeight = document.documentElement.clientHeight * 0.65;
         if (document.documentElement.clientWidth <= 900) {
             cWidth = document.documentElement.clientWidth * 0.8;
         }

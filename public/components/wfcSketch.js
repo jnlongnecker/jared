@@ -17,13 +17,20 @@ class UserSketch {
             this.pixels = [...pixels];
         }
         else {
-            this.pixels = [];
-            for (let r = 0; r < pixelsY; r++) {
-                this.pixels.push([]);
-                for (let c = 0; c < pixelsX; c++) {
-                    this.pixels[r].push(p5.color("#fff"));
-                }
-            }
+            // No, I didn't type this out manually
+            this.pixels = [
+                [p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30')],
+                [p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30')],
+                [p5.color('#062c30'), p5.color('#062c30'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#062c30'), p5.color('#062c30')],
+                [p5.color('#062c30'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#062c30')],
+                [p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#ffffff'), p5.color('#ffffff')],
+                [p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#ffffff'), p5.color('#ffffff')],
+                [p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff')],
+                [p5.color('#ffffff'), p5.color('#062c30'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#062c30'), p5.color('#ffffff')],
+                [p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#ffffff'), p5.color('#ffffff')],
+                [p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff')],
+                [p5.color('#062c30'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#062c30')],
+                [p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30')]];
         }
     }
 
@@ -78,9 +85,27 @@ class UserSketch {
             x: p5.floor((p5.mouseX - this.x) / this.pixelSize),
             y: p5.floor((p5.mouseY - this.y) / this.pixelSize)
         };
-        if (mousePos.x < 0 || mousePos.y < 0 || mousePos.x >= this.pixelsX || mousePos.y >= this.pixelsY) return;
+        if (mousePos.x < 0 || mousePos.y < 0 || mousePos.x >= this.pixelsX || mousePos.y >= this.pixelsY) {
+            return;
+        };
 
         this.pixels[mousePos.y][mousePos.x] = newColor;
+
+    }
+
+    Print() {
+        let retString = "[";
+        for (let r = 0; r < this.pixelsY; r++) {
+            retString += r == 0 ? "[" : ",[";
+            for (let c = 0; c < this.pixelsX; c++) {
+                retString += c == 0 ?
+                    "p5.color('" + this.pixels[r][c].toString("#rrggbb") + "')" :
+                    ",p5.color('" + this.pixels[r][c].toString("#rrggbb") + "')";
+            }
+            retString += "]";
+        }
+        retString += "]";
+        return retString;
     }
 };
 
@@ -176,14 +201,14 @@ export const wfc = (sketch) => {
     let symmetry;
 
     // Canvas settings
-    let cWidth = document.documentElement.clientWidth * 0.45;
-    let cHeight = document.documentElement.clientHeight * 0.45;
+    let cWidth = document.documentElement.clientWidth * 0.6;
+    let cHeight = document.documentElement.clientHeight * 0.65;
     let paletteFillColor = getComputedStyle(document.body).getPropertyValue('--palette-darkest');
     let paletteBackgroundColor = getComputedStyle(document.body).getPropertyValue('--background');
 
     sketch.windowResized = () => {
-        cWidth = document.documentElement.clientWidth * 0.45;
-        cHeight = document.documentElement.clientHeight * 0.45;
+        cWidth = document.documentElement.clientWidth * 0.6;
+        cHeight = document.documentElement.clientHeight * 0.65;
         if (document.documentElement.clientWidth <= 900) {
             cWidth = document.documentElement.clientWidth * 0.8;
         }

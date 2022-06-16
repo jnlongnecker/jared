@@ -65,7 +65,32 @@ template.innerHTML = `<link rel="stylesheet" media="screen and (max-width:900px)
                     pattern.
                 </p>
                 <p class="info">
-
+                    Then came the task of the visualization. Recreating the algorithm itself took a fairly long time,
+                    but was more or less a solved task. How to visualize the algorithm in progress, and most importantly
+                    of all, display that progress to the user efficiently was quite a difficult task. How it works is
+                    like this:
+                <ol>
+                    <li>Run a few passes of observations and propogations of the observations
+                    <li>Calculate a new pattern based on the remaining patterns at a given position
+                        <ul>
+                            <li>This pattern is an average of all the other patterns' colors
+                        </ul>
+                    <li>Send this along as output to be displayed
+                </ol>
+                </p>
+                <p class="info">
+                    The first implementation of this was slow, dreadfully so. The calculation of the in-progress pattern
+                    was simply too time consuming at the higher degrees of symmetry because of the large number of
+                    patterns. Some optimizations were made to only calculate positions that had changed since the last
+                    in-progress calculation, but this still was not enough.
+                </p>
+                <p class="info">
+                    The solution to this is multi-threading
+                    using JavaScript workers, which is something I had never touched before or even knew was possible.
+                    Since the Wave Function Collapse object running the calculation needed a reference to p5 for some
+                    things in my implementation, this became another problem to be solved as p5 protects itself from
+                    being copied and sent to a different thread. In the end, I had to recreate the p5 functions I was
+                    using myself.
                 </p>
             </div>
         </section>

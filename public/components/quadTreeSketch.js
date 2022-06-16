@@ -204,8 +204,8 @@ class Circle {
     lerpAmount = 0;
 
     constructor() {
-        this.startColor = p5.color(getComputedStyle(document.body).getPropertyValue('--palette-darkest'));
-        this.startHitColor = p5.color(getComputedStyle(document.body).getPropertyValue('--palette-lightest'));
+        this.startColor = p5.color(getComputedStyle(document.body).getPropertyValue('--palette-primary'));
+        this.startHitColor = p5.color(getComputedStyle(document.body).getPropertyValue('--palette-secondary'));
         this.baseColor = this.startColor;
         this.hitColor = this.startHitColor;
     }
@@ -320,8 +320,8 @@ export const quadTree = sketch => {
     let circleList;
     let cWidth = document.documentElement.clientWidth * 0.6;
     let cHeight = document.documentElement.clientHeight * 0.65;
-    let paletteFillColor = getComputedStyle(document.body).getPropertyValue('--palette-darkest');
-    let paletteBackgroundColor = getComputedStyle(document.body).getPropertyValue('--background');
+    let paletteFillColor = getComputedStyle(document.body).getPropertyValue('--palette-primary');
+    let paletteBackgroundColor = p5.color('hsl(0,0%,12%)');
 
     /*
      *  Resize the canvas when the window is resized.
@@ -368,19 +368,19 @@ export const quadTree = sketch => {
         // Handle circle collision and movement
         HandleCircles();
 
-        // Render the circles
-        for (let i = 0; i < circleList.length; i++) {
-            p5.fill(circleList[i].ColorActual());
-            p5.circle(circleList[i].center.x, circleList[i].center.y, 2 * circleList[i].radius);
-        }
-
         // End time tracking
         var end = window.performance.now();
 
         // Display the QuadTree, if visualization is turned on
         if (showVisualization.checked) {
-            p5.stroke(paletteFillColor);
+            p5.stroke(p5.color("hsl(0,0%,20%)"));
             qTree.Display();
+        }
+
+        // Render the circles
+        for (let i = 0; i < circleList.length; i++) {
+            p5.fill(circleList[i].ColorActual());
+            p5.circle(circleList[i].center.x, circleList[i].center.y, 2 * circleList[i].radius);
         }
 
         tQueue.Push(end - start);

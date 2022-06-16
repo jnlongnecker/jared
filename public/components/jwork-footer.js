@@ -19,13 +19,13 @@ template.innerHTML = `<link rel="stylesheet" media="screen and (max-width:900px)
   align-items: center;
   justify-items: stretch;
   padding: 0 1.5rem;
-  background-color: var(--palette-darkest);
+  background-color: rgba(255, 255, 255, 16);
 }
 
 .item-holder:hover {
   cursor: pointer;
   margin: 0;
-  background-color: var(--palette-light);
+  background-color: var(--palette-primary);
   color: var(--background);
 }
 
@@ -37,7 +37,7 @@ template.innerHTML = `<link rel="stylesheet" media="screen and (max-width:900px)
 }
 
 .expanse {
-  border-left: 2px solid var(--palette-light);
+  border-left: 2px solid var(--palette-primary);
   background-color: var(--palette-darkest);
   transition: .3s;
   max-width: 0;

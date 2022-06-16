@@ -1,13 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Merriweather&family=Open+Sans&family=Roboto+Mono&family=Space+Grotesk&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Merriweather&family=Lato:wght@300&family=Open+Sans&family=Roboto+Mono&family=Space+Grotesk&display=swap');
 
 :root {
-  --background: hsl(240, 2%, 10%);
-  --color: hsl(306, 23%, 91%);
-  --palette-darkest: #062C30;
-  --palette-dark: #05595B;
-  --palette-light: #E2D784;
-  --palette-lightest: #F5F5F5;
-  --anchor: #26abff;
+  --white: #FFFFFF;
+  --black: #000000;
+  --background: #121212;
+  --palette-primary: #8bd9be;
+  --palette-secondary: #988bd9;
+  --anchor: #8bbed9;
   --header-collapsed-height: 2rem;
   --header-expanded-height: 10rem;
 }
@@ -17,16 +16,17 @@
 }
 
 html {
-  color: var(--palette-lightest);
-  background-color: var(--palette-dark);
-  font-family: 'Open Sans', sans-serif;
-  font-weight: 300;
+  color: var(--white);
+  background-color: var(--background);
+  font-family: 'Lato', sans-serif;
   font-size: 1.3rem;
 }
 
 code {
   font-family: 'Roboto Mono', monospace;
-  color: var(--palette-light);
+  color: var(--palette-secondary);
+  background: rgba(255,255,255, .08);
+  border-radius: 5px;
 }
 
 a {
@@ -57,7 +57,10 @@ ul,li {
 
 .main-header {
   font-size: 3rem;
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Roboto Mono', monospace;
+  background-color: rgba(255,255,255, 0.06);
+  padding: .2em;
+  border-radius: 5px;
 }
 
 .subheader {

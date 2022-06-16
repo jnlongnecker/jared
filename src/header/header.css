@@ -104,6 +104,10 @@ a:visited:hover {
   transition: .8s;
 }
 
+.overlay {
+  background: rgba(255,255,255, .16);
+}
+
 #menu {
   background: rgba(0,0,0,0);
   border: 0;
@@ -113,7 +117,7 @@ a:visited:hover {
 
 #menu:hover {
   cursor: pointer;
-  color: var(--palette-light);
+  color: var(--palette-primary);
 }
 
 #menu-content {
@@ -133,8 +137,8 @@ a:visited:hover {
 #header-holder {
   position: fixed;
   top: 0;
-  border-bottom: 1px solid var(--palette-lightest);
-  color: var(--palette-lightest);
+  border-bottom: 1px solid var(--palette-secondary);
+  color: var(--white);
   background: var(--background);
   z-index: 1;
   overflow: hidden;

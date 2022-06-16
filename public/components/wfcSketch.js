@@ -13,24 +13,26 @@ class UserSketch {
         this.pixelsX = pixelsX;
         this.pixelsY = pixelsY;
         this.pixelSize = this.width / this.pixelsX;
+        this.primary = getComputedStyle(document.body).getPropertyValue('--palette-primary');
+        this.secondary = getComputedStyle(document.body).getPropertyValue('--palette-secondary');
         if (pixels) {
             this.pixels = [...pixels];
         }
         else {
             // No, I didn't type this out manually
             this.pixels = [
-                [p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30')],
-                [p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30')],
-                [p5.color('#062c30'), p5.color('#062c30'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#062c30'), p5.color('#062c30')],
-                [p5.color('#062c30'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#062c30')],
-                [p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#ffffff'), p5.color('#ffffff')],
-                [p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#ffffff'), p5.color('#ffffff')],
-                [p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff')],
-                [p5.color('#ffffff'), p5.color('#062c30'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#062c30'), p5.color('#ffffff')],
-                [p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#ffffff'), p5.color('#ffffff')],
-                [p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff')],
-                [p5.color('#062c30'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#ffffff'), p5.color('#062c30')],
-                [p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30'), p5.color('#062c30')]];
+                [p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333')],
+                [p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333')],
+                [p5.color('#333333'), p5.color('#333333'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#333333'), p5.color('#333333')],
+                [p5.color('#333333'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#333333')],
+                [p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#333333'), p5.color('#333333'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#333333'), p5.color('#333333'), p5.color('#BBBBBB'), p5.color('#BBBBBB')],
+                [p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#333333'), p5.color('#333333'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#333333'), p5.color('#333333'), p5.color('#BBBBBB'), p5.color('#BBBBBB')],
+                [p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB')],
+                [p5.color('#BBBBBB'), p5.color('#333333'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#333333'), p5.color('#BBBBBB')],
+                [p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#BBBBBB'), p5.color('#BBBBBB')],
+                [p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB')],
+                [p5.color('#333333'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#333333')],
+                [p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333')]];
         }
     }
 
@@ -58,13 +60,13 @@ class UserSketch {
         }
 
         p5.strokeWeight(3);
-        p5.stroke(p5.color("red"));
+        p5.stroke(p5.color(this.secondary));
         p5.noFill();
         p5.rect(this.x, this.y, this.pixelSize * sampleSize.value, this.pixelSize * sampleSize.value);
 
         if (mousePos.x >= 0 && mousePos.y >= 0) {
             p5.strokeWeight(4);
-            p5.stroke(p5.color("blue"));
+            p5.stroke(p5.color(this.primary));
             p5.noFill();
             p5.rect((mousePos.x * this.pixelSize) + this.x, (mousePos.y * this.pixelSize) + this.y, this.pixelSize, this.pixelSize);
         }
@@ -203,8 +205,7 @@ export const wfc = (sketch) => {
     // Canvas settings
     let cWidth = document.documentElement.clientWidth * 0.6;
     let cHeight = document.documentElement.clientHeight * 0.65;
-    let paletteFillColor = getComputedStyle(document.body).getPropertyValue('--palette-darkest');
-    let paletteBackgroundColor = getComputedStyle(document.body).getPropertyValue('--background');
+    let paletteBackgroundColor = p5.color('hsl(0,0%,12%)');
 
     sketch.windowResized = () => {
         cWidth = document.documentElement.clientWidth * 0.6;
@@ -233,7 +234,7 @@ export const wfc = (sketch) => {
         let userSketchWidth = cWidth * 0.3;
         userSketch = new UserSketch(cWidth - userSketchWidth - 2, cHeight - userSketchWidth - 2, userSketchWidth, cHeight, 12, 12);
 
-        colorPicker = p5.createColorPicker(paletteFillColor);
+        colorPicker = p5.createColorPicker('#BBBBBB');
         colorPicker.parent(sketchHolder);
 
         generateButton = p5.createButton("Run");

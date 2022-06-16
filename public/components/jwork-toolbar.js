@@ -31,7 +31,7 @@ template.innerHTML = `<link rel="stylesheet" media="screen and (max-width:900px)
 }
 
 .expanded {
-    max-width: 100%;
+    max-width: calc(20vw - 1.5rem);
     transition: 0.5s;
 }
 

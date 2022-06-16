@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Merriweather&family=Open+Sans&family=Roboto+Mono&family=Space+Grotesk&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Merriweather&family=Lato:wght@300&family=Open+Sans&family=Roboto+Mono&family=Space+Grotesk&display=swap');
 
 :root {
   --white: #FFFFFF;
@@ -18,8 +18,7 @@
 html {
   color: var(--white);
   background-color: var(--background);
-  font-family: 'Open Sans', sans-serif;
-  font-weight: 300;
+  font-family: 'Lato', sans-serif;
   font-size: 1.3rem;
 }
 

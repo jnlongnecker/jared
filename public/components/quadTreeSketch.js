@@ -534,7 +534,7 @@ export const quadTree = sketch => {
         slider2.setAttribute("orient", "vertical");
         slider2.setAttribute("type", "range");
         slider2.setAttribute("min", "5");
-        slider2.setAttribute("max", "200");
+        slider2.setAttribute("max", "500");
         slider2.classList.add("slider-vert");
         slider2.addEventListener("change", UpdateSettings);
 

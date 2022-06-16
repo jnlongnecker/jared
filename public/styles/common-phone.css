@@ -1,96 +1,24 @@
 @import url('https://fonts.googleapis.com/css2?family=Merriweather&family=Lato:wght@300&family=Open+Sans&family=Roboto+Mono&family=Space+Grotesk&display=swap');
+@import "./universal-styles.css";
 
-:root {
-    --white: #FFFFFF;
-    --black: #000000;
-    --background: #121212;
-    --palette-primary: #8bd9be;
-    --palette-secondary: #988bd9;
-    --anchor: #8bbed9;
-    --header-collapsed-height: 2rem;
-    --header-expanded-height: 10rem;
-  }
-
-::-webkit-scrollbar {
-  width: 0;
-}
-
-html {
-  color: var(--white);
-  background-color: var(--background);
-  font-family: 'Open Sans', sans-serif;
-  font-weight: 300;
-  font-size: 1.3rem;
-}
-
-code {
-  font-family: 'Roboto Mono', monospace;
-  color: var(--palette-secondary);
-  background: rgba(255,255,255, .08);
-  border-radius: 5px;
-}
-
-a {
-  color: var(--anchor);
-}
-
-a:visited {
-  color: var(--anchor);
-}
-
-body {
-  margin: 0;
-}
-
-h1,h2,h3,h4,h5,h6 {
-  font-size: 1rem;
-}
-
-section {
-  display: flex;
-  flex-flow: column;
-  align-items: center;
-}
-
-ul,li {
-  text-align: left;
+p {
+  margin-left: 1rem;
+  margin-right: 1rem;
 }
 
 .main-header {
-    font-size: 3rem;
-    font-family: 'Roboto Mono', monospace;
-    background-color: rgba(255,255,255, 0.06);
-    padding: .2em;
-    border-radius: 5px;
+    text-align: center;
   }
 
 .subheader {
-  font-size: 2rem;
-  font-family: 'Merriweather', serif;
+  font-size: 1.3rem;
 }
 
 .topic-header {
-  font-size: 1.5rem;
-  font-family: 'Space Grotesk', sans-serif;
-}
-
-.section-content {
-  display: block;
+  font-size: 1.3rem;
 }
 
 .interactivity {
-    max-height: 0;
-    overflow: hidden;
-  }
-
-.italics {
-  font-style: italic;
-}
-
-.bold {
-  font-weight: bold;
-}
-
-.centered {
-  text-align: center;
+  max-height: 0;
+  overflow: hidden;
 }

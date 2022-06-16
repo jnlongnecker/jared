@@ -8,19 +8,16 @@ template.innerHTML = `<link rel="stylesheet" media="screen and (max-width:900px)
 .content {
     display: flex;
     justify-content: center;
+    align-items: center;
 }
 
-.backer {
-    padding: 1rem;
-    background-color: rgba(255,255,255, 0.06);
-    border-radius: 5px;
+.holder {
     display: inline-block;
 }
-@media screen and (max-width: 900px) {
-    
-    .backer  {
-        padding: 1rem;
-        margin: 1rem;
+
+@media only screen and (max-width:900px) {
+    .content {
+        padding: 0 1rem;
     }
 }</style>
 <section>
@@ -43,11 +40,7 @@ template.innerHTML = `<link rel="stylesheet" media="screen and (max-width:900px)
     </div>
 </section>
 
-<div class="content">
-    <div class="backer">
-        <slot name="content"></slot>
-    </div>
-</div>`;
+<slot name="content"></slot>`;
 
 export default class JworkDemocontent extends HTMLElement {
 

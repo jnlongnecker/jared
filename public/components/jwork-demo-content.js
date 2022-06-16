@@ -1,11 +1,11 @@
 let template = document.createElement("template");
-template.innerHTML = `<link rel="stylesheet" href="../styles/common.css" />
+template.innerHTML = `<link rel="stylesheet" media="screen and (max-width:900px)" href="../styles/common-phone.css" /><link rel="stylesheet" media="screen and (min-width:900px)" href="../styles/common.css" />
 <style>.intro {
     margin-top: 5rem;
     text-align: center;
 }</style>
 <section>
-    <div class="intro">
+    <div class="intro section-content">
         <h1 class="main-header">
             <slot name="header"></slot>
         </h1>
@@ -16,7 +16,7 @@ template.innerHTML = `<link rel="stylesheet" href="../styles/common.css" />
         <p class="italics">
             <slot name="blurb"></slot>
         </p>
-        <slot name="interactivity"></slot>
+        <slot class="interactivity" name="interactivity"></slot>
     </div>
 </section>
 

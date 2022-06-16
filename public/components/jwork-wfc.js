@@ -5,7 +5,7 @@ import jworkFooter from "./jwork-footer.js";
 
 
 let template = document.createElement("template");
-template.innerHTML = `<link rel="stylesheet" href="../styles/common.css" />
+template.innerHTML = `<link rel="stylesheet" media="screen and (max-width:900px)" href="../styles/common-phone.css" /><link rel="stylesheet" media="screen and (min-width:900px)" href="../styles/common.css" />
 <style>/* To Do /*
 </style>
 <jwork-header></jwork-header>
@@ -16,7 +16,7 @@ template.innerHTML = `<link rel="stylesheet" href="../styles/common.css" />
     <span slot="blurb">A pattern recognition algorithm to learn rules and construct larger outputs</span>
     <div slot="interactivity">
         <h3 class="centered">Interactivity</h3>
-        <p class="section-content">
+        <p class="centered">
             Draw in the provided box to create a sample, then click on the <code>RUN</code> button to run the algorithm.
             Left click to draw in the chosen color, and right click on a pixel to change to that color. Select the color
             picker above the sample to select a brand-new color. The red box is a representation of the sampling size
@@ -56,13 +56,16 @@ template.innerHTML = `<link rel="stylesheet" href="../styles/common.css" />
                     for better understanding how it works (if you're interested in this deconstruction, you can find my
                     fork <a href="https://github.com/jnlongnecker/WaveFunctionCollapse">here</a>).
                 </p>
-                <br />
+                <hr />
                 <p class="info">
                     Once the deconstruction of the algorithm was done and I sufficiently understood it, I then underwent
                     the task of translating the algorithm to JavaScript. How the algorithm works here is that the
                     pattern I supply to the algorithm is created by the user in the canvas, which is stored as a matrix
                     of colors. The algorithm then runs and outputs a larger matrix of colors based on the supplied
                     pattern.
+                </p>
+                <p class="info">
+
                 </p>
             </div>
         </section>

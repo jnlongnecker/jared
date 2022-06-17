@@ -47,7 +47,6 @@ template.innerHTML = `<link rel="stylesheet" media="screen and (max-width:900px)
     <div class="toolbar hide">
         <div class="content-holder">
             <div class="formatting">
-                <slot name="content"></slot>
             </div>
         </div>
         <div class="head">Toolbar</div>

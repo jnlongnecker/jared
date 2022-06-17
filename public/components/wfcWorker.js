@@ -573,8 +573,11 @@ class OverlappingModel {
 
 let wfc;
 let output;
+let reset;
 
 self.addEventListener("message", (event) => {
+
+    if (wfc) return;
 
     let payload = event.data;
 

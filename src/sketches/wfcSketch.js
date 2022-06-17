@@ -1,5 +1,7 @@
-import { ColorToHex } from "../scripts/util.js"
+import { ColorToHex, ConvertRemToPixels } from "../scripts/util.js"
 import { createElementWithText } from "../scripts/util.js";
+import JworkButton from "./jwork-button.js";
+import JworkSpinner from "./jwork-spinner.js";
 
 let p5;
 let sampleSize;
@@ -19,20 +21,13 @@ class UserSketch {
             this.pixels = [...pixels];
         }
         else {
-            // No, I didn't type this out manually
-            this.pixels = [
-                [p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333')],
-                [p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333')],
-                [p5.color('#333333'), p5.color('#333333'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#333333'), p5.color('#333333')],
-                [p5.color('#333333'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#333333')],
-                [p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#333333'), p5.color('#333333'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#333333'), p5.color('#333333'), p5.color('#BBBBBB'), p5.color('#BBBBBB')],
-                [p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#333333'), p5.color('#333333'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#333333'), p5.color('#333333'), p5.color('#BBBBBB'), p5.color('#BBBBBB')],
-                [p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB')],
-                [p5.color('#BBBBBB'), p5.color('#333333'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#333333'), p5.color('#BBBBBB')],
-                [p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#BBBBBB'), p5.color('#BBBBBB')],
-                [p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB')],
-                [p5.color('#333333'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#BBBBBB'), p5.color('#333333')],
-                [p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333'), p5.color('#333333')]];
+            this.pixels = [];
+            for (let r = 0; r < pixelsY; r++) {
+                this.pixels.push([]);
+                for (let c = 0; c < pixelsX; c++) {
+                    this.pixels[r].push(p5.color("#333"));
+                }
+            }
         }
     }
 
@@ -64,7 +59,7 @@ class UserSketch {
         p5.noFill();
         p5.rect(this.x, this.y, this.pixelSize * sampleSize.value, this.pixelSize * sampleSize.value);
 
-        if (mousePos.x >= 0 && mousePos.y >= 0) {
+        if (mousePos.x >= 0 && mousePos.y >= 0 && mousePos.x < this.pixelsX && mousePos.y < this.pixelsY) {
             p5.strokeWeight(4);
             p5.stroke(p5.color(this.primary));
             p5.noFill();
@@ -119,8 +114,8 @@ class OutputTexture {
     };
 
     Render(width = this.cols, height = this.rows, x, y) {
-        p5.strokeWeight(.5);
-        p5.stroke(p5.color(255, 255, 255));
+        p5.strokeWeight(.2);
+        p5.stroke('black');
         let xSize = width / this.pixels[0].length;
         let ySize = height / this.pixels.length;
         let pixelSize = p5.min(xSize, ySize);
@@ -193,6 +188,8 @@ export const wfc = (sketch) => {
     let userSketch;
     let colorPicker;
     let generateButton;
+    let spinner;
+    let viewInput;
 
     // Wave Function Collapse variables
     let output;
@@ -204,50 +201,87 @@ export const wfc = (sketch) => {
 
     // Canvas settings
     let cWidth = document.documentElement.clientWidth * 0.6;
-    let cHeight = document.documentElement.clientHeight * 0.65;
+    let cHeight = cWidth * 0.5;
     let paletteBackgroundColor = p5.color('hsl(0,0%,12%)');
 
     sketch.windowResized = () => {
         cWidth = document.documentElement.clientWidth * 0.6;
-        cHeight = document.documentElement.clientHeight * 0.65;
+        cHeight = cWidth * 0.5;
+        p5.textSize(ConvertRemToPixels(2));
+        let uSketchWidth = cWidth * 0.4;
+        let uSketchX = cWidth * 0.6;
+        let uSketchY = cWidth * 0.1;
+        let canvPos = canvas.canvas.getBoundingClientRect();
+        generateButton.position(canvPos.right - cWidth * 0.5 - generateButton.width * 0.5, window.pageYOffset + canvPos.top + cHeight * 0.5);
+        colorPicker.position(generateButton.position().x + (generateButton.width - colorPicker.width) * 0.5, generateButton.position().y + generateButton.height + 5, 'ABSOLUTE');
+
         if (document.documentElement.clientWidth <= 900) {
             cWidth = document.documentElement.clientWidth * 0.8;
+            cHeight = cWidth + cWidth * 0.2;
+            uSketchX = 0;
+            uSketchY = cWidth * 0.2;
+            uSketchWidth = cWidth;
         }
         p5.resizeCanvas(cWidth, cHeight);
 
         let temp = userSketch;
-        let userSketchWidth = cWidth * 0.3;
-        userSketch = new UserSketch(cWidth - userSketchWidth - 2, cHeight - userSketchWidth - 2, userSketchWidth, cHeight, 12, 12, temp.pixels);
+        userSketch = new UserSketch(uSketchX, uSketchY, uSketchWidth, uSketchWidth, 12, 12, temp.pixels);
     }
 
     sketch.setup = () => {
+        let uSketchWidth = cWidth * 0.4;
+        let uSketchX = cWidth * 0.6;
+        let uSketchY = cWidth * 0.1;
         if (document.documentElement.clientWidth <= 900) {
             cWidth = document.documentElement.clientWidth * 0.8;
+            cHeight = cWidth + cWidth * 0.2;
+            uSketchX = 0;
+            uSketchY = cWidth * 0.2;
+            uSketchWidth = cWidth;
         }
         canvas = p5.createCanvas(cWidth, cHeight);
+        p5.textFont('Open Sans');
+        p5.textAlign("center");
+        p5.textSize(ConvertRemToPixels(2));
 
-        PopulateTools();
+        // PopulateTools();
+        viewInput = false;
 
         let sketchHolder = document.querySelector("#canvas-holder");
         sketchHolder.addEventListener("contextmenu", e => e.preventDefault());
+        sketchHolder.addEventListener("touchmove", e => e.preventDefault());
 
-        let userSketchWidth = cWidth * 0.3;
-        userSketch = new UserSketch(cWidth - userSketchWidth - 2, cHeight - userSketchWidth - 2, userSketchWidth, cHeight, 12, 12);
+        userSketch = new UserSketch(uSketchX, uSketchY, uSketchWidth, uSketchWidth, 16, 16);
 
         colorPicker = p5.createColorPicker('#BBBBBB');
         colorPicker.parent(sketchHolder);
 
-        generateButton = p5.createButton("Run");
-        generateButton.parent(sketchHolder);
-        generateButton.mousePressed(GenerateOutput);
+        generateButton = document.createElement("jwork-button", { is: JworkButton });
+        sketchHolder.appendChild(generateButton);
+        generateButton.setAttribute("type", "primary");
+        generateButton.setAttribute("label", "run");
+        generateButton.addEventListener("click", () => GenerateOutput());
+
+        let canvPos = canvas.canvas.getBoundingClientRect();
+        generateButton.position(document.documentElement.clientWidth * 0.5 - generateButton.width * 0.5, window.pageYOffset + canvPos.top + cHeight * 0.5);
+        colorPicker.position(generateButton.position().x + (generateButton.width - colorPicker.width) * 0.5, generateButton.position().y + generateButton.height + 5, 'ABSOLUTE');
     }
 
     sketch.draw = () => {
-        let canvPos = canvas.canvas.getBoundingClientRect();
-        colorPicker.position(canvPos.right - userSketch.width, window.pageYOffset + canvPos.bottom - userSketch.width - 30, 'ABSOLUTE');
-        generateButton.position(colorPicker.position().x + colorPicker.width + 5, colorPicker.position().y);
-
         p5.background(paletteBackgroundColor);
+
+        if (document.documentElement.clientWidth <= 900) {
+            drawPhone();
+            return;
+        }
+        drawDesktop();
+    }
+
+    function drawDesktop() {
+        p5.noStroke();
+        p5.fill("white");
+        p5.text("Output", userSketch.width * 0.5, cHeight * 0.18);
+        p5.text("Input", userSketch.width * 0.5 + cWidth * 0.6, cHeight * 0.18);
 
         // Used to draw or change color
         if (p5.mouseIsPressed)
@@ -261,7 +295,31 @@ export const wfc = (sketch) => {
         p5.fill("white");
         userSketch.Render();
         if (output)
-            output.Render(cWidth - userSketch.width, cHeight, 0, 0);
+            output.Render(userSketch.width, userSketch.height, userSketch.x - cWidth * 0.6, userSketch.y);
+    }
+
+    function drawPhone() {
+        if (viewInput) {
+            p5.noStroke();
+            p5.fill("white");
+            p5.text("Input", userSketch.width * 0.5, cHeight * 0.1);
+
+            if (p5.mouseIsPressed)
+                if (p5.mouseButton == p5.LEFT)
+                    userSketch.Ink(colorPicker.color());
+                else if (p5.mouseButton == p5.RIGHT)
+                    colorPicker.value(ColorToHex(userSketch.Select()));
+
+            userSketch.Render();
+            return;
+        }
+        else if (output) {
+            p5.noStroke();
+            p5.fill("white");
+            p5.text("Ouput", userSketch.width * 0.5, cHeight * 0.1);
+            output.Render(userSketch.width, userSketch.height, userSketch.x, userSketch.y)
+        }
+
     }
 
     function GenerateOutput() {
@@ -275,6 +333,12 @@ export const wfc = (sketch) => {
             pOutput: periodicOutput.checked,
             sym: symmetry.value
         });
+        let canvPos = canvas.canvas.getBoundingClientRect();
+        if (!spinner) {
+            spinner = document.createElement("jwork-spinner", { is: JworkSpinner });
+            document.documentElement.appendChild(spinner);
+            spinner.position(canvPos.left + userSketch.width * 0.5, canvPos.bottom - cHeight * 0.5);
+        }
     }
 
     function PopulateTools() {
@@ -324,7 +388,7 @@ export const wfc = (sketch) => {
         let sampleText = createElementWithText("p", "Sampling Size");
         sampleSize = document.createElement("input");
         sampleSize.setAttribute("type", "range");
-        sampleSize.setAttribute("min", "2"); sampleSize.setAttribute("max", "5");
+        sampleSize.setAttribute("min", "2"); sampleSize.setAttribute("max", "4");
         let outputText = createElementWithText("p", "Output Pixels");
         outputLength = document.createElement("input");
         outputLength.setAttribute("type", "range");
@@ -353,6 +417,10 @@ export const wfc = (sketch) => {
     wfc.addEventListener("message", (event) => {
         let payload = event.data;
         output = new OutputTexture(payload.pixels, payload.width, payload.height);
+        if (spinner) {
+            document.documentElement.removeChild(spinner);
+            spinner = null;
+        }
     });
 
 }

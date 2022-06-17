@@ -1,0 +1,46 @@
+@keyframes bounce {
+    0% {
+        height: 3rem;
+        width: 0.5rem;
+        background-color: hsl(0, 0%, 20%);
+    }
+    30% {
+        height: 5.5rem;
+        width: 0.2rem;
+        background-color: hsl(0, 0%, 75%);
+    }
+    60%,100% {
+        height: 3rem;
+        width: 0.5rem;
+        background-color: hsl(0, 0%, 20%);
+    }
+}
+
+.container {
+    position: absolute;
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    align-items: top;
+    height: 5rem;
+    width: 4rem
+}
+
+.bar {
+    width: 0.5rem;
+    height: 3rem;
+    background-color: hsl(0, 0%, 20%);
+    animation: .8s bounce forwards infinite;
+}
+
+#one {
+    animation-delay: 0s;
+}
+
+#two {
+    animation-delay: .15s;
+}
+
+#three {
+    animation-delay: .3s;
+}

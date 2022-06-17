@@ -219,7 +219,7 @@ export const wfc = (sketch) => {
         let uSketchY = cWidth * 0.1;
 
         if (document.documentElement.clientWidth <= 900) {
-            cWidth = document.documentElement.clientWidth * 0.75;
+            cWidth = document.documentElement.clientWidth * 0.8;
             cHeight = cWidth + cWidth * 0.2;
             uSketchX = 0;
             uSketchY = cWidth * 0.2;

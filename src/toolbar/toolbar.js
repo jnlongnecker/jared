@@ -1,41 +1,45 @@
+import JworkIconButton from "./jwork-icon-button.js";
+
 export default class Toolbar extends HTMLElement {
 
+    controlsButton;
+
     connectedCallback() {
-        this.toolbar = this.template.querySelector(".toolbar");
+        this.controls = this.template.querySelector(".controls");
         this.parent = this.querySelector("*[slot=item]:first-child");
 
         // Position the toolbar correctly on the parent
         const cb = () => {
-            let newStyles = "";
-            let parent = this.parent;
-            const coords = parent.getBoundingClientRect();
+            let box = this.parent.getBoundingClientRect();
 
-            newStyles += `top:${coords.top + window.pageYOffset}px;`;
-            newStyles += `left:${coords.right}px;`;
-            newStyles += `height:${coords.height}px;`;
+            let style = `position:absolute;`;
+            style += `top:${window.scrollY + box.top}px;left:${window.scrollX + box.left}px;`;
+            style += `width:${box.width}px;height:${box.height}px;`;
 
-            // Hide the toolbar on small clients
-            if (document.documentElement.clientWidth < 900) {
-                this.toolbar.setAttribute("style", "max-height: 0; overflow: hidden");
+            this.controls.setAttribute("style", style);
+        }
+
+        let contentSlot = this.template.querySelector("slot[name=controls]");
+        contentSlot.onslotchange = () => {
+            if (contentSlot.assignedNodes().length && this.controlsButton) {
+                this.controlsButton.parentNode.removeChild(this.controlsButton);
+                return;
             }
-            else {
-                this.toolbar.setAttribute("style", newStyles);
-            }
+            if (this.controlsButton) return;
+            this.controlsButton = document.createElement("jwork-icon-button", { is: JworkIconButton });
+            this.controlsButton.setAttribute("variant", "secondary");
+            this.controlsButton.setAttribute("icon", "settings");
+            this.controlsButton.onclick = () => { this.toggleControls() };
+            this.template.querySelector(".toolbar").appendChild(this.controlsButton);
         }
 
         // Detect changes in the parent
         let resizeObserver = new ResizeObserver(cb);
         resizeObserver.observe(this.parent);
+    }
 
-        // Unhide the toolbar when content has been slotted in
-        let contentSlot = this.template.querySelector("slot[name=content]");
-        contentSlot.onslotchange = () => {
-            this.template.querySelector(".toolbar").classList.remove("hide");
-        }
-
-        // Expand/reduce the toolbar on head click
-        this.template.querySelector(".head").addEventListener("click", () => {
-            this.template.querySelector(".content-holder").classList.toggle("expanded");
-        });
+    toggleControls() {
+        this.controls.classList.toggle("hide");
+        this.controlsButton.changeState();
     }
 }

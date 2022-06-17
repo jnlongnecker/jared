@@ -1,38 +1,30 @@
+import JworkIconButton from "./jwork-icon-button.js";
+
 let template = document.createElement("template");
 template.innerHTML = `<link rel="stylesheet" media="screen and (max-width:900px)" href="../styles/common-phone.css" /><link rel="stylesheet" media="screen and (min-width:900px)" href="../styles/common.css" />
 <style>.toolbar {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    padding: .5rem 0;
+}
+
+.controls {
     position: absolute;
     display: flex;
     justify-content:start;
-}
-
-.head {
-    background: rgba(40,40,40,0.4);
-    color: var(--color);
-    writing-mode: vertical-rl;
-    text-orientation: mixed;
-    height: 100%;
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
-}
-
-.head:hover {
-    cursor: pointer;
+    align-items: stretch;
+    transition: .5s;
+    max-height: 100%;
 }
 
 .content-holder {
-    background: rgba(40,40,40,0.2);
-    color: var(--color);
-    height: 100%;
-    max-width: 0px;
+    background: rgba(0,0,0,0.95);
+    color: var(--white);
     transition: 0.5s;
     overflow: hidden;
     white-space: nowrap;
-}
-
-.expanded {
-    max-width: calc(20vw - 1.5rem);
-    transition: 0.5s;
+    width: 100%;
 }
 
 .formatting {
@@ -40,16 +32,20 @@ template.innerHTML = `<link rel="stylesheet" media="screen and (max-width:900px)
 }
 
 .hide {
-    display: none;
+    max-height: 0;
+    transition: .5s;
 }</style>
 <div>
     <slot name="item"></slot>
-    <div class="toolbar hide">
+    <div class="toolbar">
+        <slot></slot>
+    </div>
+    <div class="controls hide">
         <div class="content-holder">
             <div class="formatting">
+                <slot name="controls"></slot>
             </div>
         </div>
-        <div class="head">Toolbar</div>
     </div>
 </div>`;
 
@@ -62,43 +58,45 @@ export default class JworkToolbar extends HTMLElement {
 	}
 
 
+	controlsButton;
+
 	connectedCallback() {
-		this.toolbar = this.template.querySelector(".toolbar");
+		this.controls = this.template.querySelector(".controls");
 		this.parent = this.querySelector("*[slot=item]:first-child");
 
 		// Position the toolbar correctly on the parent
 		const cb = () => {
-			let newStyles = "";
-			let parent = this.parent;
-			const coords = parent.getBoundingClientRect();
+			let box = this.parent.getBoundingClientRect();
 
-			newStyles += `top:${coords.top + window.pageYOffset}px;`;
-			newStyles += `left:${coords.right}px;`;
-			newStyles += `height:${coords.height}px;`;
+			let style = `position:absolute;`;
+			style += `top:${window.scrollY + box.top}px;left:${window.scrollX + box.left}px;`;
+			style += `width:${box.width}px;height:${box.height}px;`;
 
-			// Hide the toolbar on small clients
-			if (document.documentElement.clientWidth < 900) {
-				this.toolbar.setAttribute("style", "max-height: 0; overflow: hidden");
+			this.controls.setAttribute("style", style);
+		}
+
+		let contentSlot = this.template.querySelector("slot[name=controls]");
+		contentSlot.onslotchange = () => {
+			if (contentSlot.assignedNodes().length && this.controlsButton) {
+				this.controlsButton.parentNode.removeChild(this.controlsButton);
+				return;
 			}
-			else {
-				this.toolbar.setAttribute("style", newStyles);
-			}
+			if (this.controlsButton) return;
+			this.controlsButton = document.createElement("jwork-icon-button", { is: JworkIconButton });
+			this.controlsButton.setAttribute("variant", "secondary");
+			this.controlsButton.setAttribute("icon", "settings");
+			this.controlsButton.onclick = () => { this.toggleControls() };
+			this.template.querySelector(".toolbar").appendChild(this.controlsButton);
 		}
 
 		// Detect changes in the parent
 		let resizeObserver = new ResizeObserver(cb);
 		resizeObserver.observe(this.parent);
+	}
 
-		// Unhide the toolbar when content has been slotted in
-		let contentSlot = this.template.querySelector("slot[name=content]");
-		contentSlot.onslotchange = () => {
-			this.template.querySelector(".toolbar").classList.remove("hide");
-		}
-
-		// Expand/reduce the toolbar on head click
-		this.template.querySelector(".head").addEventListener("click", () => {
-			this.template.querySelector(".content-holder").classList.toggle("expanded");
-		});
+	toggleControls() {
+		this.controls.classList.toggle("hide");
+		this.controlsButton.changeState();
 	}
 
 }

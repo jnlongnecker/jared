@@ -8,7 +8,8 @@ template.innerHTML = `<link rel="stylesheet" media="screen and (max-width:900px)
     color: var(--black);
     border: 0;
     vertical-align: middle;
-    padding: .2rem 1rem;
+    padding: .4rem 1rem;
+    letter-spacing: 2px;
 }
 
 button:hover {
@@ -45,9 +46,13 @@ export default class JworkButton extends HTMLElement {
 		return this.btn.getBoundingClientRect().height;
 	}
 
+	text;
+
 	connectedCallback() {
 		this.btn = this.template.querySelector("button");
 		this.updateStyle("primary");
+		this.addEventListener("click", this.onclick);
+		this.updateLabel(this.text);
 	}
 
 	attributeChangedCallback(name, oldVal, newVal) {
@@ -66,7 +71,10 @@ export default class JworkButton extends HTMLElement {
 	}
 
 	updateLabel(newLabel) {
-		this.btn.innerText = newLabel.toUpperCase();
+		this.text = newLabel;
+		if (this.btn) {
+			this.btn.innerText = newLabel.toUpperCase();
+		}
 	}
 
 	position(x, y) {
@@ -75,6 +83,8 @@ export default class JworkButton extends HTMLElement {
 		}
 		return { x: this.btn.getBoundingClientRect().x + window.scrollX, y: this.btn.getBoundingClientRect().y + window.scrollY };
 	}
+
+	onclick() { }
 
 }
 

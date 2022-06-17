@@ -6,7 +6,8 @@ button {
     color: var(--black);
     border: 0;
     vertical-align: middle;
-    padding: .2rem 1rem;
+    padding: .4rem 1rem;
+    letter-spacing: 2px;
 }
 
 button:hover {

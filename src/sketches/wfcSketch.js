@@ -244,7 +244,7 @@ export const wfc = (sketch) => {
         p5.textAlign("center");
         p5.textSize(ConvertRemToPixels(2));
 
-        // PopulateTools();
+        PopulateTools();
         viewInput = false;
 
         let sketchHolder = document.querySelector("#canvas-holder");
@@ -347,7 +347,7 @@ export const wfc = (sketch) => {
 
         // Create the div to hold the toolbar content to be slotted in
         let slotDiv = document.createElement("div");
-        slotDiv.setAttribute("slot", "content");
+        slotDiv.setAttribute("slot", "controls");
 
         let wrapControls = document.createElement("div");
         wrapControls.classList.add("controls");

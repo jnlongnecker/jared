@@ -16,7 +16,7 @@ template.innerHTML = `<link rel="stylesheet" media="screen and (max-width:900px)
     <div slot="interactivity">
         <h3 class="centered">Interactivity</h3>
         <p class="centered">
-            Fiddle with the settings to the right of the canvas to control various features of the QuadTree and the
+            Fiddle with the settings by clicking the button to control various features of the QuadTree and the
             simulation.
         <ul>
             <li>Enable QuadTree Visualization: Toggle on or off the visualization features.</li>

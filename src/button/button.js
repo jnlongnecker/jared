@@ -11,9 +11,13 @@ export default class Button extends HTMLElement {
         return this.btn.getBoundingClientRect().height;
     }
 
+    text;
+
     connectedCallback() {
         this.btn = this.template.querySelector("button");
         this.updateStyle("primary");
+        this.addEventListener("click", this.onclick);
+        this.updateLabel(this.text);
     }
 
     attributeChangedCallback(name, oldVal, newVal) {
@@ -32,7 +36,10 @@ export default class Button extends HTMLElement {
     }
 
     updateLabel(newLabel) {
-        this.btn.innerText = newLabel.toUpperCase();
+        this.text = newLabel;
+        if (this.btn) {
+            this.btn.innerText = newLabel.toUpperCase();
+        }
     }
 
     position(x, y) {
@@ -41,4 +48,6 @@ export default class Button extends HTMLElement {
         }
         return { x: this.btn.getBoundingClientRect().x + window.scrollX, y: this.btn.getBoundingClientRect().y + window.scrollY };
     }
+
+    onclick() { }
 }

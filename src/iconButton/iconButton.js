@@ -108,7 +108,7 @@ export default class IconButton extends HTMLElement {
             if (newVal.toLowerCase() == "colorpicker") {
                 this.btn.setAttribute("style", "outline: 4px solid #bbbbbb;outline-offset:-4px;")
                 this.template.querySelector("input[type=color]").onchange = (e) => {
-                    let newStyle = `outline: 4px solid ${e.target.value};outline-offset:-4px;`;
+                    let newStyle = `outline: 4px solid ${e.target.value};outline-offset:-4px;outline-radius:100%;`;
                     this.btn.setAttribute("style", newStyle);
                 };
             }

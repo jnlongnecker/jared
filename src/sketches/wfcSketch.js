@@ -1,5 +1,6 @@
 import { ColorToHex, ConvertRemToPixels } from "../scripts/util.js"
 import { createElementWithText } from "../scripts/util.js";
+import JworkIconButton from "./jwork-icon-button.js";
 import JworkButton from "./jwork-button.js";
 import JworkSpinner from "./jwork-spinner.js";
 
@@ -78,6 +79,7 @@ class UserSketch {
     }
 
     Ink(newColor) {
+        newColor = p5.color(newColor);
         let mousePos = {
             x: p5.floor((p5.mouseX - this.x) / this.pixelSize),
             y: p5.floor((p5.mouseY - this.y) / this.pixelSize)
@@ -190,6 +192,9 @@ export const wfc = (sketch) => {
     let generateButton;
     let spinner;
     let viewInput;
+    let swapButton;
+    let downloadButton;
+    let toolbar;
 
     // Wave Function Collapse variables
     let output;
@@ -198,6 +203,7 @@ export const wfc = (sketch) => {
     let periodicInput;
     let periodicOutput;
     let symmetry;
+    let wfcWorking;
 
     // Canvas settings
     let cWidth = document.documentElement.clientWidth * 0.6;
@@ -211,16 +217,17 @@ export const wfc = (sketch) => {
         let uSketchWidth = cWidth * 0.4;
         let uSketchX = cWidth * 0.6;
         let uSketchY = cWidth * 0.1;
-        let canvPos = canvas.canvas.getBoundingClientRect();
-        generateButton.position(canvPos.right - cWidth * 0.5 - generateButton.width * 0.5, window.pageYOffset + canvPos.top + cHeight * 0.5);
-        colorPicker.position(generateButton.position().x + (generateButton.width - colorPicker.width) * 0.5, generateButton.position().y + generateButton.height + 5, 'ABSOLUTE');
 
         if (document.documentElement.clientWidth <= 900) {
-            cWidth = document.documentElement.clientWidth * 0.8;
+            cWidth = document.documentElement.clientWidth * 0.75;
             cHeight = cWidth + cWidth * 0.2;
             uSketchX = 0;
             uSketchY = cWidth * 0.2;
             uSketchWidth = cWidth;
+            toolbar.appendChild(swapButton);
+        }
+        else if (toolbar.contains(swapButton)) {
+            toolbar.removeChild(swapButton);
         }
         p5.resizeCanvas(cWidth, cHeight);
 
@@ -245,26 +252,15 @@ export const wfc = (sketch) => {
         p5.textSize(ConvertRemToPixels(2));
 
         PopulateTools();
-        viewInput = false;
+
+        wfcWorking = false;
+        viewInput = true;
 
         let sketchHolder = document.querySelector("#canvas-holder");
         sketchHolder.addEventListener("contextmenu", e => e.preventDefault());
         sketchHolder.addEventListener("touchmove", e => e.preventDefault());
 
         userSketch = new UserSketch(uSketchX, uSketchY, uSketchWidth, uSketchWidth, 16, 16);
-
-        colorPicker = p5.createColorPicker('#BBBBBB');
-        colorPicker.parent(sketchHolder);
-
-        generateButton = document.createElement("jwork-button", { is: JworkButton });
-        sketchHolder.appendChild(generateButton);
-        generateButton.setAttribute("type", "primary");
-        generateButton.setAttribute("label", "run");
-        generateButton.addEventListener("click", () => GenerateOutput());
-
-        let canvPos = canvas.canvas.getBoundingClientRect();
-        generateButton.position(document.documentElement.clientWidth * 0.5 - generateButton.width * 0.5, window.pageYOffset + canvPos.top + cHeight * 0.5);
-        colorPicker.position(generateButton.position().x + (generateButton.width - colorPicker.width) * 0.5, generateButton.position().y + generateButton.height + 5, 'ABSOLUTE');
     }
 
     sketch.draw = () => {
@@ -288,7 +284,7 @@ export const wfc = (sketch) => {
             if (p5.mouseButton == p5.LEFT)
                 userSketch.Ink(colorPicker.color());
             else if (p5.mouseButton == p5.RIGHT)
-                colorPicker.value(ColorToHex(userSketch.Select()));
+                colorPicker.color(ColorToHex(userSketch.Select()));
 
 
         p5.noStroke();
@@ -313,17 +309,22 @@ export const wfc = (sketch) => {
             userSketch.Render();
             return;
         }
-        else if (output) {
-            p5.noStroke();
-            p5.fill("white");
-            p5.text("Ouput", userSketch.width * 0.5, cHeight * 0.1);
+
+        p5.noStroke();
+        p5.fill("white");
+        p5.text("Ouput", userSketch.width * 0.5, cHeight * 0.1);
+        if (output) {
             output.Render(userSketch.width, userSketch.height, userSketch.x, userSketch.y)
         }
 
     }
 
     function GenerateOutput() {
+        if (wfcWorking) return;
+
+        wfcWorking = true;
         output = null;
+        viewInput = false;
         wfc.postMessage({
             pixels: userSketch.pixels,
             n: sampleSize.value,
@@ -335,6 +336,8 @@ export const wfc = (sketch) => {
         });
         let canvPos = canvas.canvas.getBoundingClientRect();
         if (!spinner) {
+            generateButton.toggleDisabled();
+            generateButton.togglePlay();
             spinner = document.createElement("jwork-spinner", { is: JworkSpinner });
             document.documentElement.appendChild(spinner);
             spinner.position(canvPos.left + userSketch.width * 0.5, canvPos.bottom - cHeight * 0.5);
@@ -343,7 +346,7 @@ export const wfc = (sketch) => {
 
     function PopulateTools() {
         // Retrieve a reference to the toolbar
-        let toolbar = document.querySelector("jwork-toolbar");
+        toolbar = document.querySelector("jwork-toolbar");
 
         // Create the div to hold the toolbar content to be slotted in
         let slotDiv = document.createElement("div");
@@ -405,7 +408,36 @@ export const wfc = (sketch) => {
 
         slotDiv.appendChild(wrapControls);
         slotDiv.appendChild(numControls);
+
+        generateButton = document.createElement("jwork-icon-button", { is: JworkIconButton });
+        generateButton.setAttribute("icon", "play");
+        generateButton.onclick = () => {
+            GenerateOutput();
+        }
+
+        toolbar.appendChild(generateButton);
+
+        colorPicker = document.createElement("jwork-icon-button", { is: JworkIconButton });
+        colorPicker.setAttribute("icon", "colorpicker");
+        toolbar.appendChild(colorPicker);
+
+        downloadButton = document.createElement("jwork-icon-button", { is: JworkIconButton });
+        downloadButton.setAttribute("icon", "download");
+        downloadButton.onclick = () => { Download(); };
+        toolbar.appendChild(downloadButton);
+
+        downloadButton.toggleDisabled();
+
+
+        swapButton = document.createElement("jwork-icon-button", { is: JworkIconButton });
+        swapButton.setAttribute("icon", "flip");
+        swapButton.onclick = () => { viewInput = !viewInput; };
+
+        if (document.documentElement.clientWidth <= 900) {
+            toolbar.appendChild(swapButton);
+        }
         toolbar.appendChild(slotDiv);
+
 
         sampleSize.value = 3;
         outputLength.value = 16;
@@ -414,9 +446,48 @@ export const wfc = (sketch) => {
         symmetry.value = 8;
     }
 
+    function Download() {
+        if (!output) return;
+
+        let canv = document.createElement("canvas");
+        canv.width = output.pixels.length;
+        canv.height = output.pixels[0].length;
+
+        let context = canv.getContext("2d");
+        let imageData = context.createImageData(canv.width, canv.height);
+
+        for (let x = 0; x < output.pixels.length; x++) {
+            for (let y = 0; y < output.pixels[x].length; y++) {
+                let spot = (x * output.pixels.length + y) * 4;
+                let color = p5.color(output.pixels[x][y].toString("rrggbbaa"));
+                imageData.data[spot + 0] = color.levels[0];
+                imageData.data[spot + 1] = color.levels[1];
+                imageData.data[spot + 2] = color.levels[2];
+                imageData.data[spot + 3] = color.levels[3];
+            }
+        }
+
+        context.putImageData(imageData, 0, 0);
+
+        p5.saveCanvas(canv, "wfc-output", "png");
+        let png = canv.toDataURL("image/png");
+        return { type: "png", value: png };
+    }
+
     wfc.addEventListener("message", (event) => {
         let payload = event.data;
         output = new OutputTexture(payload.pixels, payload.width, payload.height);
+
+        if (downloadButton.getAttribute("disabled")) {
+            downloadButton.toggleDisabled();
+        }
+
+        if (payload.done) {
+            console.log("wfc done");
+            generateButton.toggleDisabled();
+            generateButton.togglePlay();
+            wfcWorking = false;
+        }
         if (spinner) {
             document.documentElement.removeChild(spinner);
             spinner = null;

@@ -32,7 +32,12 @@ code {
 
 a {
     color: var(--anchor);
+    text-decoration: none;
   }
+
+a:hover {
+  text-decoration: underline;
+}
   
   a:visited {
     color: var(--anchor);

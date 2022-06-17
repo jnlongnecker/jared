@@ -328,7 +328,10 @@ class OverlappingModel {
             let currentEntropy = this.entropyAt[position];
 
             // If there are no remaining patterns at a spot, that's a contradiciton and the algorithm failed
-            if (remainingPatterns == 0) return false;
+            if (remainingPatterns == 0) {
+                this.done = true;
+                return false;
+            }
 
             // If there is 1 remaining pattern at a spot, that position is solved and we can skip
             // If the current entropy is greater than the minimum, well it's not the minimum is it?
@@ -577,6 +580,8 @@ let reset;
 
 self.addEventListener("message", (event) => {
 
+    console.log("got message");
+
     if (wfc) return;
 
     let payload = event.data;
@@ -600,7 +605,7 @@ function runWfc() {
     while (result === null) {
         result = wfc.Run(5);
         wfc.buildInProgress();
-        output = { pixels: wfc.inProgress, width: wfc.width, height: wfc.height };
+        output = { pixels: wfc.inProgress, width: wfc.width, height: wfc.height, done: wfc.done };
 
         if (result !== false) self.postMessage(output);
     }

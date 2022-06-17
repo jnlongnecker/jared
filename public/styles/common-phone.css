@@ -7,6 +7,7 @@ p {
 
 .main-header {
     text-align: center;
+    border-radius: 0;
   }
 
 .subheader {

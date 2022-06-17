@@ -1,83 +1,62 @@
+import jworkIconButton from "./jwork-icon-button.js";
+
+
 let template = document.createElement("template");
 template.innerHTML = `<link rel="stylesheet" media="screen and (max-width:900px)" href="../styles/common-phone.css" /><link rel="stylesheet" media="screen and (min-width:900px)" href="../styles/common.css" />
 <style>footer {
-  text-align: center;
   display: flex;
   flex-wrap: nowrap;
-  flex-direction: row-reverse;
-  justify-content: flex-start;
+  justify-content: space-between;
   justify-items: stretch;
-  position: sticky;
-  bottom: 0px;
-  color: var(--background);
+  background-color: rgba(255,255,255,.06);
+  border-top: 2px solid rgba(255,255,255, 0.08);
 }
 
-.item-holder {
-  display: flex;
-  transition: .5s;
-  flex-direction: column;
-  align-items: center;
-  justify-items: stretch;
-  padding: 0 1.5rem;
-  background-color: rgba(255, 255, 255, 16);
-}
-
-.item-holder:hover {
-  cursor: pointer;
+section {
   margin: 0;
-  background-color: var(--palette-primary);
-  color: var(--background);
+  justify-content: stretch;
+  align-items: stretch;
+  font-size: .8rem;
+  padding: 5px 10px;
+  color: rgba(255,255,255, 0.65);
+  width: 30%;
 }
 
-.item-holder:hover + .expanse {
-  transition: .5s cubic-bezier(0.165, 0.84, 0.44, 1);
-  flex-grow: 1;
-  max-width: 100%;
-  padding-right: 1.5rem;
+hr {
+  width: 0;
+  margin: 1rem 0;
+  border-left: 1px solid white;
 }
 
-.expanse {
-  border-left: 2px solid var(--palette-primary);
-  background-color: var(--palette-darkest);
-  transition: .3s;
-  max-width: 0;
-  overflow: hidden;
-  white-space: nowrap;
-  color: var(--palette-lightest);
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
+p {
+  margin: 5px 0;
 }
 
-.item {
-  font-size: 1rem;
-  margin: .5rem;
+.left {
+  text-align: left;
 }
 
-.darkest {
-  background-color: var(--palette-darkest);
+.middle {
+  text-align: center;
 }
 
-.light {
-  background-color: var(--palette-light);
-}
-
-.lightest {
-  background-color: var(--palette-lightest);
-  color: var(--background);
+.right {
+  text-align: right;
 }
 </style>
 <footer>
-    <!--
-    <a class="item-holder" href="https://github.com/jnlongnecker">
-        <p class="item">GitHub</p>
-    </a>
-    <div class="expanse">View all my GitHub repositories</div>
-    <a class="item-holder" href="https://github.com/jnlongnecker/jared">
-        <p class="item">Site Repo</p>
-    </a>
-    <div class="expanse">View the source code for this site</div>
-    -->
+    <section class="left"></section>
+    <hr />
+    <section class="middle">
+        <a href="https://github.com/jnlongnecker">
+            <jwork-icon-button icon="github"></jwork-icon-button>
+        </a>
+    </section>
+    <hr />
+    <section class="right">
+        <p>Icons by <a target="_blank" href="https://icons8.com/">Icons8</a></p>
+        <p>Site <a target="_blank" href="https://github.com/jnlongnecker/jared">source code</a></p>
+    </section>
 </footer>`;
 
 export default class JworkFooter extends HTMLElement {

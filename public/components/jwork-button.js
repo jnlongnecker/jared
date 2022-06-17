@@ -72,7 +72,7 @@ export default class JworkButton extends HTMLElement {
 
 	updateLabel(newLabel) {
 		this.text = newLabel;
-		if (this.btn) {
+		if (this.btn && newLabel) {
 			this.btn.innerText = newLabel.toUpperCase();
 		}
 	}

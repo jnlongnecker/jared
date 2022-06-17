@@ -13,6 +13,7 @@ div {
     display: inline-block;
     border-radius: 100%;
     background-color: rgba(255,255,255, .08);
+    transform: translateZ(0);
 }
 
 input[type=color] {
@@ -30,6 +31,7 @@ button {
     align-items: center;
     background-color: rgba(0,0,0,0);
     transition: 0.1s;
+    transform: translateZ(0);
 }
 
 button:hover,input[type=color]:hover {
@@ -244,7 +246,7 @@ export default class JworkIconbutton extends HTMLElement {
 			if (newVal.toLowerCase() == "colorpicker") {
 				this.btn.setAttribute("style", "outline: 4px solid #bbbbbb;outline-offset:-4px;")
 				this.template.querySelector("input[type=color]").onchange = (e) => {
-					let newStyle = `outline: 4px solid ${e.target.value};outline-offset:-4px;`;
+					let newStyle = `outline: 4px solid ${e.target.value};outline-offset:-4px;outline-radius:100%;`;
 					this.btn.setAttribute("style", newStyle);
 				};
 			}

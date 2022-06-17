@@ -17,8 +17,3 @@ p {
 .topic-header {
   font-size: 1.3rem;
 }
-
-.interactivity {
-  max-height: 0;
-  overflow: hidden;
-}

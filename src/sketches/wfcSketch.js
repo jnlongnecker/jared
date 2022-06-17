@@ -232,7 +232,7 @@ export const wfc = (sketch) => {
         p5.resizeCanvas(cWidth, cHeight);
 
         let temp = userSketch;
-        userSketch = new UserSketch(uSketchX, uSketchY, uSketchWidth, uSketchWidth, 12, 12, temp.pixels);
+        userSketch = new UserSketch(uSketchX, uSketchY, uSketchWidth, uSketchWidth, 16, 16, temp.pixels);
     }
 
     sketch.setup = () => {

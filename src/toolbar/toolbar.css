@@ -1,36 +1,26 @@
 .toolbar {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    padding: .5rem 0;
+}
+
+.controls {
     position: absolute;
     display: flex;
     justify-content:start;
-}
-
-.head {
-    background: rgba(40,40,40,0.4);
-    color: var(--color);
-    writing-mode: vertical-rl;
-    text-orientation: mixed;
-    height: 100%;
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
-}
-
-.head:hover {
-    cursor: pointer;
+    align-items: stretch;
+    transition: .5s;
+    max-height: 100%;
 }
 
 .content-holder {
-    background: rgba(40,40,40,0.2);
-    color: var(--color);
-    height: 100%;
-    max-width: 0px;
+    background: rgba(0,0,0,0.95);
+    color: var(--white);
     transition: 0.5s;
     overflow: hidden;
     white-space: nowrap;
-}
-
-.expanded {
-    max-width: calc(20vw - 1.5rem);
-    transition: 0.5s;
+    width: 100%;
 }
 
 .formatting {
@@ -38,5 +28,6 @@
 }
 
 .hide {
-    display: none;
+    max-height: 0;
+    transition: .5s;
 }

@@ -1,4 +1,5 @@
 import { createElementWithText } from "../scripts/util.js";
+import JworkIconButton from "./jwork-icon-button.js";
 let p5;
 
 /*
@@ -311,6 +312,8 @@ export const quadTree = sketch => {
     let showVisualization;
     let numCircles;
     let timer;
+    let playButton;
+    let downloadButton;
 
     // Data structures for the Quad Tree and time reporting
     let qTree;
@@ -355,6 +358,8 @@ export const quadTree = sketch => {
      *  @returntype: undefined
      */
     sketch.draw = () => {
+        if (playButton.getAttribute("icon") == "play") return;
+
         p5.background(paletteBackgroundColor);
         p5.noStroke();
 
@@ -498,7 +503,7 @@ export const quadTree = sketch => {
 
         // Create the div to hold the toolbar content to be slotted in
         let slotDiv = document.createElement("div");
-        slotDiv.setAttribute("slot", "content");
+        slotDiv.setAttribute("slot", "controls");
 
         // Create the div to hold the slider controls
         let containerDiv = document.createElement("div");
@@ -567,7 +572,22 @@ export const quadTree = sketch => {
         slotDiv.appendChild(timerText);
         slotDiv.appendChild(time);
 
+        playButton = document.createElement("jwork-icon-button", { is: JworkIconButton });
+        playButton.setAttribute("icon", "pause");
+        playButton.onclick = () => { playButton.togglePlay() };
+
+        downloadButton = document.createElement("jwork-icon-button", { is: JworkIconButton });
+        downloadButton.setAttribute("icon", "download");
+        downloadButton.onclick = () => { Download(); };
+
+        toolbar.appendChild(playButton);
+        toolbar.appendChild(downloadButton);
+
         // Slot in the toolbar controls
         toolbar.appendChild(slotDiv);
+    }
+
+    function Download() {
+        p5.saveCanvas(p5.canvas, "quadtree", "png");
     }
 };

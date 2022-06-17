@@ -40,3 +40,7 @@ export const DigitToHex = function (digit) {
     let unicode = digit > 9 ? 55 + digit : 48 + digit;
     return String.fromCharCode(unicode);
 }
+
+export const ConvertRemToPixels = function (rem) {
+    return rem * parseFloat(getComputedStyle(document.documentElement).fontSize);
+}

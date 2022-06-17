@@ -1,3 +1,4 @@
+import JworkIconButton from "./jwork-icon-button.js";
 let p5;
 
 /*
@@ -231,6 +232,9 @@ class Circle {
 export const circle = sketch => {
     p5 = sketch;
 
+    let playButton;
+    let downloadButton;
+
     // Simulation variables
     var circles;
     var ripple;
@@ -287,6 +291,8 @@ export const circle = sketch => {
             cWidth = document.documentElement.clientWidth * 0.8;
         }
         p5.createCanvas(cWidth, cHeight);
+
+        PopulateToolbar();
     }
 
     /*
@@ -294,6 +300,8 @@ export const circle = sketch => {
      *  @returntype: undefined
      */
     sketch.draw = () => {
+        if (playButton.getAttribute("icon") == "play") return;
+
         p5.background(paletteBackgroundColor);
         HandleCircles();
         p5.noStroke();
@@ -422,6 +430,25 @@ export const circle = sketch => {
         let randomChoice = Math.floor(p5.random(0, bubbleSounds.length - 1));
         audioPlayer.src = bubbleSounds[randomChoice].src;
         audioPlayer.play();
+    }
+
+    function PopulateToolbar() {
+        let toolbar = document.querySelector("jwork-toolbar");
+
+        playButton = document.createElement("jwork-icon-button", { is: JworkIconButton });
+        playButton.setAttribute("icon", "pause");
+        playButton.onclick = () => { playButton.togglePlay() };
+
+        downloadButton = document.createElement("jwork-icon-button", { is: JworkIconButton });
+        downloadButton.setAttribute("icon", "download");
+        downloadButton.onclick = () => { Download(); };
+
+        toolbar.appendChild(playButton);
+        toolbar.appendChild(downloadButton);
+    }
+
+    function Download() {
+        p5.saveCanvas(p5.canvas, "circles", "png");
     }
 
     /*

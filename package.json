@@ -18,5 +18,8 @@
   "homepage": "https://github.com/jnlongnecker/jared#readme",
   "dependencies": {
     "express": "^4.17.3"
+  },
+  "nodemonConfig": {
+    "ext": ".js,.json,.css,.html"
   }
 }

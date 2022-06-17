@@ -68,6 +68,9 @@ function transferModules(moduleName) {
  */
 function buildModule(moduleName) {
     const filePath = __dirname + "/src" + "/" + moduleName + "/" + moduleName;
+    if (!fs.existsSync(filePath + ".html")) {
+        return;
+    }
     let htmlContent = fs.readFileSync(filePath + ".html", "utf8");
     let jsContent = fs.readFileSync(filePath + ".js", "utf8");
     let cssContent = "";

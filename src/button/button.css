@@ -1,0 +1,23 @@
+button {
+    border-radius: 5px;
+    font-size: 1.2rem;
+    font-family: 'Lato', sans-serif;
+    font-weight: 600;
+    color: var(--black);
+    border: 0;
+    vertical-align: middle;
+    padding: .4rem 1rem;
+    letter-spacing: 2px;
+}
+
+button:hover {
+    cursor: pointer;
+}
+
+.primary {
+    background-color: var(--palette-primary);
+}
+
+.secondary {
+    background-color: var(--palette-secondary);
+}

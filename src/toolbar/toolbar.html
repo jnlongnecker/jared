@@ -1,11 +1,13 @@
 <div>
     <slot name="item"></slot>
-    <div class="toolbar hide">
+    <div class="toolbar">
+        <slot></slot>
+    </div>
+    <div class="controls hide">
         <div class="content-holder">
             <div class="formatting">
-                <slot name="content"></slot>
+                <slot name="controls"></slot>
             </div>
         </div>
-        <div class="head">Toolbar</div>
     </div>
 </div>

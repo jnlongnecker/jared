@@ -1,0 +1,120 @@
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+div {
+    display: inline-block;
+    border-radius: 100%;
+    background-color: rgba(255,255,255, .08);
+}
+
+input[type=color] {
+    opacity: 0;
+    position:absolute;
+}
+
+button {
+    border:0;
+    border-radius: 100%;
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0,0,0,0);
+    transition: 0.1s;
+}
+
+button:hover,input[type=color]:hover {
+    cursor: pointer;
+    background-color: rgba(255,255,255,.08);
+    transition: 0.1s;
+}
+
+button svg {
+    width: 1rem;
+    height: 1rem;
+    fill: var(--white);
+    stroke: var(--white);
+}
+
+button:hover svg {
+    fill: var(--white);
+    stroke: var(--white);
+    width: 1.3rem;
+    height: 1.3rem;
+}
+
+.primary {
+    background-color: var(--palette-primary);
+}
+
+.secondary {
+    background-color: var(--palette-secondary);
+}
+
+.primary:hover button,.secondary:hover button {
+    background-color: rgba(0,0,0,.16);
+    transition: 0.1s;
+}
+
+.primary svg,.secondary svg {
+    fill: var(--black);
+    stroke: var(--black);
+}
+
+.primary:hover svg,.secondary:hover svg {
+    fill: var(--black);
+    stroke: var(--black);
+    width: 1.3rem;
+    height: 1.3rem;
+}
+
+.on button {
+    background-color: rgba(0,0,0,0.16);
+}
+
+.on svg {
+    animation: linear rotate 2s infinite;
+    width: 1.3rem;
+    height: 1.3rem;
+}
+
+.large svg {
+    width: 1.3rem;
+    height: 1.3rem;
+}
+
+.large:hover svg {
+    width: 1.6rem;
+    height: 1.6rem;
+}
+
+.disabled {
+    background-color: rgba(255,255,255,.20);
+}
+
+.disabled:hover button {
+    cursor: default;
+}
+
+.disabled button {
+    background-color: rgba(255,255,255,0);
+}
+
+.disabled svg {
+    fill: rgba(255,255,255,.20);
+    stroke: rgba(255,255,255,.20);
+}
+
+.disabled:hover svg {
+    fill: rgba(255,255,255,.20);
+    stroke: rgba(255,255,255,.20);
+    width: 1rem;
+    height: 1rem;
+}

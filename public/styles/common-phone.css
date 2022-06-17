@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Merriweather&family=Lato:wght@300&family=Open+Sans&family=Roboto+Mono&family=Space+Grotesk&display=swap');
 @import "./universal-styles.css";
 
 p {
@@ -8,6 +7,7 @@ p {
 
 .main-header {
     text-align: center;
+    border-radius: 0;
   }
 
 .subheader {

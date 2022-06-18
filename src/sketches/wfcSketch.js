@@ -300,23 +300,30 @@ export const wfc = (sketch) => {
             p5.fill("white");
             p5.text("Input", userSketch.width * 0.5, cHeight * 0.1);
 
-            if (p5.mouseIsPressed)
-                if (p5.mouseButton == p5.LEFT)
-                    userSketch.Ink(colorPicker.color());
-                else if (p5.mouseButton == p5.RIGHT)
-                    colorPicker.value(ColorToHex(userSketch.Select()));
-
             userSketch.Render();
             return;
         }
 
         p5.noStroke();
         p5.fill("white");
-        p5.text("Ouput", userSketch.width * 0.5, cHeight * 0.1);
+        p5.text("Output", userSketch.width * 0.5, cHeight * 0.1);
         if (output) {
             output.Render(userSketch.width, userSketch.height, userSketch.x, userSketch.y)
         }
 
+    }
+
+    p5.touchStarted = () => {
+        if (viewInput && document.documentElement.clientWidth <= 900) {
+            userSketch.Ink(colorPicker.color());
+            p5.canvas.focus();
+        }
+    }
+
+    p5.touchMoved = () => {
+        if (viewInput && document.documentElement.clientWidth <= 900) {
+            userSketch.Ink(colorPicker.color());
+        }
     }
 
     function GenerateOutput() {

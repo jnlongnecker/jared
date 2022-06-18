@@ -14,7 +14,7 @@ template.innerHTML = `<link rel="stylesheet" media="screen and (max-width:900px)
 }
 
 div {
-    display: flex;
+    display: inline-block;
     border-radius: 100%;
     background-color: rgba(255,255,255, .08);
     justify-content: center;

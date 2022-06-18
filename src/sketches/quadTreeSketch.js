@@ -331,12 +331,16 @@ export const quadTree = sketch => {
      *  @returntype: undefined
      */
     sketch.windowResized = () => {
+
+        let lastWidth = cWidth;
         cWidth = document.documentElement.clientWidth * 0.6;
         cHeight = document.documentElement.clientHeight * 0.65;
         if (document.documentElement.clientWidth <= 900) {
             cWidth = document.documentElement.clientWidth * 0.8;
         }
         p5.resizeCanvas(cWidth, cHeight);
+
+        if (document.documentElement.clientWidth <= 900 && lastWidth == cWidth) return;
         PopulateCircles(numCircles.value);
     }
 
@@ -346,10 +350,10 @@ export const quadTree = sketch => {
      */
     sketch.setup = () => {
         PopulateTools();
-        PopulateCircles(numCircles.value);
         if (document.documentElement.clientWidth <= 900) {
             cWidth = document.documentElement.clientWidth * 0.8;
         }
+        PopulateCircles(numCircles.value);
         p5.createCanvas(cWidth, cHeight);
     }
 
@@ -428,19 +432,18 @@ export const quadTree = sketch => {
     function PopulateCircles(numCircles) {
         circleList = [];
 
+        if (document.documentElement.clientWidth <= 900) {
+            numCircles = numCircles * 0.5;
+        }
+
         for (let i = 0; i < numCircles; i++) {
             circleList.push(CreateCircle());
         }
 
-        let internalCircles = true;
-        while (internalCircles) {
-            internalCircles = false;
-            for (let i = 0; i < numCircles; i++) {
-                for (let j = i + 1; j < numCircles; j++) {
-                    if (circleList[i].IsInside(circleList[j])) {
-                        internalCircles = true;
-                        circleList[i].center = p5.createVector(p5.random(31, cWidth - 31), p5.random(31, cHeight - 31));
-                    }
+        for (let i = 0; i < numCircles; i++) {
+            for (let j = i + 1; j < numCircles; j++) {
+                while (circleList[i].IsInside(circleList[j])) {
+                    circleList[i].center = p5.createVector(p5.random(31, cWidth - 31), p5.random(31, cHeight - 31));
                 }
             }
         }

@@ -476,7 +476,10 @@ export const wfc = (sketch) => {
 
     wfc.addEventListener("message", (event) => {
         let payload = event.data;
-        output = new OutputTexture(payload.pixels, payload.width, payload.height);
+
+        if (payload.result !== false) {
+            output = new OutputTexture(payload.pixels, payload.width, payload.height);
+        }
 
         if (downloadButton.getAttribute("disabled")) {
             downloadButton.toggleDisabled();

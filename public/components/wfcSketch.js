@@ -219,7 +219,7 @@ export const wfc = (sketch) => {
         let uSketchY = cWidth * 0.1;
 
         if (document.documentElement.clientWidth <= 900) {
-            cWidth = document.documentElement.clientWidth * 0.75;
+            cWidth = document.documentElement.clientWidth * 0.8;
             cHeight = cWidth + cWidth * 0.2;
             uSketchX = 0;
             uSketchY = cWidth * 0.2;
@@ -232,7 +232,7 @@ export const wfc = (sketch) => {
         p5.resizeCanvas(cWidth, cHeight);
 
         let temp = userSketch;
-        userSketch = new UserSketch(uSketchX, uSketchY, uSketchWidth, uSketchWidth, 12, 12, temp.pixels);
+        userSketch = new UserSketch(uSketchX, uSketchY, uSketchWidth, uSketchWidth, 16, 16, temp.pixels);
     }
 
     sketch.setup = () => {
@@ -476,7 +476,10 @@ export const wfc = (sketch) => {
 
     wfc.addEventListener("message", (event) => {
         let payload = event.data;
-        output = new OutputTexture(payload.pixels, payload.width, payload.height);
+
+        if (payload.result !== false) {
+            output = new OutputTexture(payload.pixels, payload.width, payload.height);
+        }
 
         if (downloadButton.getAttribute("disabled")) {
             downloadButton.toggleDisabled();

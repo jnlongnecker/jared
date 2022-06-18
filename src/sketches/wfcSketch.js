@@ -466,7 +466,10 @@ export const wfc = (sketch) => {
         for (let x = 0; x < output.pixels.length; x++) {
             for (let y = 0; y < output.pixels[x].length; y++) {
                 let spot = (x * output.pixels.length + y) * 4;
-                let color = p5.color(output.pixels[x][y].toString("rrggbbaa"));
+                let color = output.pixels[x][y];
+                if (typeof output.pixels[x][y] == "string") {
+                    color = p5.color(output.pixels[x][y]);
+                }
                 imageData.data[spot + 0] = color.levels[0];
                 imageData.data[spot + 1] = color.levels[1];
                 imageData.data[spot + 2] = color.levels[2];

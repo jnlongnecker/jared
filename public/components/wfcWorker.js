@@ -605,9 +605,9 @@ function runWfc() {
     while (result === null) {
         result = wfc.Run(5);
         wfc.buildInProgress();
-        output = { pixels: wfc.inProgress, width: wfc.width, height: wfc.height, done: wfc.done };
+        output = { pixels: wfc.inProgress, width: wfc.width, height: wfc.height, done: wfc.done, result: result };
 
-        if (result !== false) self.postMessage(output);
+        self.postMessage(output);
     }
     wfc = null;
 }

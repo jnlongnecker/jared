@@ -6,8 +6,13 @@ template.innerHTML = `<link rel="stylesheet" media="screen and (max-width:900px)
     display: flex;
     justify-content: center;
     gap: 2rem;
-    padding: .5rem 0;
 }
+
+@media only screen and (max-width: 900px) {
+    .toolbar {
+        gap: 1rem;
+    }
+} 
 
 .controls {
     position: absolute;

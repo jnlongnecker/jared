@@ -48,13 +48,17 @@ export default class IconButton extends HTMLElement {
     }
 
     connectedCallback() {
-        this.btn = this.template.querySelector("button");
+        this.host = this.template.querySelector("style").sheet.cssRules[1].style;
+
+        this.btn = this.template.querySelector("span");
         this.bkg = this.template.querySelector("div");
         this.updateIcon(this.getAttribute("icon"));
         this.updateVariant(this.getAttribute("variant"));
 
         this.addEventListener("click", this.onclick);
         this.setAttribute("variant", this.variant);
+
+        console.log(this.host.getPropertyValue("--outline"));
     }
 
     attributeChangedCallback(name, oldVal, newVal) {
@@ -73,7 +77,6 @@ export default class IconButton extends HTMLElement {
 
         this.variant = newVal;
         if (this.bkg) {
-            console.log(newVal);
             this.bkg.setAttribute("class", newVal.toLowerCase());
         }
     }
@@ -106,10 +109,9 @@ export default class IconButton extends HTMLElement {
         if (this.btn) {
             this.btn.innerHTML = this.currSVG;
             if (newVal.toLowerCase() == "colorpicker") {
-                this.btn.setAttribute("style", "outline: 4px solid #bbbbbb;outline-offset:-4px;")
+                this.host.setProperty("--outline", "#bbbbbb");
                 this.template.querySelector("input[type=color]").onchange = (e) => {
-                    let newStyle = `outline: 4px solid ${e.target.value};outline-offset:-4px;`;
-                    this.btn.setAttribute("style", newStyle);
+                    this.host.setProperty("--outline", e.target.value);
                 };
             }
             else if (newVal.toLowerCase() == "github") {

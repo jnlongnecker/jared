@@ -7,12 +7,26 @@
     }
 }
 
+:host {
+    --outline: rgba(0,0,0,0);
+}
+
 div {
-    display: inline-block;
+    display: flex;
     border-radius: 100%;
     background-color: rgba(255,255,255, .08);
-    transform: translateZ(0);
-    position: relative;
+    justify-content: center;
+    align-items: center;
+}
+
+span {
+    border-radius: 100%;
+    border: 4px solid var(--outline);
+    width: calc(3rem - 8px);
+    height: calc(3rem - 8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 input[type=color] {
@@ -25,13 +39,9 @@ button {
     border-radius: 100%;
     width: 3rem;
     height: 3rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     background-color: rgba(0,0,0,0);
     transition: 0.1s;
-    transform: translateZ(0);
-    position: relative;
+    padding: 0;
 }
 
 button:hover,input[type=color]:hover {

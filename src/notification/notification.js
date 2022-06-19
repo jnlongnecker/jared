@@ -21,8 +21,15 @@ export default class Notification extends HTMLElement {
         resizeObserver.observe(JworkNotification.parent);
 
         setTimeout(() => {
-            this.template.querySelector("span").classList.add("exit");
+            let span = this.template.querySelector("span");
+            span.classList.add("exit");
+            span.addEventListener("animationend", () => { this.cleanup(); });
         }, this.duration * 1000 + 600);
+    }
+
+    cleanup() {
+        JworkNotification.notification = null;
+        this.parentNode.removeChild(this);
     }
 
     attributeChangedCallback(name, oldVal, newVal) {

@@ -60,6 +60,20 @@ p {
     text-align: center;
 }
 
+@media only screen and (max-width: 900px) {
+    .notification {
+        position: relative;
+        max-height: 15vh;
+        max-width: 80vw;
+        min-width: 75vw;
+
+        border: 0;
+        border-radius: 5px;
+        padding: 1rem;
+        text-align: center;
+    }
+}
+
 .error {
     background-color: rgba(255,0,0,0.04);
     color: var(--error)

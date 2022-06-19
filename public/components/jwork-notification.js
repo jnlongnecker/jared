@@ -62,6 +62,20 @@ p {
     text-align: center;
 }
 
+@media only screen and (max-width: 900px) {
+    .notification {
+        position: relative;
+        max-height: 15vh;
+        max-width: 80vw;
+        min-width: 75vw;
+
+        border: 0;
+        border-radius: 5px;
+        padding: 1rem;
+        text-align: center;
+    }
+}
+
 .error {
     background-color: rgba(255,0,0,0.04);
     color: var(--error)
@@ -110,8 +124,15 @@ export default class JworkNotification extends HTMLElement {
 		resizeObserver.observe(JworkNotification.parent);
 
 		setTimeout(() => {
-			this.template.querySelector("span").classList.add("exit");
+			let span = this.template.querySelector("span");
+			span.classList.add("exit");
+			span.addEventListener("animationend", () => { this.cleanup(); });
 		}, this.duration * 1000 + 600);
+	}
+
+	cleanup() {
+		JworkNotification.notification = null;
+		this.parentNode.removeChild(this);
 	}
 
 	attributeChangedCallback(name, oldVal, newVal) {

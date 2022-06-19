@@ -28,6 +28,9 @@ export default class Header extends HTMLElement {
     }
 
     handleScroll = (event) => {
+
+        if (document.documentElement.clientWidth <= 900) return;
+
         if (this.lastScrollPos < window.scrollY) {
             this.header.classList.remove("show-header");
             this.header.classList.add("hide-header");

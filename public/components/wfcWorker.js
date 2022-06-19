@@ -11,9 +11,9 @@ const ColorToHex = function (color) {
 
 const RGBToHex = function (red, green, blue) {
     let hexCode = "#";
-    hexCode += DecimalToHex(Math.round(red), 2);
-    hexCode += DecimalToHex(Math.round(green), 2);
-    hexCode += DecimalToHex(Math.round(blue), 2);
+    hexCode += DecimalToHex(red, 2);
+    hexCode += DecimalToHex(green, 2);
+    hexCode += DecimalToHex(blue, 2);
     return hexCode;
 }
 
@@ -50,11 +50,22 @@ class Vector {
         return this;
     }
 
+    sub(vector) {
+        this.x -= vector.x;
+        this.y -= vector.y;
+        this.z -= vector.z;
+        return this;
+    }
+
     div(scalar) {
         this.x /= scalar;
         this.y /= scalar;
         this.z /= scalar;
         return this;
+    }
+
+    copy() {
+        return new Vector(this.x, this.y, this.z);
     }
 }
 
@@ -215,6 +226,7 @@ class OverlappingModel {
     constructor(texture, samplePixels = 3, outputWidth = 48, outputHeight = 48,
         periodicInput = true, periodicOutput = false, symmetry = 8) {
 
+        this.colors = [];
         this.remainingPatternsLastBuild = [];
         this.inProgress = [];
         this.done = false;
@@ -268,6 +280,7 @@ class OverlappingModel {
         }
 
         this.numPatterns = this.patterns.length;
+        console.log("Pat: " + this.patterns.length);
 
         // Now that we have our patterns, we need to find which patterns match on which side
         for (let currPattern of this.patterns) {
@@ -313,6 +326,9 @@ class OverlappingModel {
         }
         this.stack = [];
         this.observedPatterns = [];
+
+        // Build the starting output array
+        this.buildInitial();
     };
 
     // Make an observation of the lowest entropy pixel
@@ -381,6 +397,15 @@ class OverlappingModel {
 
         // Recalculate the position's entropy
         this.entropyAt[position] = Math.log(this.weightSumAt[position]) - this.logWeightSumAt[position] / this.weightSumAt[position];
+
+        // Remove its contribution from the average colors at this position
+        let oldMatrix = this.colors[position].pixels;
+        for (let x = 0; x < oldMatrix.length; x++) {
+            for (let y = 0; y < oldMatrix[x].length; y++) {
+                let temp = oldMatrix[x][y].copy();
+                oldMatrix[x][y] = temp.sub(this.colorToVector(currPattern.pixels[x][y]));
+            }
+        }
 
         // Push the position and pattern pair to the stack to calculate the rippling effect of its removal
         this.stack.push({ position: position, pattern: pattern });
@@ -522,39 +547,72 @@ class OverlappingModel {
         console.groupEnd();
     };
 
+    // Most time is spent building the visualization, it takes the least amount of time to build it from scratch if we do it at the start
+    buildInitial() {
+
+        let patternsLeft = 0;
+        let newMatrix = [];
+
+        // All positions are identical, so build a matrix of the starting values of pixels from one position
+        for (let pattern = 0; pattern < this.wave[0].length; pattern++) {
+            patternsLeft++;
+            let pat = this.patterns[pattern];
+            let pxl = pat.pixels;
+            for (let x = 0; x < pxl.length; x++) {
+                if (!newMatrix[x]) {
+                    newMatrix.push([]);
+                }
+                for (let y = 0; y < pxl[x].length; y++) {
+                    let clr = pxl[x][y];
+                    let curr = newMatrix[x][y];
+                    newMatrix[x][y] = curr != undefined ? curr.add(this.colorToVector(clr)) : this.colorToVector(clr);
+                }
+            }
+        }
+
+        // For each position, push both the pattern representation and the color value totals to different arrays
+        for (let position = 0; position < this.wave.length; position++) {
+            let newPixels = [];
+            let patMatrix = []
+            for (let x = 0; x < newMatrix.length; x++) {
+                newPixels.push([]);
+                patMatrix.push([]);
+                for (let y = 0; y < newMatrix[x].length; y++) {
+                    newPixels[x][y] = newMatrix[x][y].copy();
+                    let temp = newMatrix[x][y].copy().div(patternsLeft);
+                    patMatrix[x][y] = RGBToHex(temp.x, temp.y, temp.z);
+                }
+            }
+            let startPattern = new Pattern(patMatrix);
+            this.inProgress[position] = startPattern;
+
+            // Tracking the cumulative total makes it faster to build an output since we don't have to keep calculating it
+            this.colors[position] = { pixels: newPixels };
+        }
+
+        this.remainingPatternsLastBuild = [...this.remainingPatternsAt]
+    }
+
+    // Builds the patterns for visualization
     buildInProgress() {
+
+        // If we're done, just return the observed pattern array we created already
         if (this.done) {
             this.inProgress = this.observedPatterns;
             return;
         }
 
+        // For each position, calculate the average of the color totals from contributing patterns
         for (let position = 0; position < this.wave.length; position++) {
             if (this.remainingPatternsAt[position] === this.remainingPatternsLastBuild[position]) continue;
 
-            let patternsLeft = 0;
             let newMatrix = [];
-            for (let pattern = 0; pattern < this.wave[position].length; pattern++) {
-                if (!this.wave[position][pattern]) continue;
+            let patternsLeft = this.remainingPatternsAt[position];
 
-                patternsLeft++;
-
-                let pat = this.patterns[pattern];
-                let pxl = pat.pixels;
-                for (let x = 0; x < pxl.length; x++) {
-                    if (!newMatrix[x]) {
-                        newMatrix.push([]);
-                    }
-                    for (let y = 0; y < pxl[x].length; y++) {
-                        let clr = pxl[x][y];
-                        let curr = newMatrix[x][y];
-                        newMatrix[x][y] = curr != undefined ? curr.add(this.colorToVector(clr)) : this.colorToVector(clr);
-                    }
-                }
-            }
-
-            for (let x = 0; x < newMatrix.length; x++) {
-                for (let y = 0; y < newMatrix[x].length; y++) {
-                    newMatrix[x][y] = newMatrix[x][y].div(patternsLeft);
+            for (let x = 0; x < this.colors[position].pixels.length; x++) {
+                newMatrix.push([]);
+                for (let y = 0; y < this.colors[position].pixels[x].length; y++) {
+                    newMatrix[x][y] = this.colors[position].pixels[x][y].copy().div(patternsLeft);
                     let temp = newMatrix[x][y];
                     newMatrix[x][y] = RGBToHex(temp.x, temp.y, temp.z);
                 }
@@ -567,9 +625,6 @@ class OverlappingModel {
     }
 
     colorToVector(color) {
-        let colStr = color.toString("rgb").replaceAll(" ", "");
-        let stripped = colStr.substring(4, colStr.length - 1);
-        let rawVals = stripped.split(",");
         return new Vector(color.levels[0], color.levels[1], color.levels[2]);
     }
 };
@@ -577,6 +632,7 @@ class OverlappingModel {
 let wfc;
 let output;
 let reset;
+let iterations;
 
 self.addEventListener("message", (event) => {
 
@@ -586,6 +642,7 @@ self.addEventListener("message", (event) => {
 
     let payload = event.data;
 
+    iterations = 3;
     wfc = new OverlappingModel(
         payload.pixels,
         payload.n,
@@ -602,11 +659,15 @@ self.addEventListener("message", (event) => {
 
 function runWfc() {
     let result = null;
+    wfc.buildInitial();
+
     while (result === null) {
-        result = wfc.Run(5);
+        result = wfc.Run(iterations);
+
         wfc.buildInProgress();
         output = { pixels: wfc.inProgress, width: wfc.width, height: wfc.height, done: wfc.done, result: result };
 
+        console.log("posting message");
         self.postMessage(output);
     }
     wfc = null;

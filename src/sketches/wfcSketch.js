@@ -490,6 +490,9 @@ export const wfc = (sketch) => {
         if (payload.result !== false) {
             output = new OutputTexture(payload.pixels, payload.width, payload.height);
         }
+        else {
+            toolbar.postError("Oops! We got stuck! Try running the algorithm again.");
+        }
 
         if (downloadButton.getAttribute("disabled")) {
             downloadButton.toggleDisabled();

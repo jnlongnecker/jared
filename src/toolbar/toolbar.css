@@ -12,11 +12,8 @@
 
 .controls {
     position: absolute;
-    display: flex;
-    justify-content:start;
-    align-items: stretch;
     transition: .5s;
-    max-height: 100%;
+    overflow: hidden;
 }
 
 .content-holder {
@@ -26,6 +23,13 @@
     overflow: hidden;
     white-space: nowrap;
     width: 100%;
+    max-height: 100%;
+    vertical-align: bottom;
+}
+
+.padder {
+    max-height: 100%;
+    transition: 0.5s;
 }
 
 .formatting {
@@ -35,4 +39,8 @@
 .hide {
     max-height: 0;
     transition: .5s;
+}
+
+.notification {
+    position: relative;
 }

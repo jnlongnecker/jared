@@ -7,6 +7,8 @@
     --palette-primary: #8bd9be;
     --palette-secondary: #988bd9;
     --anchor: #8bbed9;
+    --error: #eb6767;
+    --warning: #ebce67;
     --header-collapsed-height: 2rem;
     --header-expanded-height: 10rem;
 }

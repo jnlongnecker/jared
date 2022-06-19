@@ -1,4 +1,5 @@
 import JworkIconButton from "./jwork-icon-button.js";
+import JworkNotification from "./jwork-notification.js";
 
 let template = document.createElement("template");
 template.innerHTML = `<link rel="stylesheet" media="screen and (max-width:900px)" href="../styles/common-phone.css" /><link rel="stylesheet" media="screen and (min-width:900px)" href="../styles/common.css" />
@@ -16,11 +17,8 @@ template.innerHTML = `<link rel="stylesheet" media="screen and (max-width:900px)
 
 .controls {
     position: absolute;
-    display: flex;
-    justify-content:start;
-    align-items: stretch;
     transition: .5s;
-    max-height: 100%;
+    overflow: hidden;
 }
 
 .content-holder {
@@ -30,6 +28,13 @@ template.innerHTML = `<link rel="stylesheet" media="screen and (max-width:900px)
     overflow: hidden;
     white-space: nowrap;
     width: 100%;
+    max-height: 100%;
+    vertical-align: bottom;
+}
+
+.padder {
+    max-height: 100%;
+    transition: 0.5s;
 }
 
 .formatting {
@@ -39,13 +44,18 @@ template.innerHTML = `<link rel="stylesheet" media="screen and (max-width:900px)
 .hide {
     max-height: 0;
     transition: .5s;
+}
+
+.notification {
+    position: relative;
 }</style>
 <div>
     <slot name="item"></slot>
     <div class="toolbar">
         <slot></slot>
     </div>
-    <div class="controls hide">
+    <div class="controls">
+        <div class="padder"></div>
         <div class="content-holder">
             <div class="formatting">
                 <slot name="controls"></slot>
@@ -73,11 +83,12 @@ export default class JworkToolbar extends HTMLElement {
 		const cb = () => {
 			let box = this.parent.getBoundingClientRect();
 
-			let style = `position:absolute;`;
-			style += `top:${window.scrollY + box.top}px;left:${window.scrollX + box.left}px;`;
-			style += `width:${box.width}px;height:${box.height}px;`;
+			let style = `top:${window.scrollY + box.top}px;left:${window.scrollX + box.left}px;`;
+			let style2 = `width:${box.width}px;height:${box.height}px;`;
 
-			this.controls.setAttribute("style", style);
+			this.controls.setAttribute("style", style + style2);
+			this.controls.firstElementChild.setAttribute("style", style2);
+			this.controls.firstElementChild.nextElementSibling.setAttribute("style", style2);
 		}
 
 		let contentSlot = this.template.querySelector("slot[name=controls]");
@@ -100,8 +111,12 @@ export default class JworkToolbar extends HTMLElement {
 	}
 
 	toggleControls() {
-		this.controls.classList.toggle("hide");
+		this.controls.firstElementChild.classList.toggle("hide");
 		this.controlsButton.changeState();
+	}
+
+	postError(message, duration = 5.5) {
+		JworkNotification.notify(message, duration, this.parent, false, "error");
 	}
 
 }

@@ -73,7 +73,7 @@ class UserSketch {
             x: p5.floor((p5.mouseX - this.x) / this.pixelSize),
             y: p5.floor((p5.mouseY - this.y) / this.pixelSize)
         };
-        if (mousePos.x < 0 || mousePos.y < 0 || mousePos.x >= this.pixelsX || mousePos.y >= this.pixelsY) return p5.color("#fff");
+        if (mousePos.x < 0 || mousePos.y < 0 || mousePos.x >= this.pixelsX || mousePos.y >= this.pixelsY) return null;
 
         return this.pixels[mousePos.y][mousePos.x];
     }
@@ -112,7 +112,7 @@ class OutputTexture {
     constructor(patterns, rows, cols) {
         this.cols = cols;
         this.rows = rows;
-        this.pixels = this.OldGenerateMapFromPatterns(patterns);
+        this.pixels = this.GenerateMapFromPatterns(patterns);
     };
 
     Render(width = this.cols, height = this.rows, x, y) {
@@ -135,7 +135,7 @@ class OutputTexture {
         }
     };
 
-    OldGenerateMapFromPatterns(patterns) {
+    GenerateMapFromPatterns(patterns) {
         let result = [];
         let N = patterns[0].pixels.length;
         let FMX = this.cols;
@@ -152,28 +152,6 @@ class OutputTexture {
         }
         return result;
     }
-
-    GenerateMapFromPatterns(patterns) {
-        let result = [];
-        let N = patterns[0].pixels.length;
-
-        for (let row = 0; row < this.rows * N; row++) {
-            result.push([]);
-            let pRow = row % N;
-            let accessRow = (row / N) | 0;
-            for (let col = 0; col < this.cols * N; col++) {
-                let pCol = col % N;
-                let accessCol = (col / N) | 0;
-                let pColor = patterns[accessRow + accessCol * this.rows].pixels[pRow][pCol];
-                if (!pColor) console.log(`Tried to get ${accessRow + accessCol * this.rows}`);
-                result[row].push(pColor);
-            }
-        }
-        this.rows = this.rows * N;
-        this.cols = this.cols * N;
-
-        return result;
-    };
 
     Debug() {
         let p = new Pattern(this.pixels);
@@ -283,8 +261,11 @@ export const wfc = (sketch) => {
         if (p5.mouseIsPressed)
             if (p5.mouseButton == p5.LEFT)
                 userSketch.Ink(colorPicker.color());
-            else if (p5.mouseButton == p5.RIGHT)
-                colorPicker.color(ColorToHex(userSketch.Select()));
+            else if (p5.mouseButton == p5.RIGHT) {
+                let selectedColor = userSketch.Select();
+                selectedColor = selectedColor ? selectedColor : colorPicker.color();
+                colorPicker.color(selectedColor.toString("#rrggbb"));
+            }
 
 
         p5.noStroke();
@@ -379,8 +360,8 @@ export const wfc = (sketch) => {
         periodicOutput = document.createElement("input");
         periodicOutput.setAttribute("type", "checkbox");
 
-        wrapCol2.appendChild(outputLabel);
-        wrapCol2.appendChild(periodicOutput);
+        // wrapCol2.appendChild(outputLabel);
+        // wrapCol2.appendChild(periodicOutput);
 
         wrapControls.appendChild(wrapCol1);
         wrapControls.appendChild(wrapCol2);

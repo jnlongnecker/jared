@@ -14,6 +14,7 @@
     position: absolute;
     transition: .5s;
     overflow: hidden;
+    max-height: 100%;
 }
 
 .content-holder {
@@ -23,13 +24,14 @@
     overflow: hidden;
     white-space: nowrap;
     width: 100%;
-    max-height: 100%;
+    height: 100%;
     vertical-align: bottom;
 }
 
 .padder {
     max-height: 100%;
     transition: 0.5s;
+    pointer-events: none;
 }
 
 .formatting {

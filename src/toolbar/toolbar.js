@@ -17,8 +17,6 @@ export default class Toolbar extends HTMLElement {
             let style2 = `width:${box.width}px;height:${box.height}px;`;
 
             this.controls.setAttribute("style", style + style2);
-            this.controls.firstElementChild.setAttribute("style", style2);
-            this.controls.firstElementChild.nextElementSibling.setAttribute("style", style2);
         }
 
         let contentSlot = this.template.querySelector("slot[name=controls]");
@@ -41,7 +39,7 @@ export default class Toolbar extends HTMLElement {
     }
 
     toggleControls() {
-        this.controls.firstElementChild.classList.toggle("hide");
+        this.controls.classList.toggle("hide");
         this.controlsButton.changeState();
     }
 

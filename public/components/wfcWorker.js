@@ -280,7 +280,6 @@ class OverlappingModel {
         }
 
         this.numPatterns = this.patterns.length;
-        console.log("Pat: " + this.patterns.length);
 
         // Now that we have our patterns, we need to find which patterns match on which side
         for (let currPattern of this.patterns) {
@@ -597,10 +596,10 @@ class OverlappingModel {
     buildInProgress() {
 
         // If we're done, just return the observed pattern array we created already
-        if (this.done) {
-            this.inProgress = this.observedPatterns;
-            return;
-        }
+        // if (this.done) {
+        //     this.inProgress = this.observedPatterns;
+        //     return;
+        // }
 
         // For each position, calculate the average of the color totals from contributing patterns
         for (let position = 0; position < this.wave.length; position++) {
@@ -635,11 +634,6 @@ let reset;
 let iterations;
 
 self.addEventListener("message", (event) => {
-
-    console.log("got message");
-
-    if (wfc) return;
-
     let payload = event.data;
 
     iterations = 3;
@@ -664,11 +658,11 @@ function runWfc() {
     while (result === null) {
         result = wfc.Run(iterations);
 
-        wfc.buildInProgress();
-        output = { pixels: wfc.inProgress, width: wfc.width, height: wfc.height, done: wfc.done, result: result };
+        if (result != false)
+            wfc.buildInProgress();
 
-        console.log("posting message");
+        output = { pixels: [...wfc.inProgress], width: wfc.width, height: wfc.height, done: wfc.done, result: result };
+
         self.postMessage(output);
     }
-    wfc = null;
 }

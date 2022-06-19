@@ -491,6 +491,7 @@ export const wfc = (sketch) => {
             output = new OutputTexture(payload.pixels, payload.width, payload.height);
         }
         else {
+            console.log("wfc failed");
             toolbar.postError("Oops! We got stuck! Try running the algorithm again.");
         }
 

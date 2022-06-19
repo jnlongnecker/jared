@@ -57,8 +57,6 @@ export default class IconButton extends HTMLElement {
 
         this.addEventListener("click", this.onclick);
         this.setAttribute("variant", this.variant);
-
-        console.log(this.host.getPropertyValue("--outline"));
     }
 
     attributeChangedCallback(name, oldVal, newVal) {

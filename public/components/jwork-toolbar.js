@@ -19,6 +19,7 @@ template.innerHTML = `<link rel="stylesheet" media="screen and (max-width:900px)
     position: absolute;
     transition: .5s;
     overflow: hidden;
+    max-height: 100%;
 }
 
 .content-holder {
@@ -28,13 +29,14 @@ template.innerHTML = `<link rel="stylesheet" media="screen and (max-width:900px)
     overflow: hidden;
     white-space: nowrap;
     width: 100%;
-    max-height: 100%;
+    height: 100%;
     vertical-align: bottom;
 }
 
 .padder {
     max-height: 100%;
     transition: 0.5s;
+    pointer-events: none;
 }
 
 .formatting {
@@ -54,8 +56,7 @@ template.innerHTML = `<link rel="stylesheet" media="screen and (max-width:900px)
     <div class="toolbar">
         <slot></slot>
     </div>
-    <div class="controls">
-        <div class="padder"></div>
+    <div class="controls hide">
         <div class="content-holder">
             <div class="formatting">
                 <slot name="controls"></slot>
@@ -87,8 +88,6 @@ export default class JworkToolbar extends HTMLElement {
 			let style2 = `width:${box.width}px;height:${box.height}px;`;
 
 			this.controls.setAttribute("style", style + style2);
-			this.controls.firstElementChild.setAttribute("style", style2);
-			this.controls.firstElementChild.nextElementSibling.setAttribute("style", style2);
 		}
 
 		let contentSlot = this.template.querySelector("slot[name=controls]");
@@ -111,7 +110,7 @@ export default class JworkToolbar extends HTMLElement {
 	}
 
 	toggleControls() {
-		this.controls.firstElementChild.classList.toggle("hide");
+		this.controls.classList.toggle("hide");
 		this.controlsButton.changeState();
 	}
 

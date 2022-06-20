@@ -6,12 +6,25 @@ let archive = JSON.parse(fs.readFileSync(archiveDir, "utf8"));
 exports.getRoutes = () => {
     let routeList = [];
 
-    let pages = fs.readdirSync(__dirname + "/pages");
-    pages.forEach((file) => {
-        file = file.substring(0, file.indexOf(".html"));
-        routeList.push(file);
-    });
+    routeList = getRoutesInDir("", routeList);
 
+    console.log(routeList);
+    return routeList;
+}
+
+function getRoutesInDir(directory, routeList) {
+    let dirPath = __dirname + "/pages" + directory;
+    let pages = fs.readdirSync(dirPath);
+    pages.forEach((file) => {
+        let stats = fs.statSync(dirPath + "/" + file);
+        if (stats.isFile() && file.indexOf(".html") != -1) {
+            file = file.substring(0, file.indexOf(".html"));
+            routeList.push(directory + "/" + file);
+        }
+        else if (stats.isDirectory()) {
+            return getRoutesInDir(directory + "/" + file, routeList);
+        }
+    });
     return routeList;
 }
 

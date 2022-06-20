@@ -1,0 +1,42 @@
+figure {
+    width: 25vw;
+    height: calc(25vw * 0.55);
+    overflow: hidden;
+    border-radius: 5px;
+}
+
+img {
+    border-radius: 5px;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+}
+
+figcaption {
+    --height: 3rem;
+    background-color: rgba(12,12,12,.6);
+    color: white;
+    position: relative;
+    height: var(--height);
+    top: calc(0px - var(--height) - 5px);
+    transition: 0.5s;
+
+    text-align: center;
+    font-size: 1.3rem;
+    font-family: 'Roboto Mono', monospace;
+}
+
+figure:hover figcaption {
+    --height: 3.5rem;
+    transition: 0.5s;
+    font-size: 1.5rem;
+}
+
+@media only screen and (max-width: 900px) {
+    figure {
+        width: 80vw;
+        height: calc(80vw * 0.6);
+        overflow: hidden;
+        border-radius: 5px;
+    }
+}

@@ -1,7 +1,6 @@
 import { ColorToHex, ConvertRemToPixels } from "../scripts/util.js"
 import { createElementWithText } from "../scripts/util.js";
 import JworkIconButton from "./jwork-icon-button.js";
-import JworkButton from "./jwork-button.js";
 import JworkSpinner from "./jwork-spinner.js";
 
 let p5;
@@ -176,7 +175,7 @@ export const wfc = (sketch) => {
 
     // Wave Function Collapse variables
     let output;
-    let wfc = new Worker('./components/wfcWorker.js');
+    let wfc = new Worker('../components/wfcWorker.js');
     let outputLength;
     let periodicInput;
     let periodicOutput;
@@ -234,6 +233,7 @@ export const wfc = (sketch) => {
         wfcWorking = false;
         viewInput = true;
 
+        console.log(document.querySelectorAll("*"));
         let sketchHolder = document.querySelector("#canvas-holder");
         sketchHolder.addEventListener("contextmenu", e => e.preventDefault());
         sketchHolder.addEventListener("touchmove", e => e.preventDefault());

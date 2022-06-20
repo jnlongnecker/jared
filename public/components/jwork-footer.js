@@ -1,6 +1,10 @@
 let template = document.createElement("template");
 template.innerHTML = `<link rel="stylesheet" media="screen and (max-width:900px)" href="../styles/common-phone.css" /><link rel="stylesheet" media="screen and (min-width:900px)" href="../styles/common.css" />
-<style>footer {
+<style>:host {
+  flex-shrink: 0;
+}
+
+footer {
   display: flex;
   flex-wrap: nowrap;
   justify-content: space-between;
@@ -97,9 +101,9 @@ p {
             <hr />
         </div>
 
-        <p><a href="/circles">Circles</a></p>
-        <p><a href="/quadTree">QuadTree</a></p>
-        <p><a href="/wfc">Wave Function Collapse</a></p>
+        <p><a href="/physics/circles">Circles</a></p>
+        <p><a href="/algorithms/quadTree">QuadTree</a></p>
+        <p><a href="/algorithms/wfc">Wave Function Collapse</a></p>
     </section>
     <hr />
     <section class="middle">

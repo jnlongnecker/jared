@@ -1,8 +1,9 @@
 /* jwork flag no-shadow */
-import { circle } from "./circleSketch.js";
-import { quadTree } from "./quadTreeSketch.js";
-import { wfc } from "./wfcSketch.js";
-import { test } from "./testSketch.js";
+import { circle } from "../components/circleSketch.js";
+import { quadTree } from "../components/quadTreeSketch.js";
+import { wfc } from "../components/wfcSketch.js";
+import { boids } from "../components/boidsSketch.js";
+import { test } from "../components/testSketch.js";
 
 export default class P5Canvas extends HTMLElement {
 
@@ -18,16 +19,23 @@ export default class P5Canvas extends HTMLElement {
 
     // Handles sketch cases
     setCanvas(type) {
-        switch (type.toLowerCase()) {
-            case "circle":
-                this.p5instance = new p5(circle, "canvas-holder");
-                break;
-            case "quadtree":
-                this.p5instance = new p5(quadTree, "canvas-holder");
-                break;
-            case "wfc":
-                this.p5instance = new p5(wfc, "canvas-holder");
-                break;
-        }
+
+        // Loads too fast before the canvas sometimes, this is a fix
+        setTimeout(() => {
+            switch (type.toLowerCase()) {
+                case "circle":
+                    this.p5instance = new p5(circle, "canvas-holder");
+                    break;
+                case "quadtree":
+                    this.p5instance = new p5(quadTree, "canvas-holder");
+                    break;
+                case "wfc":
+                    this.p5instance = new p5(wfc, "canvas-holder");
+                    break;
+                case "boids":
+                    this.p5instance = new p5(boids, "canvas-holder");
+                    break;
+            }
+        }, 0);
     }
 }

@@ -1,14 +1,11 @@
-import jworkHeader from "./jwork-header.js";
 import jworkDemoContent from "./jwork-demo-content.js";
 import jworkP5Canvas from "./jwork-p5-canvas.js";
-import jworkFooter from "./jwork-footer.js";
 
 
 let template = document.createElement("template");
 template.innerHTML = `<link rel="stylesheet" media="screen and (max-width:900px)" href="../styles/common-phone.css" /><link rel="stylesheet" media="screen and (min-width:900px)" href="../styles/common.css" />
 <style>/* To Do /*
 </style>
-<jwork-header></jwork-header>
 <jwork-demo-content>
     <span slot="header">Wave Function Collapse</span>
     <span slot="subheader">AI with no learning</span>
@@ -95,8 +92,7 @@ template.innerHTML = `<link rel="stylesheet" media="screen and (max-width:900px)
             </div>
         </section>
     </div>
-</jwork-demo-content>
-<jwork-footer></jwork-footer>`;
+</jwork-demo-content>`;
 
 export default class JworkWfc extends HTMLElement {
 

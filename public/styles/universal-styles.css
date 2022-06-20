@@ -11,6 +11,7 @@
     --warning: #ebce67;
     --header-collapsed-height: 2rem;
     --header-expanded-height: 10rem;
+    --body-padding: 5rem;
 }
 
 ::-webkit-scrollbar {
@@ -22,6 +23,14 @@ html {
     background-color: var(--background);
     font-family: 'Open Sans', sans-serif;
     font-size: 1rem;
+}
+
+body {
+  margin: 0;
+  padding: var(--body-padding) 0 0 0;
+  min-height: calc(100vh - var(--body-padding));
+  display: flex;
+  flex-flow: column;
 }
 
 code {
@@ -45,9 +54,7 @@ a:hover {
     color: var(--anchor);
   }
   
-  body {
-    margin: 0;
-  }
+
   
   h1,h2,h3,h4,h5,h6 {
     font-size: 1rem;
@@ -88,6 +95,16 @@ section {
     display: block;
 }
 
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+  gap: 2rem;
+  width: 100%;
+}
+
+
 .margin-around {
     margin: 1rem;
   }
@@ -111,4 +128,12 @@ section {
   
   .centered {
     text-align: center;
+  }
+
+  .hide-overflow {
+    overflow:hidden;
+  }
+
+  #main {
+    flex: 1 0 auto;
   }

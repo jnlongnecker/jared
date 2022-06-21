@@ -418,6 +418,7 @@ export const boids = (sketch) => {
     sketch.windowResized = () => {
         cWidth = document.documentElement.clientWidth * 0.8;
         cHeight = document.documentElement.clientWidth * 0.8;
+        p5.resizeCanvas(cWidth, cHeight);
     }
 
     sketch.setup = () => {

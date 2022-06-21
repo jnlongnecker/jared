@@ -283,12 +283,11 @@ class Boid {
             if (dist - effRad > this.visionRadius) continue;
 
             let myHeading = this.velocity.heading();
-            let vectorToCenter = this.center.copy().sub(obstacle.center);
-            let angleToCenter = vectorToCenter.heading();
+            let vectorToObject = this.center.copy().sub(obstacle.center);
+            let angleToObject = vectorToObject.heading();
 
-            let strength = obstacleFear;
-            let clockwise = this.isGoingClockwise(myHeading, angleToCenter) ? -1 : 1;
-            let vec = vectorToCenter.copy().rotate(90 * clockwise).mult(strength);
+            let clockwise = this.isGoingClockwise(myHeading, angleToObject) ? -1 : 1;
+            let vec = vectorToObject.copy().rotate(90 * clockwise).mult(obstacleFear);
             acceleration.add(vec);
 
             /*
@@ -308,12 +307,12 @@ class Boid {
         }
     }
 
-    isGoingClockwise(heading, angleToCenter) {
+    isGoingClockwise(heading, angleToObject) {
         heading = this.toNormalDegrees(heading);
-        angleToCenter = this.toNormalDegrees(angleToCenter);
+        angleToObject = this.toNormalDegrees(angleToObject);
 
         // if the angle to the center is 0-180, we're clockwise if the heading is 270-360 || 0-90
-        if (0 <= angleToCenter && angleToCenter >= 180) {
+        if (0 <= angleToObject && angleToObject >= 180) {
             return (heading >= 270 && heading <= 360) || (heading >= 0 && heading <= 90);
         }
         // if the angle to the center is 180-360, we're clockwise if the heading is 90-270

@@ -17,11 +17,9 @@ template.innerHTML = `<link rel="stylesheet" media="screen and (max-width:900px)
         <a href="wfc">
             <jwork-image-card image="../images/previews/wfc.png" label="wave function collapse"></jwork-image-card>
         </a>
-        <!--
         <a href="boids">
             <jwork-image-card image="../images/previews/circles.png" label="boids"></jwork-image-card>
         </a>
-        -->
     </div>
 </section>`;
 

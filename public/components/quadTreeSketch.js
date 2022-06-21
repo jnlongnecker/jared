@@ -31,11 +31,10 @@ class Quad {
 
     IntersectsCircle(circle) {
         let myCenter = p5.createVector(this.x, this.y);
-        let circleCenter = p5.createVector(circle.center.x, circle.center.y);
+        let circleCenter = circle.center.copy();
 
         let distanceVector = myCenter.sub(circleCenter);
-        let distance = myCenter.dist(circleCenter);
-        distanceVector = distanceVector.normalize().mult(Math.min(distance, circle.radius));
+        distanceVector.limit(circle.radius);
         let targetPoint = circleCenter.add(distanceVector);
 
         return this.Contains(targetPoint);

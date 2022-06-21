@@ -1,3 +1,4 @@
+import JworkIconButton from "./jwork-icon-button.js";
 let p5;
 
 export const test = (sketch) => {
@@ -6,6 +7,8 @@ export const test = (sketch) => {
 
     let canvas;
     let toolbar;
+    let playButton;
+    let downloadButton;
 
     let cWidth = document.documentElement.clientWidth * 0.6;
     let cHeight = document.documentElement.clientHeight * 0.65;
@@ -30,6 +33,21 @@ export const test = (sketch) => {
     }
 
     function PopulateToolbar() {
-        toolbar = document.querySelector("jwork-toolbar");
+        let toolbar = document.querySelector("jwork-toolbar");
+
+        playButton = document.createElement("jwork-icon-button", { is: JworkIconButton });
+        playButton.setAttribute("icon", "pause");
+        playButton.onclick = () => { playButton.togglePlay() };
+
+        downloadButton = document.createElement("jwork-icon-button", { is: JworkIconButton });
+        downloadButton.setAttribute("icon", "download");
+        downloadButton.onclick = () => { Download(); };
+
+        toolbar.appendChild(playButton);
+        toolbar.appendChild(downloadButton);
+    }
+
+    function Download() {
+        p5.saveCanvas(p5.canvas, "test", "png");
     }
 }

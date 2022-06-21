@@ -273,14 +273,25 @@ class Boid {
 
     // todo- pull back to the obstacle within the margin
     avoidObstacles(obstacleList, acceleration) {
-        let obstacleFear = 1.5;
-        let margin = 20;
+        let obstacleFear = 0.1;
+        let margin = -(this.visionRadius * 0.5);
 
         for (let obstacle of obstacleList) {
-            let effRad = obstacle.radius + margin;
             if (obstacle.raisePerc < 0.5) continue;
-            if (this.center.dist(obstacle.center) - effRad > this.visionRadius) continue;
+            let effRad = obstacle.radius + margin;
+            let dist = this.center.dist(obstacle.center);
+            if (dist - effRad > this.visionRadius) continue;
 
+            let myHeading = this.velocity.heading();
+            let vectorToCenter = this.center.copy().sub(obstacle.center);
+            let angleToCenter = vectorToCenter.heading();
+
+            let strength = obstacleFear;
+            let clockwise = this.isGoingClockwise(myHeading, angleToCenter) ? -1 : 1;
+            let vec = vectorToCenter.copy().rotate(90 * clockwise).mult(strength);
+            acceleration.add(vec);
+
+            /*
             if (this.center.y > obstacle.center.y - effRad && this.center.y < obstacle.center.y) {
                 acceleration.y -= ((margin + obstacle.center.y - this.center.y) / (effRad)) * obstacleFear + 0.01;
             }
@@ -293,7 +304,28 @@ class Boid {
             else if (this.center.x < obstacle.center.y + effRad && this.center.x > obstacle.center.x) {
                 acceleration.x += ((margin + this.center.x - obstacle.center.x) / (effRad)) * obstacleFear + 0.01;
             }
+            */
         }
+    }
+
+    isGoingClockwise(heading, angleToCenter) {
+        heading = this.toNormalDegrees(heading);
+        angleToCenter = this.toNormalDegrees(angleToCenter);
+
+        // if the angle to the center is 0-180, we're clockwise if the heading is 270-360 || 0-90
+        if (0 <= angleToCenter && angleToCenter >= 180) {
+            return (heading >= 270 && heading <= 360) || (heading >= 0 && heading <= 90);
+        }
+        // if the angle to the center is 180-360, we're clockwise if the heading is 90-270
+        return heading >= 90 && heading <= 270;
+    }
+
+    // p5 has 0-180 as negative and 180 - 360 as positive 180-0 for some weird reason
+    toNormalDegrees(angle) {
+        if (angle < 0) {
+            return angle * -1;
+        }
+        return 360 - angle;
     }
 
     steer(nearbyBoids, acceleration) {

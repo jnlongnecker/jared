@@ -17,9 +17,16 @@ template.innerHTML = `<link rel="stylesheet" media="screen and (max-width:900px)
 
 .controls {
     position: absolute;
-    transition: .5s;
+    transition: max-width .5s;
     overflow: hidden;
     max-height: 100%;
+    max-width: 25%;
+}
+
+@media only screen and (max-width: 900px) {
+    .controls {
+        max-width: 100%;
+    }
 }
 
 .content-holder {
@@ -43,9 +50,14 @@ template.innerHTML = `<link rel="stylesheet" media="screen and (max-width:900px)
     padding: 1rem;
 }
 
-.hide {
+.hide-horizontal {
     max-height: 0;
-    transition: .5s;
+    transition: 0.5s;
+}
+
+.hide-vertical {
+    max-width: 0;
+    transition: max-width 0.5s;
 }
 
 .notification {
@@ -56,7 +68,7 @@ template.innerHTML = `<link rel="stylesheet" media="screen and (max-width:900px)
     <div class="toolbar">
         <slot></slot>
     </div>
-    <div class="controls hide">
+    <div class="controls hide-vertical">
         <div class="content-holder">
             <div class="formatting">
                 <slot name="controls"></slot>
@@ -80,16 +92,6 @@ export default class JworkToolbar extends HTMLElement {
 		this.controls = this.template.querySelector(".controls");
 		this.parent = this.querySelector("*[slot=item]:first-child");
 
-		// Position the toolbar correctly on the parent
-		const cb = () => {
-			let box = this.parent.getBoundingClientRect();
-
-			let style = `top:${window.scrollY + box.top}px;left:${window.scrollX + box.left}px;`;
-			let style2 = `width:${box.width}px;height:${box.height}px;`;
-
-			this.controls.setAttribute("style", style + style2);
-		}
-
 		let contentSlot = this.template.querySelector("slot[name=controls]");
 		contentSlot.onslotchange = () => {
 			if (contentSlot.assignedNodes().length && this.controlsButton) {
@@ -103,14 +105,21 @@ export default class JworkToolbar extends HTMLElement {
 			this.controlsButton.onclick = () => { this.toggleControls() };
 			this.template.querySelector(".toolbar").appendChild(this.controlsButton);
 		}
+	}
 
-		// Detect changes in the parent
-		let resizeObserver = new ResizeObserver(cb);
-		resizeObserver.observe(this.parent);
+	resize() {
+		let box = this.parent.getBoundingClientRect();
+
+		let style = `top:${window.scrollY + box.top}px;right:${window.scrollX + box.left}px;`;
+		let style2 = `width:${box.width}px;height:${box.height}px;`;
+
+		console.log(`box top: ${box.top}, scrollY: ${window.scrollY}`);
+		this.controls.setAttribute("style", style + style2);
 	}
 
 	toggleControls() {
-		this.controls.classList.toggle("hide");
+		this.resize();
+		this.controls.classList.toggle("hide-vertical");
 		this.controlsButton.changeState();
 	}
 

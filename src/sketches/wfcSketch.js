@@ -233,7 +233,6 @@ export const wfc = (sketch) => {
         wfcWorking = false;
         viewInput = true;
 
-        console.log(document.querySelectorAll("*"));
         let sketchHolder = document.querySelector("#canvas-holder");
         sketchHolder.addEventListener("contextmenu", e => e.preventDefault());
         sketchHolder.addEventListener("touchmove", e => e.preventDefault());

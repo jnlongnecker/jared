@@ -12,9 +12,16 @@
 
 .controls {
     position: absolute;
-    transition: .5s;
+    transition: max-width .5s;
     overflow: hidden;
     max-height: 100%;
+    max-width: 25%;
+}
+
+@media only screen and (max-width: 900px) {
+    .controls {
+        max-width: 100%;
+    }
 }
 
 .content-holder {
@@ -38,9 +45,14 @@
     padding: 1rem;
 }
 
-.hide {
+.hide-horizontal {
     max-height: 0;
-    transition: .5s;
+    transition: 0.5s;
+}
+
+.hide-vertical {
+    max-width: 0;
+    transition: max-width 0.5s;
 }
 
 .notification {

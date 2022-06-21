@@ -9,16 +9,6 @@ export default class Toolbar extends HTMLElement {
         this.controls = this.template.querySelector(".controls");
         this.parent = this.querySelector("*[slot=item]:first-child");
 
-        // Position the toolbar correctly on the parent
-        const cb = () => {
-            let box = this.parent.getBoundingClientRect();
-
-            let style = `top:${window.scrollY + box.top}px;left:${window.scrollX + box.left}px;`;
-            let style2 = `width:${box.width}px;height:${box.height}px;`;
-
-            this.controls.setAttribute("style", style + style2);
-        }
-
         let contentSlot = this.template.querySelector("slot[name=controls]");
         contentSlot.onslotchange = () => {
             if (contentSlot.assignedNodes().length && this.controlsButton) {
@@ -32,14 +22,21 @@ export default class Toolbar extends HTMLElement {
             this.controlsButton.onclick = () => { this.toggleControls() };
             this.template.querySelector(".toolbar").appendChild(this.controlsButton);
         }
+    }
 
-        // Detect changes in the parent
-        let resizeObserver = new ResizeObserver(cb);
-        resizeObserver.observe(this.parent);
+    resize() {
+        let box = this.parent.getBoundingClientRect();
+
+        let style = `top:${window.scrollY + box.top}px;right:${window.scrollX + box.left}px;`;
+        let style2 = `width:${box.width}px;height:${box.height}px;`;
+
+        console.log(`box top: ${box.top}, scrollY: ${window.scrollY}`);
+        this.controls.setAttribute("style", style + style2);
     }
 
     toggleControls() {
-        this.controls.classList.toggle("hide");
+        this.resize();
+        this.controls.classList.toggle("hide-vertical");
         this.controlsButton.changeState();
     }
 

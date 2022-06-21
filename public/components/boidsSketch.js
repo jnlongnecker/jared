@@ -173,8 +173,7 @@ class QuadTree {
 
         if (this.topLeft === null) {
             for (let data of this.data) {
-                if (data.flockId === bounds.data.flockId || data.flockId === 0)
-                    retData.push(data);
+                retData.push(data);
             }
             return retData;
         }
@@ -216,10 +215,11 @@ class Boid {
     turnSpeed;
     maxSpeed;
     preferredSpeed;
+    time;
 
     constructor(
         flockId, center, velocity, acceleration, color, visionRadius, visionAngle = 120,
-        coStrength = 2, alignStrength = 2, sepStrength = 1, size = 8) {
+        coStrength = 2, alignStrength = 2, sepStrength = 1, size = 6) {
 
         this.flockId = flockId;
         this.center = center;
@@ -235,6 +235,7 @@ class Boid {
         this.sepStrength = sepStrength;
         this.maxSpeed = 7;
         this.preferredSpeed = 4;
+        this.time = 0;
     }
 
     move() {
@@ -273,8 +274,8 @@ class Boid {
 
     // todo- pull back to the obstacle within the margin
     avoidObstacles(obstacleList, acceleration) {
-        let obstacleFear = 0.1;
-        let margin = -(this.visionRadius * 0.5);
+        let obstacleFear = 0.05;
+        let margin = -(this.visionRadius * 0.3);
 
         for (let obstacle of obstacleList) {
             if (obstacle.raisePerc < 0.5) continue;
@@ -282,50 +283,12 @@ class Boid {
             let dist = this.center.dist(obstacle.center);
             if (dist - effRad > this.visionRadius) continue;
 
-            let myHeading = this.velocity.heading();
-            let vectorToCenter = this.center.copy().sub(obstacle.center);
-            let angleToCenter = vectorToCenter.heading();
+            let vectorToObject = this.center.copy().sub(obstacle.center);
 
-            let strength = obstacleFear;
-            let clockwise = this.isGoingClockwise(myHeading, angleToCenter) ? -1 : 1;
-            let vec = vectorToCenter.copy().rotate(90 * clockwise).mult(strength);
+            let turnClockwise = this.velocity.angleBetween(vectorToObject) > 0 ? 1 : -1;
+            let vec = vectorToObject.copy().rotate(-90 * turnClockwise).mult(obstacleFear);
             acceleration.add(vec);
-
-            /*
-            if (this.center.y > obstacle.center.y - effRad && this.center.y < obstacle.center.y) {
-                acceleration.y -= ((margin + obstacle.center.y - this.center.y) / (effRad)) * obstacleFear + 0.01;
-            }
-            else if (this.center.y < obstacle.center.y + effRad && this.center.y > obstacle.center.y) {
-                acceleration.y += ((margin + this.center.y - obstacle.center.y) / (effRad)) * obstacleFear + 0.01;
-            }
-            if (this.center.x > obstacle.center.x - effRad && this.center.x < obstacle.center.x) {
-                acceleration.x -= ((margin + obstacle.center.x - this.center.x) / (effRad)) * obstacleFear + 0.01;
-            }
-            else if (this.center.x < obstacle.center.y + effRad && this.center.x > obstacle.center.x) {
-                acceleration.x += ((margin + this.center.x - obstacle.center.x) / (effRad)) * obstacleFear + 0.01;
-            }
-            */
         }
-    }
-
-    isGoingClockwise(heading, angleToCenter) {
-        heading = this.toNormalDegrees(heading);
-        angleToCenter = this.toNormalDegrees(angleToCenter);
-
-        // if the angle to the center is 0-180, we're clockwise if the heading is 270-360 || 0-90
-        if (0 <= angleToCenter && angleToCenter >= 180) {
-            return (heading >= 270 && heading <= 360) || (heading >= 0 && heading <= 90);
-        }
-        // if the angle to the center is 180-360, we're clockwise if the heading is 90-270
-        return heading >= 90 && heading <= 270;
-    }
-
-    // p5 has 0-180 as negative and 180 - 360 as positive 180-0 for some weird reason
-    toNormalDegrees(angle) {
-        if (angle < 0) {
-            return angle * -1;
-        }
-        return 360 - angle;
     }
 
     steer(nearbyBoids, acceleration) {
@@ -349,9 +312,10 @@ class Boid {
             if (this.center.dist(boid.center) < this.bubble && boid != this) {
                 spacingAdd = spaceVector.copy();
             }
+
             spacing.add(spacingAdd);
 
-
+            if (boid.flockId != this.flockId) continue;
             alignment.add(boid.velocity.copy());
             cohesion.add(boid.center.copy());
 
@@ -374,8 +338,8 @@ class Boid {
 
     turn(nearbyBoids, obstacleList, width, height) {
         let newAcceleration = this.contain(width, height);
-        this.avoidObstacles(obstacleList, newAcceleration);
         this.steer(nearbyBoids, newAcceleration);
+        this.avoidObstacles(obstacleList, newAcceleration);
         this.acceleration = newAcceleration;
     }
 
@@ -418,7 +382,8 @@ export const boids = (sketch) => {
 
     sketch.windowResized = () => {
         cWidth = document.documentElement.clientWidth * 0.8;
-        cHeight = document.documentElement.clientWidth * 0.8;
+        cHeight = document.documentElement.clientHeight * 0.8;
+        p5.resizeCanvas(cWidth, cHeight);
     }
 
     sketch.setup = () => {
@@ -430,8 +395,10 @@ export const boids = (sketch) => {
         boidList = [];
         obstacleList = [];
         CreateObstacle(p5.createVector(cWidth * 0.5, cHeight * 0.5));
-        PopulateBoids(100, palettePrimary);
-        PopulateBoids(100, paletteSecondary);
+
+        let totalBoids = Math.max(cWidth, cHeight) * .2;
+        PopulateBoids(totalBoids * 0.5, palettePrimary);
+        PopulateBoids(totalBoids * 0.5, paletteSecondary);
     }
 
     sketch.draw = () => {

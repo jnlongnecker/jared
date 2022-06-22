@@ -206,6 +206,7 @@ class QuadTree {
     }
 }
 
+// todo - Mobile touch controls, boids smaller on mobile, boids slower on mobile
 class Boid {
 
     flockId;
@@ -277,7 +278,6 @@ class Boid {
         return newAcceleration;
     }
 
-    // todo- pull back to the obstacle within the margin
     avoidObstacles(obstacleList, acceleration) {
         let obstacleFear = 0.1;
         let margin = -(this.visionRadius.value * 0.3);
@@ -437,7 +437,7 @@ export const boids = (sketch) => {
     }
 
     p5.touchStarted = function touchStart() {
-        mouseClicked();
+        p5.mouseClicked();
     }
 
     p5.mouseClicked = function mouseClicked() {

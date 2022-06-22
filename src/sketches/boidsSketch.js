@@ -1,4 +1,5 @@
 import JworkIconButton from "./jwork-icon-button.js";
+import { createElementWithText } from "../scripts/util.js";
 let p5;
 
 class Quad {
@@ -82,7 +83,7 @@ class Obstacle {
             shake.x = p5.random(-2, 2);
             shake.y = p5.random(-2, 2);
         }
-        else {
+        else if (this.modifier > 0) {
             this.modifier = 0;
         }
 
@@ -93,6 +94,10 @@ class Obstacle {
         p5.circle(this.center.x + shake.x, this.center.y + shake.y, this.radius * 2);
 
         this.raisePerc += this.modifier;
+    }
+
+    die() {
+        this.modifier = -0.01;
     }
 }
 
@@ -218,8 +223,8 @@ class Boid {
     time;
 
     constructor(
-        flockId, center, velocity, acceleration, color, visionRadius, visionAngle = 120,
-        coStrength = 2, alignStrength = 2, sepStrength = 1, size = 6) {
+        flockId, center, velocity, acceleration, color, visionRadius, visionAngle,
+        coStrength, alignStrength, sepStrength, size = 6) {
 
         this.flockId = flockId;
         this.center = center;
@@ -274,14 +279,14 @@ class Boid {
 
     // todo- pull back to the obstacle within the margin
     avoidObstacles(obstacleList, acceleration) {
-        let obstacleFear = 0.05;
-        let margin = -(this.visionRadius * 0.3);
+        let obstacleFear = 0.1;
+        let margin = -(this.visionRadius.value * 0.3);
 
         for (let obstacle of obstacleList) {
             if (obstacle.raisePerc < 0.5) continue;
             let effRad = obstacle.radius + margin;
             let dist = this.center.dist(obstacle.center);
-            if (dist - effRad > this.visionRadius) continue;
+            if (dist - effRad > this.visionRadius.value) continue;
 
             let vectorToObject = this.center.copy().sub(obstacle.center);
 
@@ -298,7 +303,7 @@ class Boid {
         let numBoids = 0;
 
         for (let boid of nearbyBoids) {
-            if (this.center.dist(boid.center) > this.visionRadius) continue;
+            if (this.center.dist(boid.center) > this.visionRadius.value) continue;
 
             let spaceVector = this.center.copy().sub(boid.center);
             let spacingAdd = p5.createVector();
@@ -307,7 +312,7 @@ class Boid {
                 spacingAdd = spaceVector.copy();
             }
 
-            if (Math.abs(spaceVector.heading() - this.velocity.heading()) > this.visionAngle * 0.5) continue;
+            if (Math.abs(spaceVector.heading() - this.velocity.heading()) > this.visionAngle.value * 0.5) continue;
 
             if (this.center.dist(boid.center) < this.bubble && boid != this) {
                 spacingAdd = spaceVector.copy();
@@ -328,10 +333,10 @@ class Boid {
             cohesion.sub(this.center);
             alignment.sub(this.velocity);
         }
-        acceleration.add(cohesion.mult(.005 * this.coStrength));
-        acceleration.add(spacing.mult(.05 * this.sepStrength));
+        acceleration.add(cohesion.mult(.005 * this.coStrength.value));
+        acceleration.add(spacing.mult(.05 * this.sepStrength.value));
         alignment.sub(acceleration);
-        acceleration.add(alignment.mult(.05 * this.alignStrength));
+        acceleration.add(alignment.mult(.05 * this.alignStrength.value));
 
         return acceleration;
     }
@@ -365,7 +370,12 @@ export const boids = (sketch) => {
     let qTree;
     let boidList;
     let obstacleList;
-    let visionRadius = 60;
+    let visionRadius;
+    let visionAngle;
+    let cohesion;
+    let separation;
+    let alignment;
+    let selectedBoid;
 
     // Control variables
     let toolbar;
@@ -402,27 +412,83 @@ export const boids = (sketch) => {
     }
 
     sketch.draw = () => {
-        sketch.background(paletteBackgroundColor);
 
-        qTree = new QuadTree(new Quad(cWidth * 0.5, cHeight * 0.5, cWidth * 0.5, cHeight * 0.5), 10);
+        p5.background(paletteBackgroundColor);
+
+        qTree = new QuadTree(new Quad(cWidth * 0.5, cHeight * 0.5, cWidth * 0.5, cHeight * 0.5), 35);
         qTree.Build(boidList);
         HandleBoids();
         RenderObstacles();
+
+        if (selectedBoid) {
+            RenderSelectedBoid();
+        }
     }
 
     function HandleBoids() {
         for (let boid of boidList) {
-            let nearbyBoids = qTree.Query(visionRadius, boid);
-            boid.turn(nearbyBoids, obstacleList, cWidth, cHeight);
-            boid.move();
+            if (playButton.getAttribute("icon") != "play") {
+                let nearbyBoids = qTree.Query(visionRadius.value, boid);
+                boid.turn(nearbyBoids, obstacleList, cWidth, cHeight);
+                boid.move();
+            }
             boid.render();
         }
+    }
+
+    p5.mouseClicked = function mouseClicked() {
+        let ob = ObstacleAtMouse();
+        let mousePos = p5.createVector(p5.mouseX, p5.mouseY);
+        if (MouseOutsideCanvas()) return;
+
+        if (selectedBoid) {
+            selectedBoid = null;
+            return;
+        }
+        if (playButton.getAttribute("icon") == "play") {
+            for (let boid of boidList) {
+                if (mousePos.dist(boid.center) < boid.size * 2) {
+                    if (selectedBoid == null || mousePos.dist(selectedBoid.center) > mousePos.dist(boid.center)) {
+                        selectedBoid = boid;
+                    }
+                }
+            }
+        }
+        else if (ob) {
+            ob.die();
+        }
+        else {
+            CreateObstacle(p5.createVector(p5.mouseX, p5.mouseY));
+        }
+    }
+
+    function MouseOutsideCanvas() {
+        return p5.mouseX < 0 || p5.mouseX > cWidth || p5.mouseY < 0 || p5.mouseY > cHeight;
+    }
+
+    function RemoveObstacle(obstacle) {
+        let remIndex = obstacleList.findIndex((item) => item.center == obstacle.center);
+        obstacleList.splice(remIndex, 1);
+    }
+
+    function ObstacleAtMouse() {
+        let mousePos = p5.createVector(p5.mouseX, p5.mouseY);
+        for (let obstacle of obstacleList) {
+            if (mousePos.dist(obstacle.center) < obstacle.radius) return obstacle;
+        }
+        return null;
     }
 
     function RenderObstacles() {
         for (let obstacle of obstacleList) {
             obstacle.render();
+            if (obstacle.raisePerc == 0) RemoveObstacle(obstacle);
         }
+    }
+
+    function RenderSelectedBoid() {
+        p5.background(p5.color('rgba(12,12,12,.6)'));
+        selectedBoid.render();
     }
 
     function CreateObstacle(location) {
@@ -438,7 +504,8 @@ export const boids = (sketch) => {
             let sign2 = Math.random() > 0.5 ? 1 : -1;
             let startingVelocity = p5.createVector(sign1 * (Math.random() * 4 + 1), sign2 * (Math.random() * 4 + 1));
             let startingAcceleration = p5.createVector(0, 0);
-            let newBoid = new Boid(flockId, randomCenter, startingVelocity, startingAcceleration, color, visionRadius);
+            let newBoid = new Boid(flockId, randomCenter, startingVelocity, startingAcceleration, color, visionRadius,
+                visionAngle, cohesion, alignment, separation);
             boidList.push(newBoid);
         }
     }
@@ -454,6 +521,83 @@ export const boids = (sketch) => {
         downloadButton.setAttribute("icon", "download");
         downloadButton.onclick = () => { Download(); };
 
+        let holder = document.createElement("div");
+        holder.setAttribute("slot", "controls");
+        let boidSliders = document.createElement("div");
+        boidSliders.setAttribute("class", "controls");
+        let sliderCol1 = document.createElement("div");
+        sliderCol1.setAttribute("class", "control-col");
+        let sliderCol2 = document.createElement("div");
+        sliderCol2.setAttribute("class", "control-col");
+        let sliderCol3 = document.createElement("div");
+        sliderCol3.setAttribute("class", "control-col");
+
+        boidSliders.appendChild(sliderCol1);
+        boidSliders.appendChild(sliderCol2);
+        boidSliders.appendChild(sliderCol3);
+        holder.appendChild(boidSliders);
+
+        let cohesionLabel = createElementWithText("label", "Cohesion");
+        cohesion = document.createElement("input");
+        cohesion.setAttribute("class", "slider-vert");
+        cohesion.setAttribute("type", "range");
+        cohesion.setAttribute("step", "0.1");
+        cohesion.setAttribute("min", "0.1");
+        cohesion.setAttribute("max", "5");
+        cohesion.value = 1;
+
+        let alignmentLabel = createElementWithText("label", "Alignment");
+        alignment = document.createElement("input");
+        alignment.setAttribute("class", "slider-vert");
+        alignment.setAttribute("type", "range");
+        alignment.setAttribute("step", "0.1");
+        alignment.setAttribute("min", "0.1");
+        alignment.setAttribute("max", "5");
+        alignment.value = 1;
+
+        let separationLabel = createElementWithText("label", "Separation");
+        separation = document.createElement("input");
+        separation.setAttribute("class", "slider-vert");
+        separation.setAttribute("type", "range");
+        separation.setAttribute("step", "0.1");
+        separation.setAttribute("min", "0.1");
+        separation.setAttribute("max", "5");
+        separation.value = 1;
+
+        sliderCol1.appendChild(cohesionLabel);
+        sliderCol1.appendChild(cohesion);
+        sliderCol2.appendChild(alignmentLabel);
+        sliderCol2.appendChild(alignment);
+        sliderCol3.appendChild(separationLabel);
+        sliderCol3.appendChild(separation);
+
+        let settingSliders = document.createElement("div");
+        settingSliders.setAttribute("class", "control-col");
+
+        let vRadiusLabel = createElementWithText("label", "Vision Distance");
+        visionRadius = document.createElement("input");
+        visionRadius.setAttribute("type", "range");
+        visionRadius.setAttribute("step", "5");
+        visionRadius.setAttribute("min", "20");
+        visionRadius.setAttribute("max", "100");
+        visionRadius.value = 60;
+
+        let vAngleLabel = createElementWithText("label", "Vision Angle");
+        visionAngle = document.createElement("input");
+        visionAngle.setAttribute("type", "range");
+        visionAngle.setAttribute("step", "10");
+        visionAngle.setAttribute("min", "60");
+        visionAngle.setAttribute("max", "360");
+        visionAngle.value = 120;
+
+        settingSliders.appendChild(vRadiusLabel);
+        settingSliders.appendChild(visionRadius);
+        settingSliders.appendChild(vAngleLabel);
+        settingSliders.appendChild(visionAngle);
+
+        holder.appendChild(settingSliders);
+
+        toolbar.appendChild(holder);
         toolbar.appendChild(playButton);
         toolbar.appendChild(downloadButton);
     }

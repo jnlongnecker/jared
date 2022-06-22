@@ -50,6 +50,15 @@ template.innerHTML = `<link rel="stylesheet" media="screen and (max-width:900px)
     padding: 1rem;
 }
 
+.formatting h1 {
+    font-size: 1.3rem;
+    color: white;
+    font-weight: normal;
+    text-decoration:underline;
+    margin-bottom: 1rem;
+    font-family: 'Roboto Mono', monospace;
+}
+
 .hide-horizontal {
     max-height: 0;
     transition: 0.5s;
@@ -71,6 +80,7 @@ template.innerHTML = `<link rel="stylesheet" media="screen and (max-width:900px)
     <div class="controls hide-vertical">
         <div class="content-holder">
             <div class="formatting">
+                <h1>CONTROLS</h1>
                 <slot name="controls"></slot>
             </div>
         </div>

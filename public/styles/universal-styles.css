@@ -104,6 +104,11 @@ section {
   width: 100%;
 }
 
+.info img {
+  float: left;
+  max-height: 18rem;
+  margin: 0 1rem 0 0;
+}
 
 .margin-around {
     margin: 1rem;

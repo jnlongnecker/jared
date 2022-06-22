@@ -30,6 +30,7 @@ template.innerHTML = `<link rel="stylesheet" media="screen and (max-width:900px)
 }</style>
 <jwork-toolbar>
     <div class="holder" slot="item" id="canvas-holder"></div>
+
 </jwork-toolbar>`;
 
 export default class JworkP5canvas extends HTMLElement {

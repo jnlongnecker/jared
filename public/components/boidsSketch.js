@@ -221,7 +221,6 @@ class Boid {
     turnSpeed;
     maxSpeed;
     preferredSpeed;
-    time;
 
     constructor(
         flockId, center, velocity, acceleration, color, visionRadius, visionAngle,
@@ -232,16 +231,21 @@ class Boid {
         this.velocity = velocity;
         this.acceleration = acceleration;
         this.color = color;
-        this.size = size;
         this.visionRadius = visionRadius;
         this.visionAngle = visionAngle;
         this.bubble = 20;
         this.coStrength = coStrength;
         this.alignStrength = alignStrength;
         this.sepStrength = sepStrength;
+
         this.maxSpeed = 7;
         this.preferredSpeed = 4;
-        this.time = 0;
+        this.size = size;
+        if (document.documentElement.clientWidth < 900) {
+            this.maxSpeed = 3;
+            this.preferredSpeed = 2;
+            this.size = size * 0.8;
+        }
     }
 
     move() {
@@ -259,7 +263,7 @@ class Boid {
 
     contain(width, height) {
         let margin = 50;
-        let wallFear = 1;
+        let wallFear = 1 * (this.maxSpeed / 7);
         let newAcceleration = p5.createVector();
 
         if (this.center.x < margin) {
@@ -279,7 +283,7 @@ class Boid {
     }
 
     avoidObstacles(obstacleList, acceleration) {
-        let obstacleFear = 0.1;
+        let obstacleFear = 0.1 * (this.maxSpeed / 7);
         let margin = -(this.visionRadius.value * 0.3);
 
         for (let obstacle of obstacleList) {
@@ -409,6 +413,9 @@ export const boids = (sketch) => {
         let totalBoids = Math.max(cWidth, cHeight) * .2;
         PopulateBoids(totalBoids * 0.5, palettePrimary);
         PopulateBoids(totalBoids * 0.5, paletteSecondary);
+
+
+        p5.mouseClicked = mouseClicked;
     }
 
     sketch.draw = () => {
@@ -436,11 +443,8 @@ export const boids = (sketch) => {
         }
     }
 
-    p5.touchStarted = function touchStart() {
-        p5.mouseClicked();
-    }
 
-    p5.mouseClicked = function mouseClicked() {
+    function mouseClicked() {
         let ob = ObstacleAtMouse();
         let mousePos = p5.createVector(p5.mouseX, p5.mouseY);
         if (MouseOutsideCanvas() || toolbar.getAttribute("settings-on")) return;

@@ -414,8 +414,7 @@ export const boids = (sketch) => {
         PopulateBoids(totalBoids * 0.5, palettePrimary);
         PopulateBoids(totalBoids * 0.5, paletteSecondary);
 
-
-        p5.mouseClicked = mouseClicked;
+        p5.touchStarted = mouseClicked;
     }
 
     sketch.draw = () => {
@@ -475,8 +474,11 @@ export const boids = (sketch) => {
     }
 
     function RemoveObstacle(obstacle) {
-        let remIndex = obstacleList.findIndex((item) => item.center == obstacle.center);
-        obstacleList.splice(remIndex, 1);
+        let newObList = [];
+        for (let ob of obstacleList) {
+            if (ob !== obstacle) newObList.push(ob);
+        }
+        obstacleList = newObList;
     }
 
     function ObstacleAtMouse() {
@@ -490,7 +492,7 @@ export const boids = (sketch) => {
     function RenderObstacles() {
         for (let obstacle of obstacleList) {
             obstacle.render();
-            if (obstacle.raisePerc == 0) RemoveObstacle(obstacle);
+            if (obstacle.raisePerc <= 0) RemoveObstacle(obstacle);
         }
     }
 

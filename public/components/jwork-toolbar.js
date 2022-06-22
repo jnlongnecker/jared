@@ -131,6 +131,11 @@ export default class JworkToolbar extends HTMLElement {
 		this.resize();
 		this.controls.classList.toggle("hide-vertical");
 		this.controlsButton.changeState();
+		if (this.controls.classList.contains("hide-vertical")) {
+			this.removeAttribute("settings-on");
+			return;
+		}
+		this.setAttribute("settings-on", "settings-on");
 	}
 
 	postError(message, duration = 5.5) {

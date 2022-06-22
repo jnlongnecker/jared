@@ -40,12 +40,14 @@ template.innerHTML = `<link rel="stylesheet" media="screen and (max-width:900px)
                 <hr class="main-hr" />
                 <p class="info">
                     Boids are simple creatures that follow simple rules:
+                </p>
                 <ul>
                     <li>Separation: A boid will attempt to steer away from local boids to avoid crowding
                     <li>Alignment: A boid will attempt to align itself in the same direction of other local boids
                     <li>Cohesion: A boid will attempt to steer towards the average position of local boids
                 </ul>
-                Once you put these behaviors together, you now have a flock of boids!
+                <p class="info">
+                    Once you put these behaviors together, you now have a flock of boids!
                 </p>
                 <p class="info">
                     In creating this project, I had quite the initial struggle with the behaviors. These behaviors all

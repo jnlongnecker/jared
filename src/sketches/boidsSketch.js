@@ -436,10 +436,14 @@ export const boids = (sketch) => {
         }
     }
 
+    p5.touchStarted = function touchStart() {
+        mouseClicked();
+    }
+
     p5.mouseClicked = function mouseClicked() {
         let ob = ObstacleAtMouse();
         let mousePos = p5.createVector(p5.mouseX, p5.mouseY);
-        if (MouseOutsideCanvas()) return;
+        if (MouseOutsideCanvas() || toolbar.getAttribute("settings-on")) return;
 
         if (selectedBoid) {
             selectedBoid = null;

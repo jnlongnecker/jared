@@ -270,6 +270,12 @@ export default class JworkIconbutton extends HTMLElement {
 
 	changeState() {
 		this.bkg.classList.toggle("on");
+		if (this.bkg.classList.contains("on")) {
+			this.setAttribute("on", "on");
+		}
+		else {
+			this.removeAttribute("on");
+		}
 	}
 
 	toggleDisabled() {

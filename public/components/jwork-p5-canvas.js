@@ -27,6 +27,16 @@ template.innerHTML = `<link rel="stylesheet" media="screen and (max-width:900px)
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+@media only screen and (max-width:900px) {
+    .controls {
+        flex-flow: column wrap;
+    }
+
+    .slider-vert {
+        -webkit-appearance: auto;
+    }
 }</style>
 <jwork-toolbar>
     <div class="holder" slot="item" id="canvas-holder"></div>

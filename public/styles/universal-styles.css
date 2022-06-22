@@ -110,6 +110,14 @@ section {
   margin: 0 1rem 0 0;
 }
 
+@media only screen and (max-width:900px) {
+  .info img {
+    text-align: center;
+    display: block;
+    margin: 0 1rem 1rem;
+  }
+}
+
 .margin-around {
     margin: 1rem;
   }

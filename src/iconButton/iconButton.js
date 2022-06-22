@@ -120,6 +120,12 @@ export default class IconButton extends HTMLElement {
 
     changeState() {
         this.bkg.classList.toggle("on");
+        if (this.bkg.classList.contains("on")) {
+            this.setAttribute("on", "on");
+        }
+        else {
+            this.removeAttribute("on");
+        }
     }
 
     toggleDisabled() {

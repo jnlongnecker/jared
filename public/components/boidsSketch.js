@@ -1,6 +1,6 @@
 import JworkIconButton from "./jwork-icon-button.js";
 import JworkButton from "./jwork-button.js";
-import { createElementWithText } from "../scripts/util.js";
+import { createElementWithText, RGBtoHSB } from "../scripts/util.js";
 let p5;
 
 class Quad {
@@ -88,8 +88,8 @@ class Obstacle {
             this.modifier = 0;
         }
 
-        let stroke = p5.color(120, 120, 120, 255 * this.raisePerc);
-        let fill = p5.color(120, 120, 120, 180 * this.raisePerc);
+        let stroke = p5.color(0, 0, 40, 1 * this.raisePerc);
+        let fill = p5.color(0, 0, 40, .8 * this.raisePerc);
         p5.stroke(stroke);
         p5.fill(fill);
         p5.circle(this.center.x + shake.x, this.center.y + shake.y, this.radius * 2);
@@ -221,6 +221,7 @@ class Boid {
     turnSpeed;
     maxSpeed;
     preferredSpeed;
+    hueShift;
 
     constructor(
         flockId, center, velocity, acceleration, color, visionRadius, visionAngle,
@@ -237,6 +238,7 @@ class Boid {
         this.coStrength = coStrength;
         this.alignStrength = alignStrength;
         this.sepStrength = sepStrength;
+        this.hueShift = 0;
 
         this.maxSpeed = 7;
         this.preferredSpeed = 4;
@@ -352,17 +354,27 @@ class Boid {
         this.acceleration = newAcceleration;
     }
 
-    render() {
-        p5.stroke(this.color);
+    render(rainbow) {
+        let usedColor = this.color;
+        if (rainbow) {
+            let newHue = (this.color.levels[0] * 100 + this.hueShift) % 360;
+            let newSaturation = 50;
+            let newLightness = 100;
+            usedColor = p5.color(newHue, newSaturation, newLightness, 1);
+        }
+
+        p5.stroke(usedColor);
         p5.strokeWeight(1);
-        let fillCol = p5.color(this.color);
-        fillCol.setAlpha(50);
+        let fillCol = p5.color(usedColor.levels[0], usedColor.levels[1], usedColor.levels[2], 0.2);
         p5.fill(fillCol);
+        p5.noFill();
         p5.push();
         p5.translate(this.center.x, this.center.y);
         p5.rotate(this.velocity.heading());
         p5.triangle(0, this.size / 2, 0, -this.size / 2, this.size * 2, 0);
         p5.pop();
+
+        this.hueShift += 0.5;
     }
 }
 
@@ -380,6 +392,7 @@ export const boids = (sketch) => {
     let separation;
     let alignment;
     let selectedBoid;
+    let rainbow;
 
     // Control variables
     let toolbar;
@@ -402,6 +415,11 @@ export const boids = (sketch) => {
 
     sketch.setup = () => {
         canvas = p5.createCanvas(cWidth, cHeight);
+        p5.colorMode(p5.HSB);
+
+        palettePrimary = p5.color(getComputedStyle(document.body).getPropertyValue('--palette-primary'));
+        paletteSecondary = p5.color(getComputedStyle(document.body).getPropertyValue('--palette-secondary'));
+        paletteBackgroundColor = p5.color('hsb(0,0%,12%)');
 
         p5.angleMode(p5.DEGREES);
         PopulateToolbar();
@@ -438,7 +456,7 @@ export const boids = (sketch) => {
                 boid.turn(nearbyBoids, obstacleList, cWidth, cHeight);
                 boid.move();
             }
-            boid.render();
+            boid.render(rainbow);
         }
     }
 
@@ -498,7 +516,7 @@ export const boids = (sketch) => {
 
     function RenderSelectedBoid() {
         p5.background(p5.color('rgba(12,12,12,.6)'));
-        selectedBoid.render();
+        selectedBoid.render(rainbow);
     }
 
     function CreateObstacle(location) {
@@ -605,6 +623,14 @@ export const boids = (sketch) => {
         resetButton.setAttribute("class", "margin-around");
         resetButton.onclick = () => Reset();
 
+        let toggleRainbow = document.createElement("jwork-button", { is: JworkButton });
+        toggleRainbow.setAttribute("label", "RAINBOW BOIDS OFF");
+        toggleRainbow.setAttribute("toggle", "");
+        toggleRainbow.setAttribute("toggleLabel", "RAINBOW BOIDS ON");
+        toggleRainbow.setAttribute("class", "margin-around");
+        toggleRainbow.onclick = () => { rainbow = !rainbow; };
+        rainbow = false;
+
         settingSliders.appendChild(vRadiusLabel);
         settingSliders.appendChild(visionRadius);
         settingSliders.appendChild(vAngleLabel);
@@ -612,6 +638,7 @@ export const boids = (sketch) => {
 
         holder.appendChild(settingSliders);
 
+        settingSliders.appendChild(toggleRainbow);
         settingSliders.appendChild(resetButton);
 
         toolbar.appendChild(holder);

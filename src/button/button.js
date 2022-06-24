@@ -1,6 +1,6 @@
 export default class Button extends HTMLElement {
     static get observedAttributes() {
-        return ["type", "label"]
+        return ["type", "label", "toggle", "toggleLabel", "on"]
     }
 
     get width() {
@@ -13,19 +13,29 @@ export default class Button extends HTMLElement {
 
     text;
 
+    constructor() {
+        this.btn = this.template.querySelector("span");
+    }
+
     connectedCallback() {
-        this.btn = this.template.querySelector("button");
-        this.addEventListener("click", this.onclick);
-        this.updateLabel(this.text);
+        this.btn.addEventListener("click", this.onclick);
     }
 
     attributeChangedCallback(name, oldVal, newVal) {
         switch (name) {
             case "type":
+                if (this.getAttribute("toggle")) break;
                 this.updateStyle(newVal);
                 break;
             case "label":
                 this.updateLabel(newVal);
+                break;
+            case "toggle":
+                this.btn.addEventListener("click", () => {
+                    this.toggleAttribute("on");
+                });
+            case "on":
+                this.toggle();
                 break;
         }
     }
@@ -36,8 +46,17 @@ export default class Button extends HTMLElement {
 
     updateLabel(newLabel) {
         this.text = newLabel;
-        if (this.btn && newLabel) {
-            this.btn.innerText = newLabel.toUpperCase();
+        this.btn.firstChild.innerText = newLabel;
+    }
+
+    toggle() {
+        if (this.getAttribute("on") !== "") {
+            this.updateLabel(this.getAttribute("label"));
+            this.btn.classList.remove("on");
+        }
+        else {
+            this.updateLabel(this.getAttribute("toggleLabel"));
+            this.btn.classList.add("on");
         }
     }
 

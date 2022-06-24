@@ -44,3 +44,26 @@ export const DigitToHex = function (digit) {
 export const ConvertRemToPixels = function (rem) {
     return rem * parseFloat(getComputedStyle(document.documentElement).fontSize);
 }
+
+export const RGBtoHSB = function (red, green, blue) {
+    let minVal = Math.min(red, green);
+    let maxVal = Math.max(red, green);
+    minVal = Math.min(minVal, blue);
+    maxVal = Math.max(maxVal, blue);
+    let delta = maxVal - minVal;
+
+    let b = maxVal / 255 * 100;
+    let s = delta / maxVal * 100;
+    let h;
+    if (red == maxVal) {
+        h = (green - blue) / delta;
+    }
+    else if (green == maxVal) {
+        h = 2 + ((blue - red) / delta);
+    }
+    else {
+        h = 4 + ((red - green) / delta);
+    }
+    h *= 60;
+    return [h, s, b];
+}

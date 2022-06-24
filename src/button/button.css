@@ -9,8 +9,8 @@ button {
     font-size: 1.2rem;
     font-family: 'Lato', sans-serif;
     font-weight: 600;
-    color: var(--white);
     border: 0;
+    color: var(--white);
     vertical-align: middle;
     padding: .5rem 2rem;
     letter-spacing: 2px;
@@ -30,4 +30,12 @@ button:hover {
 .secondary {
     background-color: var(--palette-secondary);
     border: 0;
+}
+
+.on {
+    background-color: var(--palette-primary);
+}
+
+.on button {
+    color: var(--black);
 }

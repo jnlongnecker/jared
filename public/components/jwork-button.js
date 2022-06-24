@@ -11,8 +11,8 @@ button {
     font-size: 1.2rem;
     font-family: 'Lato', sans-serif;
     font-weight: 600;
-    color: var(--white);
     border: 0;
+    color: var(--white);
     vertical-align: middle;
     padding: .5rem 2rem;
     letter-spacing: 2px;
@@ -33,6 +33,14 @@ button:hover {
     background-color: var(--palette-secondary);
     border: 0;
 }
+
+.on {
+    background-color: var(--palette-primary);
+}
+
+.on button {
+    color: var(--black);
+}
 </style>
 <span><button></button></span>`;
 
@@ -42,10 +50,12 @@ export default class JworkButton extends HTMLElement {
 		super();
 		this.template = this.attachShadow({ mode: "open" });
 		this.template.appendChild(template.content.cloneNode(true));
+
+		this.btn = this.template.querySelector("span");
 	}
 
 	static get observedAttributes() {
-		return ["type", "label"]
+		return ["type", "label", "toggle", "toggleLabel", "on"]
 	}
 
 	get width() {
@@ -58,19 +68,27 @@ export default class JworkButton extends HTMLElement {
 
 	text;
 
+	
+
 	connectedCallback() {
-		this.btn = this.template.querySelector("button");
-		this.addEventListener("click", this.onclick);
-		this.updateLabel(this.text);
+		this.btn.addEventListener("click", this.onclick);
 	}
 
 	attributeChangedCallback(name, oldVal, newVal) {
 		switch (name) {
 			case "type":
+				if (this.getAttribute("toggle")) break;
 				this.updateStyle(newVal);
 				break;
 			case "label":
 				this.updateLabel(newVal);
+				break;
+			case "toggle":
+				this.btn.addEventListener("click", () => {
+					this.toggleAttribute("on");
+				});
+			case "on":
+				this.toggle();
 				break;
 		}
 	}
@@ -81,8 +99,17 @@ export default class JworkButton extends HTMLElement {
 
 	updateLabel(newLabel) {
 		this.text = newLabel;
-		if (this.btn && newLabel) {
-			this.btn.innerText = newLabel.toUpperCase();
+		this.btn.firstChild.innerText = newLabel;
+	}
+
+	toggle() {
+		if (this.getAttribute("on") !== "") {
+			this.updateLabel(this.getAttribute("label"));
+			this.btn.classList.remove("on");
+		}
+		else {
+			this.updateLabel(this.getAttribute("toggleLabel"));
+			this.btn.classList.add("on");
 		}
 	}
 

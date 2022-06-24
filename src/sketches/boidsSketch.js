@@ -362,6 +362,9 @@ class Boid {
             let newLightness = 100;
             usedColor = p5.color(newHue, newSaturation, newLightness, 1);
         }
+        else {
+            this.hueShift = 0;
+        }
 
         p5.stroke(usedColor);
         p5.strokeWeight(1);

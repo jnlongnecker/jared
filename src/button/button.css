@@ -1,23 +1,33 @@
+span {
+    border: 2px solid var(--palette-primary);
+    display: inline-block;
+    border-radius: 5px;
+}
+
 button {
     border-radius: 5px;
     font-size: 1.2rem;
     font-family: 'Lato', sans-serif;
     font-weight: 600;
-    color: var(--black);
+    color: var(--white);
     border: 0;
     vertical-align: middle;
-    padding: .4rem 1rem;
+    padding: .5rem 2rem;
     letter-spacing: 2px;
+    background-color: transparent;
 }
 
 button:hover {
     cursor: pointer;
+    background-color: rgba(255,255,255,.16)
 }
 
 .primary {
     background-color: var(--palette-primary);
+    border: 0;
 }
 
 .secondary {
     background-color: var(--palette-secondary);
+    border: 0;
 }

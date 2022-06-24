@@ -1,4 +1,5 @@
 import JworkIconButton from "./jwork-icon-button.js";
+import JworkButton from "./jwork-button.js";
 import { createElementWithText } from "../scripts/util.js";
 let p5;
 
@@ -206,7 +207,6 @@ class QuadTree {
     }
 }
 
-// todo - Mobile touch controls, boids smaller on mobile, boids slower on mobile
 class Boid {
 
     flockId;
@@ -600,6 +600,11 @@ export const boids = (sketch) => {
         visionAngle.setAttribute("max", "360");
         visionAngle.value = 120;
 
+        let resetButton = document.createElement("jwork-button", { is: JworkButton });
+        resetButton.setAttribute("label", "RESET TO DEFAULT");
+        resetButton.setAttribute("class", "margin-around");
+        resetButton.onclick = () => Reset();
+
         settingSliders.appendChild(vRadiusLabel);
         settingSliders.appendChild(visionRadius);
         settingSliders.appendChild(vAngleLabel);
@@ -607,9 +612,19 @@ export const boids = (sketch) => {
 
         holder.appendChild(settingSliders);
 
+        settingSliders.appendChild(resetButton);
+
         toolbar.appendChild(holder);
         toolbar.appendChild(playButton);
         toolbar.appendChild(downloadButton);
+    }
+
+    function Reset() {
+        visionAngle.value = 120;
+        visionRadius.value = 60;
+        separation.value = 1;
+        alignment.value = 1;
+        cohesion.value = 1;
     }
 
     function Download() {

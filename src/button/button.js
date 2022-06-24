@@ -15,7 +15,6 @@ export default class Button extends HTMLElement {
 
     connectedCallback() {
         this.btn = this.template.querySelector("button");
-        this.updateStyle("primary");
         this.addEventListener("click", this.onclick);
         this.updateLabel(this.text);
     }

@@ -331,6 +331,7 @@ class Boid {
             cohesion.add(boid.center.copy());
 
             numBoids++;
+            if (numBoids >= 25) break;
         }
         if (numBoids != 0) {
             alignment.div(numBoids);
@@ -361,9 +362,6 @@ class Boid {
             let newSaturation = 50;
             let newLightness = 100;
             usedColor = p5.color(newHue, newSaturation, newLightness, 1);
-        }
-        else {
-            this.hueShift = 0;
         }
 
         p5.stroke(usedColor);

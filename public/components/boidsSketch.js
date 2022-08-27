@@ -331,6 +331,7 @@ class Boid {
             cohesion.add(boid.center.copy());
 
             numBoids++;
+            if (numBoids >= 25) break;
         }
         if (numBoids != 0) {
             alignment.div(numBoids);
